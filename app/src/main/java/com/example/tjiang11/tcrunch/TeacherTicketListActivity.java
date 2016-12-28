@@ -3,6 +3,8 @@ package com.example.tjiang11.tcrunch;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +15,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.tjiang11.tcrunch.models.Ticket;
+
+import java.util.ArrayList;
+
 public class TeacherTicketListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private RecyclerView mTicketListRecyclerView;
+    private RecyclerView.Adapter mTicketListAdapter;
+    private RecyclerView.LayoutManager mTicketListLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,23 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mTicketListRecyclerView = (RecyclerView) findViewById(R.id.ticket_list_recycler_view);
+        mTicketListRecyclerView.setHasFixedSize(true);
+
+        mTicketListLayoutManager = new LinearLayoutManager(this);
+        mTicketListRecyclerView.setLayoutManager(mTicketListLayoutManager);
+
+        Ticket[] testList = new Ticket[5];
+        ArrayList<String> empty = new ArrayList<String>();
+        testList[0] = new Ticket("question0", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+        testList[1] = new Ticket("question1", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+        testList[2] = new Ticket("question2", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+        testList[3] = new Ticket("question3", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+        testList[4] = new Ticket("question4", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+
+        mTicketListAdapter = new TicketListAdapter(testList);
+        mTicketListRecyclerView.setAdapter(mTicketListAdapter);
     }
 
     @Override
