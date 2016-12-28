@@ -38,4 +38,7 @@ public class Ticket {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+
+    public String getQuestion() { return this.question; }
+
 }

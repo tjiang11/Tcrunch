@@ -42,6 +42,6 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView textView = (TextView) holder.textView.findViewById(R.id.test_text);
-        textView.setText("HIII");
+        textView.setText(mDataset[position].getQuestion());
     }
 }
