@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TicketListActivity"
+            android:name=".TeacherTicketListActivity"
             android:label="Tickets"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

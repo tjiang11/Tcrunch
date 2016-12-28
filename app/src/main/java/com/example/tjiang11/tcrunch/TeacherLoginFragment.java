@@ -7,12 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TeacherLoginFragment.OnFragmentInteractionListener} interface
+ * {@link TeacherLoginFragment.OnTeacherLoginListener} interface
  * to handle interaction events.
  * Use the {@link TeacherLoginFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,7 +28,10 @@ public class TeacherLoginFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private Button teacherLoginButton;
+    private Button teacherRegisterButton;
+
+    private OnTeacherLoginListener mListener;
 
     public TeacherLoginFragment() {
         // Required empty public constructor
@@ -64,24 +68,45 @@ public class TeacherLoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_teacher_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_teacher_login, container, false);
+        teacherLoginButton = (Button) view.findViewById(R.id.teacherLoginButton);
+        teacherRegisterButton = (Button) view.findViewById(R.id.teacherRegisterButton);
+        teacherLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLoginButtonPressed(Uri.EMPTY);
+            }
+        });
+        teacherRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRegisterButtonPressed(Uri.EMPTY);
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onLoginButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onTeacherLoginPressed(uri);
+        }
+    }
+
+    public void onRegisterButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onTeacherRegisterPressed(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnTeacherLoginListener) {
+            mListener = (OnTeacherLoginListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnTeacherLoginListener");
         }
     }
 
@@ -101,8 +126,8 @@ public class TeacherLoginFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface OnTeacherLoginListener {
+        void onTeacherLoginPressed(Uri uri);
+        void onTeacherRegisterPressed(Uri uri);
     }
 }

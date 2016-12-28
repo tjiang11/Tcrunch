@@ -38,6 +38,7 @@
         <!--android:textAlignment="center"/>-->
 
     <Button
+        android:id="@+id/studentLoginButton"
         android:layout_width="240dp"
         android:layout_height="40dp"
         android:text="@string/start"

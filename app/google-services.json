@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "183896260802",
+    "firebase_url": "https://tcrunch-be6a7.firebaseio.com",
+    "project_id": "tcrunch-be6a7",
+    "storage_bucket": "tcrunch-be6a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183896260802:android:6882be193a465ae8",
+        "android_client_info": {
+          "package_name": "com.example.tjiang11.tcrunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "183896260802-up0jlnntnlbts2n7ftkogaha83u13hqa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tjiang11.tcrunch",
+            "certificate_hash": "C1993DE6D9C798669FD63A97E21EAA44A346335C"
+          }
+        },
+        {
+          "client_id": "183896260802-josu0r4msv1p88tj4j90qgo0v1v71bto.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApl_-jzfHIbxMh1PgXqQ-LMv8sR7f_VDQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "183896260802-josu0r4msv1p88tj4j90qgo0v1v71bto.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
