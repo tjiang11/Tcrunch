@@ -15,6 +15,20 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="time_picker_dialog_ok">OK</string>
+    <string name="time_picker_dialog_cancel">@android:string/cancel</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="dummydata_spinner_options">
+        <item>Malaysia</item>
+        <item>United States</item>
+        <item>Indonesia</item>
+        <item>France</item>
+        <item>Italy</item>
+        <item>Singapore</item>
+        <item>New Zealand</item>
+        <item>India</item>
+    </string-array>
 </resources>
