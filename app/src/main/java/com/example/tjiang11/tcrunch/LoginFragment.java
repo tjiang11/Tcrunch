@@ -14,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.tjiang11.tcrunch.common.FlexibleViewPager;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +36,7 @@ public class LoginFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private TabLayout mSlidingTabLayout;
-    private FlexibleViewPager mViewPager;
+    private ViewPager mViewPager;
 
 
     public LoginFragment() {
@@ -85,7 +83,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mSlidingTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs_login);
-        mViewPager = (FlexibleViewPager) view.findViewById(R.id.viewpager_login);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewpager_login);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(new LoginPagerAdapter(getChildFragmentManager()));
 
