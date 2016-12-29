@@ -1,11 +1,13 @@
 package com.example.tjiang11.tcrunch;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tjiang11.tcrunch.models.Ticket;
 
@@ -17,10 +19,17 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
     private Ticket[] mDataset;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private LinearLayout textView;
-        public ViewHolder(LinearLayout v) {
+        private CardView cardView;
+        public ViewHolder(CardView v) {
             super(v);
-            textView = v;
+            cardView = v;
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TextView testView = (TextView) v.findViewById(R.id.test_text);
+                    Log.i("Click", "Click ticket " + testView.getText().toString() + " id: " + v.getId());
+                }
+            });
         }
     }
 
@@ -30,9 +39,11 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LinearLayout view = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.test, parent, false);
+        CardView view = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.ticket_list_card, parent, false);
         return new ViewHolder(view);
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -41,7 +52,7 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        TextView textView = (TextView) holder.textView.findViewById(R.id.test_text);
+        TextView textView = (TextView) holder.cardView.findViewById(R.id.test_text);
         textView.setText(mDataset[position].getQuestion());
     }
 }
