@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.tjiang11.tcrunch.DatePickerDialogFragment">
+    tools:context="com.example.tjiang11.tcrunch.TimePickerDialogFragment">
 
-    <DatePicker
-        android:id="@+id/new_ticket_date_picker"
+    <TimePicker
+        android:id="@+id/new_ticket_time_picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

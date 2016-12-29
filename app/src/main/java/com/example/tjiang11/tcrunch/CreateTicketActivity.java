@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class CreateTicketActivity extends AppCompatActivity {
 
     private TextView setDate;
+    private TextView setTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +21,18 @@ public class CreateTicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_ticket);
 
         setDate = (TextView) findViewById(R.id.set_date);
+        setTime = (TextView) findViewById(R.id.set_time);
+
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDatePickerDialog();
+            }
+        });
+        setTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
             }
         });
 
@@ -33,13 +42,24 @@ public class CreateTicketActivity extends AppCompatActivity {
         DatePickerDialogFragment.newInstance("dummyArg1", "dummyArg2").show(getFragmentManager(), "f");
     }
 
-    public void doPositiveClick(int day, int month, int year, String dayOfWeek) {
-        Log.i("CreateTicketActivity", "Positive");
-        Log.i("CreateTicketActivity", "Day: " + day + "M: " + month + "Y: " + year);
+    private void showTimePickerDialog() {
+        TimePickerDialogFragment.newInstance("dummyArg1", "dummyArg2").show(getFragmentManager(), "g");
+    }
+
+    public void doDatePickerDialogPositiveClick(int day, int month, int year, String dayOfWeek) {
         String newDate = dayOfWeek + ", " + month + "/" + day + "/" + year;
         setDate.setText(newDate);
     }
-    public void doNegativeClick() {
-        Log.i("CreateTicketActivity", "Negative");
+    public void doDatePickerDialogNegativeClick() {
+        Log.i("CreateTicketActivity", "DatePickerDialogNegativeClick");
+    }
+
+    public void doTimePickerDialogPositiveClick(int hour, int minute, String AM_PM) {
+        String newTime = "" + hour + ":" + minute + " " + AM_PM;
+        setTime.setText(newTime);
+    }
+
+    public void doTimePickerDialogNegativeClick() {
+        Log.i("CreateTicketActivity", "TimePickerDialogNegativeClick");
     }
 }

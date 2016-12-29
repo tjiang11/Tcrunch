@@ -71,13 +71,6 @@ public class DatePickerDialogFragment extends DialogFragment {
         }
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_date_picker_dialog, container, false);
-//    }
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new DatePickerDialog.Builder(getActivity())
@@ -91,14 +84,14 @@ public class DatePickerDialogFragment extends DialogFragment {
                                 calendar.set(dp.getYear(), dp.getMonth(), dp.getDayOfMonth());
                                 Date date = calendar.getTime();
                                 String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
-                                ((CreateTicketActivity)getActivity()).doPositiveClick(dp.getDayOfMonth(), dp.getMonth() + 1, dp.getYear(), dayOfWeek);
+                                ((CreateTicketActivity)getActivity()).doDatePickerDialogPositiveClick(dp.getDayOfMonth(), dp.getMonth() + 1, dp.getYear(), dayOfWeek);
                             }
                         }
                 )
                 .setNegativeButton(R.string.time_picker_dialog_cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                ((CreateTicketActivity)getActivity()).doNegativeClick();
+                                ((CreateTicketActivity)getActivity()).doDatePickerDialogNegativeClick();
                             }
                         }
                 )

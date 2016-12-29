@@ -53,4 +53,35 @@
         android:layout_toLeftOf="@+id/set_date"
         android:layout_toStartOf="@+id/set_date" />
 
+    <TextView
+        android:text="Set a time..."
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:padding="9dp"
+        android:id="@+id/set_time"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/set_date"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_schedule_black_24dp"
+        android:layout_alignTop="@+id/set_time"
+        android:layout_alignLeft="@+id/imageView3"
+        android:layout_alignStart="@+id/imageView3"
+        android:id="@+id/imageView4"
+        android:layout_alignBottom="@+id/set_time"
+        android:layout_toLeftOf="@+id/set_time"
+        android:layout_toStartOf="@+id/set_time" />
+
+    <SeekBar
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/set_time"
+        android:layout_toRightOf="@+id/imageView4"
+        android:layout_marginTop="21dp"
+        android:id="@+id/seekBar2" />
+
 </RelativeLayout>
