@@ -77,11 +77,34 @@
         android:layout_toStartOf="@+id/set_time" />
 
     <SeekBar
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
+        android:id="@+id/seekBarLength"
         android:layout_below="@+id/set_time"
         android:layout_toRightOf="@+id/imageView4"
-        android:layout_marginTop="21dp"
-        android:id="@+id/seekBar2" />
+        android:layout_toEndOf="@+id/imageView4"
+        android:layout_marginTop="19dp" />
+
+    <TextView
+        android:text="Set length..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/set_length"
+        android:layout_marginBottom="16dp"
+        android:layout_alignBottom="@+id/seekBarLength"
+        android:layout_toEndOf="@+id/seekBarLength"
+        android:layout_toRightOf="@+id/seekBarLength" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_hourglass_full_black_24dp"
+        android:id="@+id/imageView5"
+        android:layout_alignLeft="@+id/imageView4"
+        android:layout_alignStart="@+id/imageView4"
+        android:layout_alignBottom="@+id/seekBarLength"
+        android:layout_toLeftOf="@+id/seekBarLength"
+        android:layout_toStartOf="@+id/seekBarLength"
+        android:layout_alignTop="@+id/seekBarLength" />
 
 </RelativeLayout>

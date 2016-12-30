@@ -8,12 +8,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class CreateTicketActivity extends AppCompatActivity {
 
     private TextView setDate;
     private TextView setTime;
+    private TextView setLength;
+    private SeekBar mSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,8 @@ public class CreateTicketActivity extends AppCompatActivity {
 
         setDate = (TextView) findViewById(R.id.set_date);
         setTime = (TextView) findViewById(R.id.set_time);
+        setLength = (TextView) findViewById(R.id.set_length);
+        mSeekBar = (SeekBar) findViewById(R.id.seekBarLength);
 
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,6 +38,28 @@ public class CreateTicketActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showTimePickerDialog();
+            }
+        });
+        mSeekBar.setMax(23);
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(Integer.toString(progress + 1) + " hour");
+                if (progress != 0) {
+                    sb.append("s");
+                }
+                setLength.setText(sb.toString());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
