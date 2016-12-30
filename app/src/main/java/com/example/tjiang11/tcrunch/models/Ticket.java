@@ -17,8 +17,8 @@ public class Ticket {
     private String className;
     private String question;
     private QuestionType questionType;
-    private List<String> answerChoices;
-    private List<String> responses;
+    private List<String> answerChoices = new ArrayList<>();
+    private List<Response> responses = new ArrayList<>();
 
     private long startTime;
     private long endTime;
@@ -51,6 +51,8 @@ public class Ticket {
     public QuestionType getQuestionType() { return this. questionType; }
     public List<String> getAnswerChoices() { return this.answerChoices; }
     public void setAnswerChoices(ArrayList<String> answerChoices) { this.answerChoices = answerChoices; }
+    public List<Response> getResponses() { return this.responses; }
+
 //    public String getQuestionType() {
 //        if (questionType == null) {
 //            return null;

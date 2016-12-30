@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.tjiang11.tcrunch.models.Response;
 import com.example.tjiang11.tcrunch.models.Ticket;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class CreateTicketActivity extends AppCompatActivity {
 
@@ -155,6 +157,9 @@ public class CreateTicketActivity extends AppCompatActivity {
                 Ticket.QuestionType.FreeResponse, startTime, endTime, classSpinner.getSelectedItem().toString());
         ArrayList<String> answerChoices = new ArrayList<>(Arrays.asList("Choice A", "Choice B", "Choice C"));
         dummyTicket.setAnswerChoices(answerChoices);
+        List<Response> responses = dummyTicket.getResponses();
+        responses.add(new Response("tony", "i don't know the answer sorry prof"));
+        responses.add(new Response("caty", "four"));
         DatabaseReference newTicketRef = mDatabase.child("tickets").push();
         String newTicketId = newTicketRef.getKey();
         dummyTicket.setId(newTicketId);
