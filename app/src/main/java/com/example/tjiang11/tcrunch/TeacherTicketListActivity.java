@@ -60,13 +60,13 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mTicketListLayoutManager = new LinearLayoutManager(this);
         mTicketListRecyclerView.setLayoutManager(mTicketListLayoutManager);
 
-        Ticket[] testList = new Ticket[5];
+        Ticket[] testList = new Ticket[0];
         ArrayList<String> empty = new ArrayList<String>();
-        testList[0] = new Ticket("What is an eigenvector? How is an eigenvector useful? Describe how you find an eigenvetor. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues.", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-        testList[1] = new Ticket("question1", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-        testList[2] = new Ticket("question2", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-        testList[3] = new Ticket("question3", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-        testList[4] = new Ticket("question4", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+//        testList[0] = new Ticket("What is an eigenvector? How is an eigenvector useful? Describe how you find an eigenvetor. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues.", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+//        testList[1] = new Ticket("question1", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+//        testList[2] = new Ticket("question2", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+//        testList[3] = new Ticket("question3", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
+//        testList[4] = new Ticket("question4", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
 
         mTicketListAdapter = new TicketListAdapter(testList);
         mTicketListRecyclerView.setAdapter(mTicketListAdapter);

@@ -8,25 +8,39 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.tjiang11.tcrunch.models.Ticket;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateTicketActivity extends AppCompatActivity {
 
+    private DatabaseReference mDatabase;
+
+    private Spinner classSpinner;
     private TextView setDate;
     private TextView setTime;
     private TextView setLength;
     private SeekBar mSeekBar;
+    private Button createTicketButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_ticket);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        classSpinner = (Spinner) findViewById(R.id.class_spinner);
         setDate = (TextView) findViewById(R.id.set_date);
         setTime = (TextView) findViewById(R.id.set_time);
         setLength = (TextView) findViewById(R.id.set_length);
         mSeekBar = (SeekBar) findViewById(R.id.seekBarLength);
+        createTicketButton = (Button) findViewById(R.id.create_ticket_button);
 
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +76,12 @@ public class CreateTicketActivity extends AppCompatActivity {
 
             }
         });
-
+        createTicketButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createTicket();
+            }
+        });
     }
 
     private void showDatePickerDialog() {
@@ -88,5 +107,13 @@ public class CreateTicketActivity extends AppCompatActivity {
 
     public void doTimePickerDialogNegativeClick() {
         Log.i("CreateTicketActivity", "TimePickerDialogNegativeClick");
+    }
+
+    public void createTicket() {
+        Ticket dummyTicket = new Ticket("What's your favorite color", Ticket.QuestionType.FreeResponse, "6:00PM", "8:00PM", classSpinner.getSelectedItem().toString());
+        DatabaseReference newTicketRef = mDatabase.child("tickets").push();
+        String newTicketId = newTicketRef.getKey();
+        dummyTicket.setId(newTicketId);
+        newTicketRef.setValue(dummyTicket);
     }
 }

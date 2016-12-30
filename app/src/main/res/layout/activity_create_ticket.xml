@@ -131,6 +131,6 @@
         android:layout_marginTop="18dp"
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhite"
-        android:id="@+id/button2" />
+        android:id="@+id/create_ticket_button" />
 
 </RelativeLayout>
