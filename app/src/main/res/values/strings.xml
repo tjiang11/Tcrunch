@@ -20,6 +20,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="set_a_date">Set a date</string>
+    <string name="set_a_time">Pick a time</string>
+    <string name="set_a_length">1 hour</string>
+    <string name="ask_a_question">Ask a question&#8230;</string>
+    <string name="create">Create</string>
 
     <string-array name="dummydata_spinner_options">
         <item>Malaysia</item>

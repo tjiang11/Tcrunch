@@ -33,7 +33,7 @@
         android:layout_toStartOf="@+id/class_spinner" />
 
     <TextView
-        android:text="Set a date..."
+        android:text="@string/set_a_date"
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
@@ -56,7 +56,7 @@
         android:layout_toStartOf="@+id/set_date" />
 
     <TextView
-        android:text="Set a time..."
+        android:text="@string/set_a_time"
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:padding="9dp"
@@ -88,7 +88,7 @@
         android:layout_marginTop="19dp" />
 
     <TextView
-        android:text="Set length..."
+        android:text="@string/set_a_length"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/set_length"
@@ -113,9 +113,9 @@
         android:id="@+id/ask_question"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textCapSentences"
         android:ems="10"
-        android:hint="Ask a question..."
+        android:hint="@string/ask_a_question"
         android:layout_marginTop="22dp"
         android:layout_below="@+id/seekBarLength"
         android:layout_alignParentLeft="true"
@@ -123,7 +123,7 @@
         android:textAlignment="center"/>
 
     <Button
-        android:text="Create"
+        android:text="@string/create"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ask_question"
