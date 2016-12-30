@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -151,6 +153,8 @@ public class CreateTicketActivity extends AppCompatActivity {
         long endTime = startTime + ticketLength * msPerHour;
         Ticket dummyTicket = new Ticket(question.getText().toString(),
                 Ticket.QuestionType.FreeResponse, startTime, endTime, classSpinner.getSelectedItem().toString());
+        ArrayList<String> answerChoices = new ArrayList<>(Arrays.asList("Choice A", "Choice B", "Choice C"));
+        dummyTicket.setAnswerChoices(answerChoices);
         DatabaseReference newTicketRef = mDatabase.child("tickets").push();
         String newTicketId = newTicketRef.getKey();
         dummyTicket.setId(newTicketId);

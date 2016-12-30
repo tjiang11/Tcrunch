@@ -28,7 +28,7 @@ public class Ticket {
     public Ticket() {}
 
     public Ticket(String question,
-                  QuestionType questionType, //ArrayList<String> answerChoices, ArrayList<String> responses,
+                  QuestionType questionType, //ArrayList<String> answerChoices, //ArrayList<String> responses,
                   //HashMap<String, Object> startTime, HashMap<String, Object> endTime) {
                   long startTime, long endTime, String className) {
         this.question = question;
@@ -48,7 +48,9 @@ public class Ticket {
     public long getStartTime() { return this.startTime; }
     public long getEndTime() { return this.endTime; }
     public String getClassName() { return this.className; }
-    public QuestionType getQuestionType() { return questionType; }
+    public QuestionType getQuestionType() { return this. questionType; }
+    public List<String> getAnswerChoices() { return this.answerChoices; }
+    public void setAnswerChoices(ArrayList<String> answerChoices) { this.answerChoices = answerChoices; }
 //    public String getQuestionType() {
 //        if (questionType == null) {
 //            return null;
