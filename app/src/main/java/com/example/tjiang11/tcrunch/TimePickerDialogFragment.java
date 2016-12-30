@@ -80,8 +80,7 @@ public class TimePickerDialogFragment extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 tp = (TimePicker) getDialog().findViewById(R.id.new_ticket_time_picker);
-                                Calendar calendar = Calendar.getInstance();
-                                int hour; int minute; String AM_PM;
+                                int hour; int minute;
                                 if (Build.VERSION.SDK_INT >= 23) {
                                     hour = tp.getHour();
                                     minute = tp.getMinute();
@@ -89,10 +88,7 @@ public class TimePickerDialogFragment extends DialogFragment {
                                     hour = tp.getCurrentHour();
                                     minute = tp.getCurrentMinute();
                                 }
-                                AM_PM = hour < 12 ? "AM" : "PM";
-                                if (hour == 0) hour = 12;
-                                if (hour > 12) hour -= 12;
-                                ((CreateTicketActivity)getActivity()).doTimePickerDialogPositiveClick(hour, minute, AM_PM);
+                                ((CreateTicketActivity)getActivity()).doTimePickerDialogPositiveClick(hour, minute);
                             }
                         }
                 )

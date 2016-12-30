@@ -84,7 +84,7 @@ public class DatePickerDialogFragment extends DialogFragment {
                                 calendar.set(dp.getYear(), dp.getMonth(), dp.getDayOfMonth());
                                 Date date = calendar.getTime();
                                 String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US).format(date);
-                                ((CreateTicketActivity)getActivity()).doDatePickerDialogPositiveClick(dp.getDayOfMonth(), dp.getMonth() + 1, dp.getYear(), dayOfWeek);
+                                ((CreateTicketActivity)getActivity()).doDatePickerDialogPositiveClick(dp.getDayOfMonth(), dp.getMonth(), dp.getYear(), dayOfWeek);
                             }
                         }
                 )

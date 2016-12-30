@@ -20,8 +20,8 @@ public class Ticket {
     private List<String> answerChoices;
     private List<String> responses;
 
-    private String startTime;
-    private String endTime;
+    private long startTime;
+    private long endTime;
 //    private HashMap<String, Object> startTime;
 //    private HashMap<String, Object> endTime;
 
@@ -30,7 +30,7 @@ public class Ticket {
     public Ticket(String question,
                   QuestionType questionType, //ArrayList<String> answerChoices, ArrayList<String> responses,
                   //HashMap<String, Object> startTime, HashMap<String, Object> endTime) {
-                  String startTime, String endTime, String className) {
+                  long startTime, long endTime, String className) {
         this.question = question;
         this.questionType = questionType;
         this.answerChoices = answerChoices;
@@ -45,8 +45,8 @@ public class Ticket {
     public void setId(String id) { this.id = id; }
     public String getQuestion() { return this.question; }
     public void setQuestion(String question) { this.question = question; }
-    public String getStartTime() { return this.startTime; }
-    public String getEndTime() { return this.endTime; }
+    public long getStartTime() { return this.startTime; }
+    public long getEndTime() { return this.endTime; }
     public String getClassName() { return this.className; }
     public QuestionType getQuestionType() { return questionType; }
 //    public String getQuestionType() {
