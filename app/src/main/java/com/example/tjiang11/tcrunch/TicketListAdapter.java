@@ -57,4 +57,6 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
         TextView textView = (TextView) holder.cardView.findViewById(R.id.test_text);
         textView.setText(mDataset.get(position).getQuestion());
     }
+
+
 }

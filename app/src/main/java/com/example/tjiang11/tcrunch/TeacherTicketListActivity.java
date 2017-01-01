@@ -23,18 +23,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class TeacherTicketListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView mTicketListRecyclerView;
-    private RecyclerView.Adapter mTicketListAdapter;
+    private TicketListAdapter mTicketListAdapter;
     private RecyclerView.LayoutManager mTicketListLayoutManager;
 
     private DatabaseReference mDatabaseReference;
-    private DatabaseReference mDatabaseReferenceTickets;
+    private Query mDatabaseReferenceTickets;
     private ChildEventListener mChildEventListener;
 
     private ArrayList<Ticket> ticketList;
@@ -88,9 +91,17 @@ public class TeacherTicketListActivity extends AppCompatActivity
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Ticket mTicket = dataSnapshot.getValue(Ticket.class);
+                Log.i("start", "start");
+
                 ticketList.add(mTicket);
-                mTicketListAdapter.notifyItemInserted(ticketList.size() - 1);
-               // mTicketListAdapter.notifyItemInserted();
+                //Collections.sort(ticketList, Ticket.TicketTimeComparator);
+                //mTicketListAdapter.notifyItemInserted(ticketList.size() - 1);
+                for (int i = 0; i < ticketList.size(); i++) {
+                    Log.i("info", Long.toString(ticketList.get(i).getStartTime()));
+                    Log.i("ques", ticketList.get(i).getQuestion());
+                }
+
+                mTicketListAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -114,7 +125,8 @@ public class TeacherTicketListActivity extends AppCompatActivity
             }
         };
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mDatabaseReferenceTickets = mDatabaseReference.child("tickets");
+
+        mDatabaseReferenceTickets = mDatabaseReference.child("tickets").orderByChild("startTime");
         mDatabaseReferenceTickets.addChildEventListener(mChildEventListener);
     }
 

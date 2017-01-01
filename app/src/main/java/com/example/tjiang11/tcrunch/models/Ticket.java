@@ -1,6 +1,7 @@
 package com.example.tjiang11.tcrunch.models;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import com.google.firebase.database.Exclude;
@@ -52,6 +53,13 @@ public class Ticket {
     public List<String> getAnswerChoices() { return this.answerChoices; }
     public void setAnswerChoices(ArrayList<String> answerChoices) { this.answerChoices = answerChoices; }
     public List<Response> getResponses() { return this.responses; }
+
+    public static Comparator<Ticket> TicketTimeComparator = new Comparator<Ticket>() {
+        @Override
+        public int compare(Ticket o1, Ticket o2) {
+            return (int) (o1.getStartTime() - o2.getStartTime());
+        }
+    };
 
 //    public String getQuestionType() {
 //        if (questionType == null) {

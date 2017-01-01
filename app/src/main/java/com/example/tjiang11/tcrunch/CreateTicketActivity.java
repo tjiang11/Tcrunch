@@ -136,6 +136,8 @@ public class CreateTicketActivity extends AppCompatActivity {
         if (tpMinute < 10) zeroPad = "0";
         String newTime = "" + hour + ":" + zeroPad + tpMinute + " " + AM_PM;
 
+        starthour = tpHour; startminute = tpMinute;
+
         setTime.setText(newTime);
     }
 
