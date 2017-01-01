@@ -57,7 +57,7 @@ public class Ticket {
     public static Comparator<Ticket> TicketTimeComparator = new Comparator<Ticket>() {
         @Override
         public int compare(Ticket o1, Ticket o2) {
-            return (int) (o1.getStartTime() - o2.getStartTime());
+            return o1.getStartTime() > o2.getStartTime() ? 1 : -1;
         }
     };
 

@@ -11,7 +11,11 @@ import android.widget.Toast;
 
 import com.example.tjiang11.tcrunch.models.Ticket;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by tjiang11 on 12/27/16.
@@ -29,6 +33,7 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     TextView testView = (TextView) v.findViewById(R.id.test_text);
+                    TextView ticketTime = (TextView) v.findViewById(R.id.ticket_card_time);
                     Log.i("Click", "Click ticket " + testView.getText().toString() + " id: " + v.getId());
                 }
             });
@@ -56,6 +61,14 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView textView = (TextView) holder.cardView.findViewById(R.id.test_text);
         textView.setText(mDataset.get(position).getQuestion());
+
+        TextView ticketTime = (TextView) holder.cardView.findViewById(R.id.ticket_card_time);
+
+        Date date = new Date(mDataset.get(position).getStartTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEEEE M/d h:mm a", Locale.US);
+        String dateFormatted = formatter.format(date);
+
+        ticketTime.setText(dateFormatted);
     }
 
 

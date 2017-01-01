@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +39,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
     private DatabaseReference mDatabaseReference;
     private Query mDatabaseReferenceTickets;
-    private ChildEventListener mChildEventListener;
+    private ValueEventListener mValueEventListener;
 
     private ArrayList<Ticket> ticketList;
 
@@ -87,39 +88,27 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mTicketListAdapter = new TicketListAdapter(ticketList);
         mTicketListRecyclerView.setAdapter(mTicketListAdapter);
 
-        mChildEventListener = new ChildEventListener() {
+        mValueEventListener = new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Ticket mTicket = dataSnapshot.getValue(Ticket.class);
-                ticketList.add(mTicket);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ticketList.clear();
+                for (DataSnapshot ticketSnapshot: dataSnapshot.getChildren()) {
+                    Ticket mTicket = ticketSnapshot.getValue(Ticket.class);
+                    ticketList.add(mTicket);
+                }
                 Collections.sort(ticketList, Ticket.TicketTimeComparator);
                 mTicketListAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         mDatabaseReferenceTickets = mDatabaseReference.child("tickets");
-        mDatabaseReferenceTickets.addChildEventListener(mChildEventListener);
+        mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
     }
 
     @Override
