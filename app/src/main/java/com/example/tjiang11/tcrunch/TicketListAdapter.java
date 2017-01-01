@@ -11,12 +11,14 @@ import android.widget.Toast;
 
 import com.example.tjiang11.tcrunch.models.Ticket;
 
+import java.util.ArrayList;
+
 /**
  * Created by tjiang11 on 12/27/16.
  */
 
 public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.ViewHolder> {
-    private Ticket[] mDataset;
+    private ArrayList<Ticket> mDataset;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private CardView cardView;
@@ -33,7 +35,7 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
         }
     }
 
-    public TicketListAdapter(Ticket[] mDataset) {
+    public TicketListAdapter(ArrayList<Ticket> mDataset) {
         this.mDataset = mDataset;
     }
 
@@ -47,12 +49,12 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView textView = (TextView) holder.cardView.findViewById(R.id.test_text);
-        textView.setText(mDataset[position].getQuestion());
+        textView.setText(mDataset.get(position).getQuestion());
     }
 }

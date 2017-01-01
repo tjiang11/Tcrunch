@@ -164,5 +164,6 @@ public class CreateTicketActivity extends AppCompatActivity {
         String newTicketId = newTicketRef.getKey();
         dummyTicket.setId(newTicketId);
         newTicketRef.setValue(dummyTicket);
+        finish();
     }
 }

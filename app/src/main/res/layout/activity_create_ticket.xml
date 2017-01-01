@@ -87,16 +87,6 @@
         android:layout_toEndOf="@+id/imageView4"
         android:layout_marginTop="19dp" />
 
-    <TextView
-        android:text="@string/set_a_length"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/set_length"
-        android:layout_marginBottom="16dp"
-        android:layout_alignBottom="@+id/seekBarLength"
-        android:layout_toEndOf="@+id/seekBarLength"
-        android:layout_toRightOf="@+id/seekBarLength" />
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -132,5 +122,23 @@
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhite"
         android:id="@+id/create_ticket_button" />
+
+    <TextView
+        android:text="Open for"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_alignTop="@+id/seekBarLength"
+        android:layout_toRightOf="@+id/seekBarLength"
+        android:layout_toEndOf="@+id/seekBarLength" />
+
+    <TextView
+        android:text="@string/set_a_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/set_length"
+        android:layout_below="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2" />
 
 </RelativeLayout>

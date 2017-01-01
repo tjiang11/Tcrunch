@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.tjiang11.tcrunch.models.Ticket;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -26,6 +32,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
     private RecyclerView mTicketListRecyclerView;
     private RecyclerView.Adapter mTicketListAdapter;
     private RecyclerView.LayoutManager mTicketListLayoutManager;
+
+    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mDatabaseReferenceTickets;
+    private ChildEventListener mChildEventListener;
+
+    private ArrayList<Ticket> ticketList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +72,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mTicketListLayoutManager = new LinearLayoutManager(this);
         mTicketListRecyclerView.setLayoutManager(mTicketListLayoutManager);
 
-        Ticket[] testList = new Ticket[0];
         ArrayList<String> empty = new ArrayList<String>();
 //        testList[0] = new Ticket("What is an eigenvector? How is an eigenvector useful? Describe how you find an eigenvetor. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues.", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
 //        testList[1] = new Ticket("question1", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
@@ -68,8 +79,43 @@ public class TeacherTicketListActivity extends AppCompatActivity
 //        testList[3] = new Ticket("question3", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
 //        testList[4] = new Ticket("question4", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
 
-        mTicketListAdapter = new TicketListAdapter(testList);
+        ticketList = new ArrayList<Ticket>();
+        //ticketList.add(new Ticket("question1", Ticket.QuestionType.FreeResponse, 0, 0, "class name"));
+        mTicketListAdapter = new TicketListAdapter(ticketList);
         mTicketListRecyclerView.setAdapter(mTicketListAdapter);
+
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Ticket mTicket = dataSnapshot.getValue(Ticket.class);
+                ticketList.add(mTicket);
+                mTicketListAdapter.notifyItemInserted(ticketList.size() - 1);
+               // mTicketListAdapter.notifyItemInserted();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mDatabaseReferenceTickets = mDatabaseReference.child("tickets");
+        mDatabaseReferenceTickets.addChildEventListener(mChildEventListener);
     }
 
     @Override

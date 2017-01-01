@@ -9,6 +9,9 @@ public class Response {
     private String author;
     private String response;
 
+    public Response() {}
+
+
     public Response(String author, String response) {
         this.author = author;
         this.response = response;
