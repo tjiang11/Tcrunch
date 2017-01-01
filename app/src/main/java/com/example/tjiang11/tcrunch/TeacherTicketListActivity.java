@@ -91,16 +91,8 @@ public class TeacherTicketListActivity extends AppCompatActivity
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Ticket mTicket = dataSnapshot.getValue(Ticket.class);
-                Log.i("start", "start");
-
                 ticketList.add(mTicket);
-                //Collections.sort(ticketList, Ticket.TicketTimeComparator);
-                //mTicketListAdapter.notifyItemInserted(ticketList.size() - 1);
-                for (int i = 0; i < ticketList.size(); i++) {
-                    Log.i("info", Long.toString(ticketList.get(i).getStartTime()));
-                    Log.i("ques", ticketList.get(i).getQuestion());
-                }
-
+                Collections.sort(ticketList, Ticket.TicketTimeComparator);
                 mTicketListAdapter.notifyDataSetChanged();
             }
 
@@ -126,7 +118,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
         };
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
-        mDatabaseReferenceTickets = mDatabaseReference.child("tickets").orderByChild("startTime");
+        mDatabaseReferenceTickets = mDatabaseReference.child("tickets");
         mDatabaseReferenceTickets.addChildEventListener(mChildEventListener);
     }
 
