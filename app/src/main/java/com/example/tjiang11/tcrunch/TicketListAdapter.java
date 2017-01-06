@@ -34,7 +34,7 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
                 public void onClick(View v) {
                     TextView testView = (TextView) v.findViewById(R.id.test_text);
                     TextView ticketTime = (TextView) v.findViewById(R.id.ticket_card_time);
-                    Log.i("Click", "Click ticket " + testView.getText().toString() + " id: " + v.getId());
+                    Log.i("Click", "Click ticket " + testView.getText().toString() + " id: " + testView);
                 }
             });
         }
@@ -49,8 +49,6 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
         CardView view = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.ticket_list_card, parent, false);
         return new ViewHolder(view);
     }
-
-
 
     @Override
     public int getItemCount() {

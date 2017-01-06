@@ -16,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.tjiang11.tcrunch.models.Ticket;
 import com.google.firebase.database.ChildEventListener;
@@ -26,21 +28,31 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 
 public class TeacherTicketListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView mTicketListRecyclerView;
-    private TicketListAdapter mTicketListAdapter;
+    //private TicketListAdapter mTicketListAdapter;
+    private SectionedTicketListAdapter mSectionedTicketListAdapter;
     private RecyclerView.LayoutManager mTicketListLayoutManager;
+
+    private Section upcoming;
+    private Section launched;
 
     private DatabaseReference mDatabaseReference;
     private Query mDatabaseReferenceTickets;
     private ValueEventListener mValueEventListener;
 
+    private ArrayList<Ticket> upcomingTickets;
+    private ArrayList<Ticket> launchedTickets;
     private ArrayList<Ticket> ticketList;
 
     @Override
@@ -84,20 +96,44 @@ public class TeacherTicketListActivity extends AppCompatActivity
 //        testList[4] = new Ticket("question4", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
 
         ticketList = new ArrayList<Ticket>();
+        launchedTickets = new ArrayList<Ticket>();
+        upcomingTickets = new ArrayList<Ticket>();
         //ticketList.add(new Ticket("question1", Ticket.QuestionType.FreeResponse, 0, 0, "class name"));
-        mTicketListAdapter = new TicketListAdapter(ticketList);
-        mTicketListRecyclerView.setAdapter(mTicketListAdapter);
+        mSectionedTicketListAdapter = new SectionedTicketListAdapter();
+        upcoming = new TicketSection("UPCOMING", upcomingTickets);
+        launched = new TicketSection("LAUNCHED", launchedTickets);
+        mSectionedTicketListAdapter.addSection(upcoming);
+        mSectionedTicketListAdapter.addSection(launched);
+
+        //mTicketListAdapter = new TicketListAdapter(ticketList);
+        mTicketListRecyclerView.setAdapter(mSectionedTicketListAdapter);
 
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ticketList.clear();
+                //ticketList.clear();
+                launchedTickets.clear();
+                upcomingTickets.clear();
                 for (DataSnapshot ticketSnapshot: dataSnapshot.getChildren()) {
                     Ticket mTicket = ticketSnapshot.getValue(Ticket.class);
-                    ticketList.add(mTicket);
+                    if (mTicket.getStartTime() < System.currentTimeMillis()) {
+                        launchedTickets.add(mTicket);
+                    } else {
+                        upcomingTickets.add(mTicket);
+                    }
+                    //ticketList.add(mTicket);
                 }
-                Collections.sort(ticketList, Ticket.TicketTimeComparator);
-                mTicketListAdapter.notifyDataSetChanged();
+                if (launchedTickets.size() == 0) {
+                    launched.setVisible(false);
+                }
+                if (upcomingTickets.size() == 0) {
+                    upcoming.setVisible(false);
+                }
+                //Collections.sort(ticketList, Ticket.TicketTimeComparator);
+                Collections.sort(upcomingTickets, Ticket.TicketTimeComparator);
+                Collections.sort(launchedTickets, Ticket.TicketTimeComparator);
+                Collections.reverse(launchedTickets);
+                mSectionedTicketListAdapter.notifyDataSetChanged();
             }
 
             @Override
