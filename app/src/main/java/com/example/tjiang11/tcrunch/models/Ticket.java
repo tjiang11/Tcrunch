@@ -61,7 +61,12 @@ public class Ticket {
         }
     };
 
-//    public String getQuestionType() {
+    @Override
+    public String toString() {
+        return "Question: " + question + ", id:  " + id;
+    }
+
+    //    public String getQuestionType() {
 //        if (questionType == null) {
 //            return null;
 //        }

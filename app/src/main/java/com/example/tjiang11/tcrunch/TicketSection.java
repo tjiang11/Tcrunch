@@ -26,11 +26,13 @@ public class TicketSection extends StatelessSection {
 
     private String title;
     private ArrayList<Ticket> mDataset;
+    private ItemClickListener clickListener;
 
-    public TicketSection(String title, ArrayList<Ticket> tickets) {
+    public TicketSection(String title, ArrayList<Ticket> tickets, ItemClickListener itc) {
         super(R.layout.ticket_section_header, R.layout.ticket_list_card);
         this.title = title;
         this.mDataset = tickets;
+        this.clickListener = itc;
     }
 
     @Override
@@ -66,9 +68,6 @@ public class TicketSection extends StatelessSection {
             emptySectionViewHolder.emptySectionMessage.setText("You have no "
                 + this.title.toLowerCase() + " tickets.");
         } else {
-            for (int i = 0; i < mDataset.size(); i++) {
-                Log.i("xx", "" + i + ": " + mDataset.get(i).getQuestion());
-            }
             if (holder instanceof EmptySectionViewHolder) return;
             TicketItemViewHolder mViewHolder = (TicketItemViewHolder) holder;
             TextView textView = (TextView) mViewHolder.cardView.findViewById(R.id.test_text);
@@ -84,19 +83,19 @@ public class TicketSection extends StatelessSection {
         }
     }
 
-    public static class TicketItemViewHolder extends RecyclerView.ViewHolder {
+    public class TicketItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CardView cardView;
         public TicketItemViewHolder(View v) {
             super(v);
             cardView = (CardView) v;
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TextView testView = (TextView) v.findViewById(R.id.test_text);
-                    TextView ticketTime = (TextView) v.findViewById(R.id.ticket_card_time);
-                    Log.i("Click", "Click ticket " + testView.getText().toString() + " id: " + testView);
-                }
-            });
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (TicketSection.this.clickListener != null) {
+                TicketSection.this.clickListener.onClick(v, getAdapterPosition(), TicketSection.this.title.toLowerCase());
+            }
         }
     }
 

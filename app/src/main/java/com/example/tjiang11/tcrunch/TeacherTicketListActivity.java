@@ -37,7 +37,8 @@ import java.util.Collections;
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 
 public class TeacherTicketListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ItemClickListener {
 
     private RecyclerView mTicketListRecyclerView;
     //private TicketListAdapter mTicketListAdapter;
@@ -100,8 +101,11 @@ public class TeacherTicketListActivity extends AppCompatActivity
         upcomingTickets = new ArrayList<Ticket>();
         //ticketList.add(new Ticket("question1", Ticket.QuestionType.FreeResponse, 0, 0, "class name"));
         mSectionedTicketListAdapter = new SectionedTicketListAdapter();
-        upcoming = new TicketSection("UPCOMING", upcomingTickets);
-        launched = new TicketSection("LAUNCHED", launchedTickets);
+        upcoming = new TicketSection("UPCOMING", upcomingTickets, this);
+        launched = new TicketSection("LAUNCHED", launchedTickets, this);
+        upcoming.setVisible(false);
+        launched.setVisible(false);
+
         mSectionedTicketListAdapter.addSection(upcoming);
         mSectionedTicketListAdapter.addSection(launched);
 
@@ -125,9 +129,13 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 }
                 if (launchedTickets.size() == 0) {
                     launched.setVisible(false);
+                } else {
+                    launched.setVisible(true);
                 }
                 if (upcomingTickets.size() == 0) {
                     upcoming.setVisible(false);
+                } else {
+                    upcoming.setVisible(true);
                 }
                 //Collections.sort(ticketList, Ticket.TicketTimeComparator);
                 Collections.sort(upcomingTickets, Ticket.TicketTimeComparator);
@@ -202,5 +210,41 @@ public class TeacherTicketListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View view, int position, String type) {
+        Ticket ticket = null;
+        int index = determineIndex(position);
+        Log.i("position", Integer.toString(index));
+        Log.i("type", type);
+        switch (type) {
+            case "launched":
+                ticket = launchedTickets.get(index);
+                break;
+            case "upcoming":
+                ticket = upcomingTickets.get(index);
+                break;
+        }
+        if (ticket != null) {
+            Intent intent = new Intent(this, TeacherTicketDetailActivity.class);
+            intent.putExtra("question", ticket.getQuestion());
+            intent.putExtra("start_time", ticket.getStartTime());
+            intent.putExtra("end_time", ticket.getEndTime());
+            intent.putExtra("ticket_id", ticket.getId());
+            startActivity(intent);
+        } else {
+            Log.e("ERR", "Could not find ticket type");
+        }
+    }
+
+    public int determineIndex(int position) {
+        if (upcomingTickets.size() > 0 && position < upcomingTickets.size() + 1) {
+            return position - 1;
+        } else if (upcomingTickets.size() > 0 && position >= upcomingTickets.size() + 1) {
+            return position - upcomingTickets.size() - 2;
+        } else {
+            return position - 1;
+        }
     }
 }
