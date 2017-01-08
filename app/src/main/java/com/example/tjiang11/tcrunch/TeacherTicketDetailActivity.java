@@ -30,11 +30,16 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
         TextView questionText = (TextView) findViewById(R.id.ticket_detail_question);
         TextView startTimeText = (TextView) findViewById(R.id.ticket_detail_start_time);
         RecyclerView responsesText = (RecyclerView) findViewById(R.id.ticket_detail_responses_recycler_view);
-
+        responsesText.setFocusable(false);
         mAdapter = new ResponseListAdapter(responseList);
         responsesText.setAdapter(mAdapter);
 
-        mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager = new LinearLayoutManager(this) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         responsesText.setLayoutManager(mLinearLayoutManager);
 
         questionText.setText(question);

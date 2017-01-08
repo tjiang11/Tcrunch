@@ -164,6 +164,12 @@ public class CreateTicketActivity extends AppCompatActivity {
         List<Response> responses = dummyTicket.getResponses();
         responses.add(new Response("tony", "i don't know the answer sorry prof"));
         responses.add(new Response("caty", "four"));
+        responses.add(new Response("Anonymouse cat", "I like to type really long answers, so here's a really long answer. Do you know why I like really long answers? I think I do. It's because long answers make me sound smart."));
+        responses.add(new Response("Cheshire cat", "Peek-a-boo!"));
+        responses.add(new Response("Seamus", "Wingardium Leviosa"));
+        responses.add(new Response("Fred", "Hmmmmmmmmmmmm"));
+        responses.add(new Response("Lucy", "Uh... five?"));
+        responses.add(new Response("Matt", "WINDMILLS"));
         DatabaseReference newTicketRef = mDatabase.child("tickets").push();
         String newTicketId = newTicketRef.getKey();
         dummyTicket.setId(newTicketId);
