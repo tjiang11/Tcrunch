@@ -25,6 +25,7 @@ public class ResponseListAdapter extends RecyclerView.Adapter<ResponseListAdapte
     @Override
     public void onBindViewHolder(ResponseViewHolder holder, int position) {
         holder.responseView.setText(mResponses.get(position).getResponse());
+        holder.authorView.setText(mResponses.get(position).getAuthor());
     }
 
     @Override
@@ -41,9 +42,11 @@ public class ResponseListAdapter extends RecyclerView.Adapter<ResponseListAdapte
 
     public static class ResponseViewHolder extends RecyclerView.ViewHolder {
         private TextView responseView;
+        private TextView authorView;
         public ResponseViewHolder(View v) {
             super(v);
             responseView = (TextView) v.findViewById(R.id.response_item_text_view);
+            authorView = (TextView) v.findViewById(R.id.response_item_author);
         }
     }
 }
