@@ -2,6 +2,8 @@ package com.example.tjiang11.tcrunch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -232,6 +234,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
             intent.putExtra("start_time", ticket.getStartTime());
             intent.putExtra("end_time", ticket.getEndTime());
             intent.putExtra("ticket_id", ticket.getId());
+            intent.putParcelableArrayListExtra("responses", (ArrayList<? extends Parcelable>) ticket.getResponses());
             startActivity(intent);
         } else {
             Log.e("ERR", "Could not find ticket type");

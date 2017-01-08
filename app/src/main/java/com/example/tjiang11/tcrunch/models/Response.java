@@ -21,6 +21,12 @@ public class Response implements Parcelable {
         this.response = response;
     }
 
+    public Response(Parcel in) {
+        this.author = in.readString();
+        this.response = in.readString();
+    }
+
+
     public String getAuthor() {
         return this.author;
     }
@@ -36,6 +42,19 @@ public class Response implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(author);
+        dest.writeString(response);
     }
+
+    public static final Parcelable.Creator<Response> CREATOR = new Parcelable.Creator<Response>() {
+        @Override
+        public Response createFromParcel(Parcel source) {
+            return new Response(source);
+        }
+
+        @Override
+        public Response[] newArray(int size) {
+            return new Response[size];
+        }
+    };
 }
