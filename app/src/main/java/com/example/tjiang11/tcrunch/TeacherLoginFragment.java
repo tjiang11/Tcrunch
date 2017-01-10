@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 
 /**
@@ -30,6 +31,9 @@ public class TeacherLoginFragment extends Fragment {
 
     private Button teacherLoginButton;
     private Button teacherRegisterButton;
+
+    private EditText teacherEmail;
+    private EditText teacherPassword;
 
     private OnTeacherLoginListener mListener;
 
@@ -69,33 +73,35 @@ public class TeacherLoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_teacher_login, container, false);
+        teacherEmail = (EditText) view.findViewById(R.id.teacher_email_input_text);
+        teacherPassword = (EditText) view.findViewById(R.id.teacher_password_input_text);
         teacherLoginButton = (Button) view.findViewById(R.id.teacherLoginButton);
         teacherRegisterButton = (Button) view.findViewById(R.id.teacherRegisterButton);
         teacherLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLoginButtonPressed(Uri.EMPTY);
+                onLoginButtonPressed(teacherEmail.getText().toString(), teacherPassword.getText().toString());
             }
         });
         teacherRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onRegisterButtonPressed(Uri.EMPTY);
+                onRegisterButtonPressed(teacherEmail.getText().toString(), teacherPassword.getText().toString());
             }
         });
         return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onLoginButtonPressed(Uri uri) {
+    public void onLoginButtonPressed(String email, String password) {
         if (mListener != null) {
-            mListener.onTeacherLoginPressed(uri);
+            mListener.onTeacherLoginPressed(email, password);
         }
     }
 
-    public void onRegisterButtonPressed(Uri uri) {
+    public void onRegisterButtonPressed(String email, String password) {
         if (mListener != null) {
-            mListener.onTeacherRegisterPressed(uri);
+            mListener.onTeacherRegisterPressed(email, password);
         }
     }
 
@@ -127,7 +133,7 @@ public class TeacherLoginFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnTeacherLoginListener {
-        void onTeacherLoginPressed(Uri uri);
-        void onTeacherRegisterPressed(Uri uri);
+        void onTeacherLoginPressed(String email, String password);
+        void onTeacherRegisterPressed(String email, String password);
     }
 }

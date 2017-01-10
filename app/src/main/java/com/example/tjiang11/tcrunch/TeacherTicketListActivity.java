@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.tjiang11.tcrunch.models.Ticket;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,6 +54,9 @@ public class TeacherTicketListActivity extends AppCompatActivity
     private DatabaseReference mDatabaseReference;
     private Query mDatabaseReferenceTickets;
     private ValueEventListener mValueEventListener;
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     private ArrayList<Ticket> upcomingTickets;
     private ArrayList<Ticket> launchedTickets;
@@ -152,9 +156,15 @@ public class TeacherTicketListActivity extends AppCompatActivity
             }
         };
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
-        mDatabaseReferenceTickets = mDatabaseReference.child("tickets");
+        mDatabaseReferenceTickets = mDatabaseReference.child("users").child(mAuth.getCurrentUser().getUid()).child("tickets");
         mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        Log.d("TeacherTicketList", mAuth.getCurrentUser().getEmail());
+
     }
 
     @Override

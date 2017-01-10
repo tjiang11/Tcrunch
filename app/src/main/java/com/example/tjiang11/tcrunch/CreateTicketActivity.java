@@ -14,9 +14,11 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tjiang11.tcrunch.models.Response;
 import com.example.tjiang11.tcrunch.models.Ticket;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,6 +32,7 @@ import java.util.List;
 public class CreateTicketActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
 
     private Spinner classSpinner;
     private TextView setDate;
@@ -54,6 +57,7 @@ public class CreateTicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_ticket);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
         classSpinner = (Spinner) findViewById(R.id.class_spinner);
         setDate = (TextView) findViewById(R.id.set_date);
@@ -170,10 +174,16 @@ public class CreateTicketActivity extends AppCompatActivity {
         responses.add(new Response("Fred", "Hmmmmmmmmmmmm"));
         responses.add(new Response("Lucy", "Uh... five?"));
         responses.add(new Response("Matt", "WINDMILLS"));
-        DatabaseReference newTicketRef = mDatabase.child("tickets").push();
-        String newTicketId = newTicketRef.getKey();
-        dummyTicket.setId(newTicketId);
-        newTicketRef.setValue(dummyTicket);
-        finish();
+        //DatabaseReference newTicketRef = mDatabase.child("tickets").push();
+        if (mAuth.getCurrentUser() != null) {
+            DatabaseReference newTicketRef = mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("tickets").push();
+            String newTicketId = newTicketRef.getKey();
+            dummyTicket.setId(newTicketId);
+            newTicketRef.setValue(dummyTicket);
+            finish();
+        } else {
+            Toast.makeText(this, "Could not find current user.", Toast.LENGTH_SHORT).show();
+            Log.d("auth", "Could not find currently authenticated user.");
+        }
     }
 }
