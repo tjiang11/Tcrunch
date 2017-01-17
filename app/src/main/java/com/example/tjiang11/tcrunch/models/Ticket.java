@@ -54,6 +54,26 @@ public class Ticket {
     public void setAnswerChoices(ArrayList<String> answerChoices) { this.answerChoices = answerChoices; }
     public List<Response> getResponses() { return this.responses; }
 
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public void setQuestionType(QuestionType questionType) {
+        this.questionType = questionType;
+    }
+
+    public void setResponse(ArrayList<Response> responses) {
+        this.responses = responses;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
     public static Comparator<Ticket> TicketTimeComparator = new Comparator<Ticket>() {
         @Override
         public int compare(Ticket o1, Ticket o2) {

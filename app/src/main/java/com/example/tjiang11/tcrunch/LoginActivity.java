@@ -92,6 +92,9 @@ public class LoginActivity extends AppCompatActivity
 
     public void onStudentLoginPressed(Uri uri) {
         Log.i("URI", "Student login pressed");
+        Intent intent = new Intent(this, StudentTicketListActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 
