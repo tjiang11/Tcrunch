@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Created by tjiang11 on 12/26/16.
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseInstanceId mInstanceId;
 
     private TabLayout tabLayout;
 
@@ -96,6 +98,8 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mInstanceId = FirebaseInstanceId.getInstance();
+        Log.i("INSTANCE", mInstanceId.getId());
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override

@@ -21,7 +21,7 @@
         <activity
             android:name=".TeacherTicketListActivity"
             android:label="Tickets"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CreateTicketActivity"
             android:label="Create a Ticket"
@@ -30,7 +30,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TeacherTicketListActivity" />
         </activity>
-        <activity android:name=".TeacherTicketDetailActivity"></activity>
+        <activity android:name=".TeacherTicketDetailActivity" />
+        <activity android:name=".StudentTicketListActivity"></activity>
     </application>
 
 </manifest>
