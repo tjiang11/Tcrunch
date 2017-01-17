@@ -56,8 +56,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         mTicketListLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mTicketListLayoutManager);
 
-        //answered.setVisible(false);
-        //unanswered.setVisible(false);
+        answered.setVisible(false);
+        unanswered.setVisible(false);
 
         mValueEventListener = new ValueEventListener() {
             @Override
@@ -71,6 +71,16 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     } else {
                         answeredTickets.add(ticket);
                     }
+                }
+                if (answeredTickets.size() == 0) {
+                    answered.setVisible(false);
+                } else {
+                    answered.setVisible(true);
+                }
+                if (unansweredTickets.size() == 0) {
+                    unanswered.setVisible(false);
+                } else {
+                    unanswered.setVisible(true);
                 }
                 mSectionedTicketListAdapter.notifyDataSetChanged();
             }
