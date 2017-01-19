@@ -1,6 +1,8 @@
 package com.example.tjiang11.tcrunch;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -19,6 +21,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.tjiang11.tcrunch.models.Ticket;
@@ -39,9 +43,13 @@ import java.util.Collections;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 
+import static com.example.tjiang11.tcrunch.LoginActivity.PREFS_NAME;
+
 public class TeacherTicketListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ItemClickListener {
+
+    private SharedPreferences sharedPrefs;
 
     private RecyclerView mTicketListRecyclerView;
     //private TicketListAdapter mTicketListAdapter;
@@ -62,9 +70,15 @@ public class TeacherTicketListActivity extends AppCompatActivity
     private ArrayList<Ticket> launchedTickets;
     private ArrayList<Ticket> ticketList;
 
+    private DrawerLayout mDrawerLayout;
+    private NavigationView classListView;
+    private ArrayAdapter classListViewAdapter;
+    private ArrayList<String> classList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,10 +94,20 @@ public class TeacherTicketListActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        classList = new ArrayList<String>();
+        classList.add("classy class");
+        classListViewAdapter = new ArrayAdapter<String>(this, R.layout.class_list_item, classList);
+        classListView = (NavigationView) findViewById(R.id.nav_view);
+        Menu classMenu = classListView.getMenu();
+        classMenu.add("test!!");
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+
+
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -173,8 +197,15 @@ public class TeacherTicketListActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            minimizeApp();
         }
+    }
+
+    public void minimizeApp() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
     }
 
     @Override
@@ -193,6 +224,16 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.log_out) {
+            SharedPreferences.Editor sharedPrefsEditor = sharedPrefs.edit();
+            sharedPrefsEditor.putBoolean("teacher_logged_in", false);
+            sharedPrefsEditor.commit();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
 

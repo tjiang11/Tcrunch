@@ -2,9 +2,11 @@ package com.example.tjiang11.tcrunch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -31,6 +33,10 @@ public class LoginActivity extends AppCompatActivity
         implements StudentLoginFragment.OnStudentLoginListener,
         TeacherLoginFragment.OnTeacherLoginListener{
 
+    public static final String PREFS_NAME = "appPrefs";
+
+    private SharedPreferences sharedPrefs;
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseInstanceId mInstanceId;
@@ -38,7 +44,7 @@ public class LoginActivity extends AppCompatActivity
     private TabLayout tabLayout;
 
     @Override
-    public void onTeacherLoginPressed(String email, String password) {
+    public void onTeacherLoginPressed(final String email, final String password) {
         final Activity loginActivity = this;
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -53,6 +59,11 @@ public class LoginActivity extends AppCompatActivity
                     Toast.makeText(LoginActivity.this, "Invalid username/password",
                             Toast.LENGTH_SHORT).show();
                 } else {
+                    SharedPreferences.Editor sharedPrefsEditor = sharedPrefs.edit();
+                    sharedPrefsEditor.putBoolean("teacher_logged_in", true);
+                    sharedPrefsEditor.putString("email", email);
+                    sharedPrefsEditor.putString("password", password);
+                    sharedPrefsEditor.apply();
                     Intent intent = new Intent(loginActivity, TeacherTicketListActivity.class);
                     startActivity(intent);
                     finish();
@@ -91,7 +102,9 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void onStudentLoginPressed(Uri uri) {
-        Log.i("URI", "Student login pressed");
+        SharedPreferences.Editor sharedPrefsEditor = sharedPrefs.edit();
+        sharedPrefsEditor.putBoolean("student_logged_in", true);
+        sharedPrefsEditor.apply();
         Intent intent = new Intent(this, StudentTicketListActivity.class);
         startActivity(intent);
         finish();
@@ -101,6 +114,19 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        if (sharedPrefs.getBoolean("teacher_logged_in", false)) {
+            Intent intent = new Intent(this, TeacherTicketListActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+        if (sharedPrefs.getBoolean("student_logged_in", false)) {
+            Intent intent = new Intent(this, StudentTicketListActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         mInstanceId = FirebaseInstanceId.getInstance();
         Log.i("INSTANCE", mInstanceId.getId());
         mAuth = FirebaseAuth.getInstance();
