@@ -1,5 +1,7 @@
 package com.example.tjiang11.tcrunch;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.shapes.Shape;
@@ -8,6 +10,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -99,19 +102,13 @@ public class TeacherTicketListActivity extends AppCompatActivity
         classList.add("classy class");
         classListViewAdapter = new ArrayAdapter<String>(this, R.layout.class_list_item, classList);
         classListView = (NavigationView) findViewById(R.id.nav_view);
-        Menu classMenu = classListView.getMenu();
-        classMenu.add("test!!");
+        classListView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
 
-
-
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         mTicketListRecyclerView = (RecyclerView) findViewById(R.id.ticket_list_recycler_view);
         mTicketListRecyclerView.setHasFixedSize(true);
@@ -234,6 +231,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
+            return true;
+        }
+
+        if (id == R.id.add_class) {
+            DialogFragment addClassDialog = new AddClassDialog();
+            addClassDialog.show(getFragmentManager(), "add class");
             return true;
         }
 
