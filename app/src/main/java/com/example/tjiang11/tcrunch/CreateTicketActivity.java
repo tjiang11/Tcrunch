@@ -51,10 +51,14 @@ public class CreateTicketActivity extends AppCompatActivity {
     private Long endTime;
     private int ticketLength;
 
+    private String classId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_ticket);
+
+        classId = getIntent().getStringExtra("classId");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -158,7 +162,11 @@ public class CreateTicketActivity extends AppCompatActivity {
         calendar.add(Calendar.HOUR, 12);
         Log.i("wtf", calendar.getTimeZone().getDisplayName());
         long startTime = calendar.getTimeInMillis();
+        Log.i("hello?", "fd");
         Log.i("fdfdf", Long.toString(startTime));
+        Log.i("class id", classId);
+        Log.i("dss", "ssdss");
+
         int msPerHour = 3600000;
         long endTime = startTime + ticketLength * msPerHour;
         Ticket dummyTicket = new Ticket(question.getText().toString(),
@@ -176,10 +184,15 @@ public class CreateTicketActivity extends AppCompatActivity {
         responses.add(new Response("Matt", "WINDMILLS"));
         //DatabaseReference newTicketRef = mDatabase.child("tickets").push();
         if (mAuth.getCurrentUser() != null) {
-            DatabaseReference newTicketRef = mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("tickets").push();
-            String newTicketId = newTicketRef.getKey();
+//            DatabaseReference newTicketRef = mDatabase.child("classes").child(classId).push();
+//            String newTicketId = newTicketRef.getKey();
+//            newTicketRef.setValue(dummyTicket);
+//
+            DatabaseReference newTicketRef2 = mDatabase.child("tickets").child(classId).push();
+            String newTicketId = newTicketRef2.getKey();
             dummyTicket.setId(newTicketId);
-            newTicketRef.setValue(dummyTicket);
+            newTicketRef2.setValue(dummyTicket);
+
             finish();
         } else {
             Toast.makeText(this, "Could not find current user.", Toast.LENGTH_SHORT).show();
