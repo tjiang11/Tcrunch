@@ -31,7 +31,8 @@
                 android:value=".TeacherTicketListActivity" />
         </activity>
         <activity android:name=".TeacherTicketDetailActivity" />
-        <activity android:name=".StudentTicketListActivity"></activity>
+        <activity android:name=".StudentTicketListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
