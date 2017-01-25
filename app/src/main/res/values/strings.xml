@@ -30,6 +30,8 @@
 
     <string name="log_out">Log out</string>
 
+    <string name="no_class_text">You have no classes.</string>
+
     <string-array name="dummydata_spinner_options">
         <item>Malaysia</item>
         <item>United States</item>

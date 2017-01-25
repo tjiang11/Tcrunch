@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.transition.Visibility;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -71,6 +72,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
     private Query mDatabaseReferenceClasses;
     private ValueEventListener mClassesValueEventListener;
+    private ValueEventListener mClassesSingleValueEventListener;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -89,6 +91,10 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
     private HashMap<String, Classroom> classMap;
 
+    private FloatingActionButton fab;
+
+    TextView noClassText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +106,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
         currentClass = new Classroom("default", "my class");
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,6 +126,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                fab.setVisibility(View.VISIBLE);
                 currentClassName = item.getTitle().toString();
                 currentClass = classMap.get(currentClassName);
                 mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
@@ -130,7 +137,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 Log.i("MENU", item.getTitle().toString());
 
                 return true;
-
             }
         });
 
@@ -168,6 +174,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mSectionedTicketListAdapter.addSection(upcoming);
         mSectionedTicketListAdapter.addSection(launched);
 
+        noClassText = (TextView) findViewById(R.id.no_class_view);
         //mTicketListAdapter = new TicketListAdapter(ticketList);
         mTicketListRecyclerView.setAdapter(mSectionedTicketListAdapter);
 
@@ -215,27 +222,59 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
 
 
-        //classes
+        mClassesSingleValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
+                    Classroom cr = classSnapshot.getValue(Classroom.class);
+                    //condense
+                    currentClass = cr;
+                    getSupportActionBar().setTitle(currentClass.getName());
+                    mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
+                    mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                    noClassText.setVisibility(View.GONE);
+                    return;
+                }
+
+                Log.i("TAG", "no class");
+                noClassText.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.GONE);
+                currentClass = new Classroom("empty", "empty");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG", "classEventSingle:onCancelled", databaseError.toException());
+            }
+        };
 
         mClassesValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean classesExist = false;
                 classMap.clear();
                 classListView.getMenu().clear();
                 for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
+                    classesExist = true;
                     Classroom cr = classSnapshot.getValue(Classroom.class);
                     classListView.getMenu().add(cr.getName());
                     classMap.put(cr.getName(), cr);
+                }
+                if (classesExist) {
+                    noClassText.setVisibility(View.GONE);
+                } else {
+                    noClassText.setVisibility(View.VISIBLE);
                 }
                 Log.i("cm", classMap.toString());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG", "classEvent:onCancelled", databaseError.toException());
             }
         };
         mDatabaseReferenceClasses = mDatabaseReference.child("users").child(mAuth.getCurrentUser().getUid());
+        mDatabaseReferenceClasses.addListenerForSingleValueEvent(mClassesSingleValueEventListener);
         mDatabaseReferenceClasses.addValueEventListener(mClassesValueEventListener);
 
         mAuth = FirebaseAuth.getInstance();
