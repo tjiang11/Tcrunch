@@ -155,17 +155,11 @@ public class CreateTicketActivity extends AppCompatActivity {
 
     public void createTicket() {
         Calendar calendar = Calendar.getInstance();
-        Log.i("dssddsdsdsds", Integer.toString(starthour));
         calendar.set(startyear, startmonth, startday - 1);
         calendar.set(Calendar.HOUR, starthour);
         calendar.set(Calendar.MINUTE, startminute);
         calendar.add(Calendar.HOUR, 12);
-        Log.i("wtf", calendar.getTimeZone().getDisplayName());
         long startTime = calendar.getTimeInMillis();
-        Log.i("hello?", "fd");
-        Log.i("fdfdf", Long.toString(startTime));
-        Log.i("class id", classId);
-        Log.i("dss", "ssdss");
 
         int msPerHour = 3600000;
         long endTime = startTime + ticketLength * msPerHour;

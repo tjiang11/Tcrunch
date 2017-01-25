@@ -255,10 +255,13 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 classMap.clear();
                 classListView.getMenu().clear();
                 for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
-                    classesExist = true;
                     Classroom cr = classSnapshot.getValue(Classroom.class);
                     classListView.getMenu().add(cr.getName());
                     classMap.put(cr.getName(), cr);
+                    if (!classesExist) {
+                        currentClass = cr;
+                    }
+                    classesExist = true;
                 }
                 if (classesExist) {
                     noClassText.setVisibility(View.GONE);
@@ -403,12 +406,19 @@ public class TeacherTicketListActivity extends AppCompatActivity
     public void doNewClassDialogPositiveClick(String className) {
         DatabaseReference newClassRef = mDatabaseReference.child("users").child(mAuth.getCurrentUser().getUid()).push();
         String newClassId = newClassRef.getKey();
-        newClassRef.setValue(new Classroom(newClassId, className));
+        Classroom newClassroom = new Classroom(newClassId, className);
+        newClassRef.setValue(newClassroom);
 
         DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
-        newClassRefClasses.setValue(new Classroom(newClassId, className));
+        newClassRefClasses.setValue(newClassroom);
 
         classListView.getMenu().add(className);
+        currentClass = newClassroom;
+        getSupportActionBar().setTitle(currentClass.getName());
+        fab.setVisibility(View.VISIBLE);
+        mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
+        //mDatabaseReferenceTickets = mDatabaseReference.child("classes").child(currentClassId).child("tickets");
+        mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
     }
 
     public String getCurrentClassName() {
