@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.tjiang11.tcrunch.models.Classroom;
 import com.example.tjiang11.tcrunch.models.Ticket;
@@ -49,6 +50,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private DatabaseReference mDatabaseReference;
     private Query mDatabaseReferenceTickets;
     private Query mDatabaseReferenceClasses;
+    private Query mDatabaseReferenceUserClasses;
     private ValueEventListener mValueEventListener;
     private FirebaseInstanceId mFirebaseInstanceId;
 
@@ -56,6 +58,10 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     private ArrayList<Ticket> answeredTickets;
     private ArrayList<Ticket> unansweredTickets;
+
+    private ArrayList<String> classList;
+
+    private StudentTicketListActivity stla = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +93,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         answered.setVisible(false);
         unanswered.setVisible(false);
 
+        mFirebaseInstanceId = FirebaseInstanceId.getInstance();
 
         mValueEventListener = new ValueEventListener() {
             @Override
@@ -178,7 +185,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
       //  mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
 
         mDatabaseReferenceClasses = mDatabaseReference.child("classes");
-        mDatabaseReferenceClasses.addValueEventListener(mValueEventListener);
+        mDatabaseReferenceUserClasses = mDatabaseReference.child("students").child(mFirebaseInstanceId.getId());
+        mDatabaseReferenceUserClasses.addValueEventListener(mValueEventListener);
     }
 
     @Override
@@ -228,11 +236,39 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         }
 
         if (id == R.id.add_class) {
-            DialogFragment addClassDialog = new AddClassDialog();
+            DialogFragment addClassDialog = new StudentAddClassDialog();
             addClassDialog.show(getFragmentManager(), "add class");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void doNewClassDialogPositiveClick(String classCode) {
+        Query classToAdd = mDatabaseReferenceClasses.orderByChild("courseCode").equalTo(classCode).limitToFirst(1);
+        classToAdd.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int size = 0;
+                for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
+                    size++;
+                    Classroom classToAdd = classSnapshot.getValue(Classroom.class);
+                    DatabaseReference addClass = mDatabaseReference.child("students")
+                            .child(mFirebaseInstanceId.getId()).child(classToAdd.getId());
+                    addClass.setValue(classToAdd);
+                }
+                if (size == 0) {
+                    Toast.makeText(stla, "Could not find a matching class.", Toast.LENGTH_SHORT).show();
+                }
+
+                //DatabaseReference mDatabaseReferenceStudent = mDatabaseReference.child("students").child(mFirebaseInstanceId.getId());
+                //DatabaseReference addClassRef = mDatabaseReferenceStudent.push();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("error", "doNewDialogPositiveClick:onCancelled");
+            }
+        });
     }
 }

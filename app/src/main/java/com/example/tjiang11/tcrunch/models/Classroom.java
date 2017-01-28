@@ -8,11 +8,13 @@ public class Classroom {
 
     private String id;
     private String name;
+    private String courseCode; //6-digit alphanumeric code
 
     public Classroom() {}
-    public Classroom(String id, String name) {
+    public Classroom(String id, String name, String courseCode) {
         this.id = id;
         this.name = name;
+        this.courseCode = courseCode;
     }
 
     public String getId() {
@@ -22,6 +24,8 @@ public class Classroom {
     public String getName() {
         return this.name;
     }
+
+    public String getCourseCode() { return this.courseCode; }
 
     public String toString() {
         return "id: " + this.id + " name: " + this.name;

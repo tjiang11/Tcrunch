@@ -186,7 +186,6 @@ public class CreateTicketActivity extends AppCompatActivity {
             String newTicketId = newTicketRef2.getKey();
             dummyTicket.setId(newTicketId);
             newTicketRef2.setValue(dummyTicket);
-
             finish();
         } else {
             Toast.makeText(this, "Could not find current user.", Toast.LENGTH_SHORT).show();

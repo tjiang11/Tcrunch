@@ -104,7 +104,8 @@ public class TeacherTicketListActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        currentClass = new Classroom("default", "my class");
+        String courseCode = Long.toString(System.currentTimeMillis(), 36);
+        currentClass = new Classroom("default", "my class", courseCode);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -239,7 +240,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 Log.i("TAG", "no class");
                 noClassText.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.GONE);
-                currentClass = new Classroom("empty", "empty");
+                currentClass = new Classroom("empty", "empty", "empty");
             }
 
             @Override
@@ -276,7 +277,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 Log.w("TAG", "classEvent:onCancelled", databaseError.toException());
             }
         };
-        mDatabaseReferenceClasses = mDatabaseReference.child("users").child(mAuth.getCurrentUser().getUid());
+        mDatabaseReferenceClasses = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid());
         mDatabaseReferenceClasses.addListenerForSingleValueEvent(mClassesSingleValueEventListener);
         mDatabaseReferenceClasses.addValueEventListener(mClassesValueEventListener);
 
@@ -404,9 +405,11 @@ public class TeacherTicketListActivity extends AppCompatActivity
     }
 
     public void doNewClassDialogPositiveClick(String className) {
-        DatabaseReference newClassRef = mDatabaseReference.child("users").child(mAuth.getCurrentUser().getUid()).push();
+        DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
         String newClassId = newClassRef.getKey();
-        Classroom newClassroom = new Classroom(newClassId, className);
+        String courseCode = Long.toString(System.currentTimeMillis(), 36);
+
+        Classroom newClassroom = new Classroom(newClassId, className, courseCode);
         newClassRef.setValue(newClassroom);
 
         DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
