@@ -167,7 +167,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                 Ticket.QuestionType.FreeResponse, startTime, endTime, classSpinner.getSelectedItem().toString());
         ArrayList<String> answerChoices = new ArrayList<>(Arrays.asList("Choice A", "Choice B", "Choice C"));
         dummyTicket.setAnswerChoices(answerChoices);
-        List<Response> responses = dummyTicket.getResponses();
+        List<Response> responses = new ArrayList<Response>();
         responses.add(new Response("tony", "i don't know the answer sorry prof"));
         responses.add(new Response("caty", "four"));
         responses.add(new Response("Anonymouse cat", "I like to type really long answers, so here's a really long answer. Do you know why I like really long answers? I think I do. It's because long answers make me sound smart."));
@@ -187,6 +187,13 @@ public class CreateTicketActivity extends AppCompatActivity {
             dummyTicket.setId(newTicketId);
             newTicketRef2.setValue(dummyTicket);
             finish();
+
+            DatabaseReference responsesRef = mDatabase.child("responses").child(newTicketId);
+            for (Response response : responses) {
+                DatabaseReference newResponseRef = responsesRef.push();
+                newResponseRef.setValue(response);
+            }
+
         } else {
             Toast.makeText(this, "Could not find current user.", Toast.LENGTH_SHORT).show();
             Log.d("auth", "Could not find currently authenticated user.");

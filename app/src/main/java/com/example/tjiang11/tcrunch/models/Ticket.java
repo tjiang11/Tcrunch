@@ -19,7 +19,6 @@ public class Ticket {
     private String question;
     private QuestionType questionType;
     private List<String> answerChoices = new ArrayList<>();
-    private List<Response> responses = new ArrayList<>();
 
     private long startTime;
     private long endTime;
@@ -35,7 +34,6 @@ public class Ticket {
         this.question = question;
         this.questionType = questionType;
         this.answerChoices = answerChoices;
-        this.responses = responses;
         //HashMap<String, Object> startTimeObj = new HashMap<String, Object>();
         //startTimeObj.put("date", ServerValue.TIMESTAMP);
         this.startTime = startTime;
@@ -52,7 +50,6 @@ public class Ticket {
     public QuestionType getQuestionType() { return this. questionType; }
     public List<String> getAnswerChoices() { return this.answerChoices; }
     public void setAnswerChoices(ArrayList<String> answerChoices) { this.answerChoices = answerChoices; }
-    public List<Response> getResponses() { return this.responses; }
 
     public void setClassName(String className) {
         this.className = className;
@@ -60,10 +57,6 @@ public class Ticket {
 
     public void setQuestionType(QuestionType questionType) {
         this.questionType = questionType;
-    }
-
-    public void setResponse(ArrayList<Response> responses) {
-        this.responses = responses;
     }
 
     public void setStartTime(long startTime) {
