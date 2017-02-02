@@ -68,6 +68,10 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         super.onCreate(savedInstanceState);
 
         sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        if (!sharedPrefs.contains("student_name")) {
+            DialogFragment createNameDialog = new StudentCreateNameDialog();
+            createNameDialog.show(getFragmentManager(), "create name");
+        }
         setContentView(R.layout.activity_student_ticket_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.student_toolbar);
         setSupportActionBar(toolbar);
@@ -191,7 +195,38 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     @Override
     public void onClick(View view, int position, String type) {
+        Ticket ticket = null;
+        int index = determineIndex(position);
+        Log.i("position", Integer.toString(index));
+        Log.i("type", type);
+        switch (type) {
+            case "answered":
+                ticket = answeredTickets.get(index);
+                break;
+            case "not answered":
+                ticket = unansweredTickets.get(index);
+                break;
+        }
+        if (ticket != null) {
+            Intent intent = new Intent(this, SubmitResponseActivity.class);
+            intent.putExtra("question", ticket.getQuestion());
+            intent.putExtra("start_time", ticket.getStartTime());
+            intent.putExtra("end_time", ticket.getEndTime());
+            intent.putExtra("ticket_id", ticket.getId());
+            startActivity(intent);
+        } else {
+            Log.e("ERR", "Could not find ticket type");
+        }
+    }
 
+    public int determineIndex(int position) {
+        if (unansweredTickets.size() > 0 && position < unansweredTickets.size() + 1) {
+            return position - 1;
+        } else if (unansweredTickets.size() > 0 && position >= unansweredTickets.size() + 1) {
+            return position - unansweredTickets.size() - 2;
+        } else {
+            return position - 1;
+        }
     }
 
     @Override
@@ -270,5 +305,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 Log.w("error", "doNewDialogPositiveClick:onCancelled");
             }
         });
+    }
+
+    public void doCreateNameDialogClick(String name) {
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString("student_name", name);
+        editor.apply();
     }
 }
