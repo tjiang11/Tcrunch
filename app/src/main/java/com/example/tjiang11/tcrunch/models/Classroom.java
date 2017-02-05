@@ -1,10 +1,12 @@
 package com.example.tjiang11.tcrunch.models;
 
+import java.io.Serializable;
+
 /**
  * Created by tjiang11 on 1/23/17.
  */
 
-public class Classroom {
+public class Classroom implements Serializable {
 
     private String id;
     private String name;

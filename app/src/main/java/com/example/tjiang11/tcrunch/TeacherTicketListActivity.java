@@ -2,6 +2,7 @@ package com.example.tjiang11.tcrunch;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.shapes.Shape;
@@ -115,13 +116,15 @@ public class TeacherTicketListActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
                 Intent intent = new Intent(view.getContext(), CreateTicketActivity.class);
                 intent.putExtra("classId", ttla.getCurrentClass().getId());
+                intent.putExtra("className", ttla.getCurrentClass().getName());
+                intent.putExtra("classes", classList);
+                intent.putExtra("classMap", classMap);
                 startActivity(intent);
             }
         });
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         classList = new ArrayList<String>();
-        classList.add("classy class");
         classListViewAdapter = new ArrayAdapter<String>(this, R.layout.class_list_item, classList);
         classListView = (NavigationView) findViewById(R.id.nav_view);
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -254,10 +257,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 boolean classesExist = false;
                 classMap.clear();
+                classList.clear();
                 classListView.getMenu().clear();
                 for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
                     Classroom cr = classSnapshot.getValue(Classroom.class);
                     classListView.getMenu().add(cr.getName());
+                    classList.add(cr.getName());
                     classMap.put(cr.getName(), cr);
                     if (!classesExist) {
                         currentClass = cr;
@@ -337,6 +342,18 @@ public class TeacherTicketListActivity extends AppCompatActivity
             DialogFragment addClassDialog = new AddClassDialog();
             addClassDialog.show(getFragmentManager(), "add class");
             return true;
+        }
+
+        if (id == R.id.class_code) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Class Code for " + this.currentClass.getName())
+                    .setMessage(this.currentClass.getCourseCode())
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -430,4 +447,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
     public Classroom getCurrentClass() {
         return this.currentClass;
     }
+
+    public HashMap<String, Classroom> getClassMap() { return this.classMap; }
 }

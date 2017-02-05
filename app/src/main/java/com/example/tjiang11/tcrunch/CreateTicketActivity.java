@@ -9,13 +9,16 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tjiang11.tcrunch.models.Classroom;
 import com.example.tjiang11.tcrunch.models.Response;
 import com.example.tjiang11.tcrunch.models.Ticket;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class CreateTicketActivity extends AppCompatActivity {
@@ -52,6 +56,9 @@ public class CreateTicketActivity extends AppCompatActivity {
     private int ticketLength;
 
     private String classId;
+    private String className;
+    private ArrayList<String> classList;
+    private HashMap<String, Classroom> classMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +66,25 @@ public class CreateTicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_ticket);
 
         classId = getIntent().getStringExtra("classId");
+        className = getIntent().getStringExtra("className");
+        classList = getIntent().getStringArrayListExtra("classes");
+        classMap = (HashMap<String, Classroom>) getIntent().getSerializableExtra("classMap");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
         classSpinner = (Spinner) findViewById(R.id.class_spinner);
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_dropdown_item, classList);
+        classSpinner.setAdapter(spinnerArrayAdapter);
+
+        for (int i = 0; i < classList.size(); i++) {
+            if (className.equals(classList.get(i))) {
+                classSpinner.setSelection(i);
+            }
+        }
+
         setDate = (TextView) findViewById(R.id.set_date);
         setTime = (TextView) findViewById(R.id.set_time);
         setLength = (TextView) findViewById(R.id.set_length);
@@ -182,7 +203,9 @@ public class CreateTicketActivity extends AppCompatActivity {
 //            String newTicketId = newTicketRef.getKey();
 //            newTicketRef.setValue(dummyTicket);
 //
-            DatabaseReference newTicketRef2 = mDatabase.child("tickets").child(classId).push();
+
+            String theClassId = classMap.get(classSpinner.getSelectedItem().toString()).getId();
+            DatabaseReference newTicketRef2 = mDatabase.child("tickets").child(theClassId).push();
             String newTicketId = newTicketRef2.getKey();
             dummyTicket.setId(newTicketId);
             newTicketRef2.setValue(dummyTicket);

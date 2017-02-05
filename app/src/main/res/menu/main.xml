@@ -16,4 +16,9 @@
         android:orderInCategory="50"
         android:title="Add class"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/class_code"
+        android:orderInCategory="150"
+        android:title="Class Code"
+        app:showAsAction="never" />
 </menu>
