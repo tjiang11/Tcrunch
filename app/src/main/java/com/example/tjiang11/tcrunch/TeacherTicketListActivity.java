@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tjiang11.tcrunch.models.Classroom;
 import com.example.tjiang11.tcrunch.models.Ticket;
@@ -421,6 +422,14 @@ public class TeacherTicketListActivity extends AppCompatActivity
     }
 
     public void doNewClassDialogPositiveClick(String className) {
+        for (String c : classList) {
+            if (className.equals(c)) {
+                Toast.makeText(this, "A class with that name already exists.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+
         DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
         String newClassId = newClassRef.getKey();
         String courseCode = Long.toString(System.currentTimeMillis(), 36);

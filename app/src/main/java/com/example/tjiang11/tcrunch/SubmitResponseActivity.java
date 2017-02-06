@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.tjiang11.tcrunch.models.Response;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class SubmitResponseActivity extends AppCompatActivity {
 
@@ -24,12 +25,15 @@ public class SubmitResponseActivity extends AppCompatActivity {
 
     private String ticketId;
 
+    private FirebaseInstanceId mFirebaseInstanceId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit_response);
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseInstanceId = FirebaseInstanceId.getInstance();
 
         response = (EditText) findViewById(R.id.submit_response_edittext);
         anon = (CheckBox) findViewById(R.id.submit_anon);
@@ -59,6 +63,10 @@ public class SubmitResponseActivity extends AppCompatActivity {
         DatabaseReference responsesRef = mDatabaseReference.child("responses").child(ticketId);
         DatabaseReference newResponse = responsesRef.push();
         newResponse.setValue(new Response(author, response.getText().toString()));
+
+        DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
+        DatabaseReference newAnswered = answeredRef.push();
+        newAnswered.setValue(ticketId);
         finish();
     }
 }

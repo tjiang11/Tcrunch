@@ -51,10 +51,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private Query mDatabaseReferenceTickets;
     private Query mDatabaseReferenceClasses;
     private Query mDatabaseReferenceUserClasses;
+    private Query mDatabaseReferenceStudentAnsweredTickets;
     private ValueEventListener mValueEventListener;
     private FirebaseInstanceId mFirebaseInstanceId;
 
-    private HashSet<Ticket> hasAnswered;
+    private HashSet<String> hasAnswered;
 
     private ArrayList<Ticket> answeredTickets;
     private ArrayList<Ticket> unansweredTickets;
@@ -78,7 +79,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         mRecyclerView = (RecyclerView) findViewById(R.id.student_ticket_list_recycler_view);
         answeredTickets = new ArrayList<Ticket>();
         unansweredTickets = new ArrayList<Ticket>();
-        hasAnswered = new HashSet<Ticket>();
+        hasAnswered = new HashSet<String>();
         mSectionedTicketListAdapter = new SectionedTicketListAdapter();
         answered = new TicketSection("ANSWERED", answeredTickets, this);
         unanswered = new TicketSection("NOT ANSWERED", unansweredTickets, this);
@@ -99,51 +100,121 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
         mFirebaseInstanceId = FirebaseInstanceId.getInstance();
 
+//        mValueEventListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                answeredTickets.clear();
+//                unansweredTickets.clear();
+//                for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
+//                    Classroom cr = classSnapshot.getValue(Classroom.class);
+//                    Log.i("CLASS", cr.toString());
+//                    String classId = cr.getId();
+//                    mDatabaseReferenceTickets.orderByKey().equalTo(classId).addListenerForSingleValueEvent(
+//                            new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                    for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
+//                                        for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
+//                                            Ticket ticket = ticketSnapshot.getValue(Ticket.class);
+//                                            Log.i("TICKET", ticket.toString());
+//                                            Log.i("INFO", ticketSnapshot.toString());
+//                                            if (!hasAnswered.contains(ticket)) {
+//                                                unansweredTickets.add(ticket);
+//                                            } else {
+//                                                answeredTickets.add(ticket);
+//                                            }
+//                                            if (answeredTickets.size() == 0) {
+//                                                answered.setVisible(false);
+//                                            } else {
+//                                                answered.setVisible(true);
+//                                            }
+//                                            if (unansweredTickets.size() == 0) {
+//                                                unanswered.setVisible(false);
+//                                            } else {
+//                                                unanswered.setVisible(true);
+//                                            }
+//                                            mSectionedTicketListAdapter.notifyDataSetChanged();
+//                                        }
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(DatabaseError databaseError) {
+//                                    Log.w("TAG", "loadTickets:onCancelled");
+//                                }
+//                            }
+//                    );
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.w("TAG", "loadClasses:onCancelled");
+//            }
+//        };
+
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                hasAnswered.clear();
                 answeredTickets.clear();
                 unansweredTickets.clear();
-                for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
-                    Classroom cr = classSnapshot.getValue(Classroom.class);
-                    Log.i("CLASS", cr.toString());
-                    String classId = cr.getId();
-                    mDatabaseReferenceTickets.orderByKey().equalTo(classId).addListenerForSingleValueEvent(
-                            new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
-                                        for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
-                                            Ticket ticket = ticketSnapshot.getValue(Ticket.class);
-                                            Log.i("TICKET", ticket.toString());
-                                            Log.i("INFO", ticketSnapshot.toString());
-                                            if (!hasAnswered.contains(ticket)) {
-                                                unansweredTickets.add(ticket);
-                                            } else {
-                                                answeredTickets.add(ticket);
+                for (DataSnapshot ticketSnapshot : dataSnapshot.getChildren()) {
+                    Log.i("ASAS", ticketSnapshot.toString());
+                    hasAnswered.add(ticketSnapshot.getValue().toString());
+                }
+
+                mDatabaseReferenceUserClasses.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
+                            Classroom cr = classSnapshot.getValue(Classroom.class);
+                            Log.i("CLASS", cr.toString());
+                            String classId = cr.getId();
+                            mDatabaseReferenceTickets.orderByKey().equalTo(classId).addListenerForSingleValueEvent(
+                                    new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
+                                                for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
+                                                    Ticket ticket = ticketSnapshot.getValue(Ticket.class);
+                                                    Log.i("TICKET", ticket.toString());
+                                                    Log.i("INFO", ticketSnapshot.toString());
+                                                    if (!hasAnswered.contains(ticket.getId())) {
+                                                        unansweredTickets.add(ticket);
+                                                    } else {
+                                                        answeredTickets.add(ticket);
+                                                    }
+                                                    if (answeredTickets.size() == 0) {
+                                                        answered.setVisible(false);
+                                                    } else {
+                                                        answered.setVisible(true);
+                                                    }
+                                                    if (unansweredTickets.size() == 0) {
+                                                        unanswered.setVisible(false);
+                                                    } else {
+                                                        unanswered.setVisible(true);
+                                                    }
+                                                    mSectionedTicketListAdapter.notifyDataSetChanged();
+                                                }
                                             }
-                                            if (answeredTickets.size() == 0) {
-                                                answered.setVisible(false);
-                                            } else {
-                                                answered.setVisible(true);
-                                            }
-                                            if (unansweredTickets.size() == 0) {
-                                                unanswered.setVisible(false);
-                                            } else {
-                                                unanswered.setVisible(true);
-                                            }
-                                            mSectionedTicketListAdapter.notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Log.w("TAG", "loadTickets:onCancelled");
                                         }
                                     }
-                                }
+                            );
+                        }
+                    }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.w("TAG", "loadTickets:onCancelled");
-                                }
-                            }
-                    );
-                }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("WARN", "mValueEventListener:onCancelled");
+                    }
+                });
+
             }
 
             @Override
@@ -151,46 +222,15 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 Log.w("TAG", "loadClasses:onCancelled");
             }
         };
-//
-//        mValueEventListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                answeredTickets.clear();
-//                unansweredTickets.clear();
-//                for (DataSnapshot ticketSnapshot : dataSnapshot.getChildren()) {
-//                    Ticket ticket = ticketSnapshot.getValue(Ticket.class);
-//                    if (!hasAnswered.contains(ticket)) {
-//                        unansweredTickets.add(ticket);
-//                    } else {
-//                        answeredTickets.add(ticket);
-//                    }
-//                }
-//                if (answeredTickets.size() == 0) {
-//                    answered.setVisible(false);
-//                } else {
-//                    answered.setVisible(true);
-//                }
-//                if (unansweredTickets.size() == 0) {
-//                    unanswered.setVisible(false);
-//                } else {
-//                    unanswered.setVisible(true);
-//                }
-//                mSectionedTicketListAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
-//            }
-//        };
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mDatabaseReferenceTickets = mDatabaseReference.child("tickets");
-      //  mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
-
         mDatabaseReferenceClasses = mDatabaseReference.child("classes");
         mDatabaseReferenceUserClasses = mDatabaseReference.child("students").child(mFirebaseInstanceId.getId());
-        mDatabaseReferenceUserClasses.addValueEventListener(mValueEventListener);
+        //mDatabaseReferenceUserClasses.addValueEventListener(mValueEventListener);
+
+        mDatabaseReferenceStudentAnsweredTickets = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
+        mDatabaseReferenceStudentAnsweredTickets.addValueEventListener(mValueEventListener);
     }
 
     @Override
