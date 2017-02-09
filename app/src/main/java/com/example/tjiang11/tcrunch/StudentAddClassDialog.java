@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 
@@ -20,6 +21,7 @@ public class StudentAddClassDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = getActivity().getLayoutInflater().inflate(R.layout.addclass_edittext, null);
         final EditText input = (EditText) view.findViewById(R.id.add_class_input);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setHint("Course Code");
         builder.setMessage("Add a new class")
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {

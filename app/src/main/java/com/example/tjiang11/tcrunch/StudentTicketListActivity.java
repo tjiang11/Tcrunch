@@ -333,6 +333,12 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     DatabaseReference addClass = mDatabaseReference.child("students")
                             .child(mFirebaseInstanceId.getId()).child(classToAdd.getId());
                     addClass.setValue(classToAdd);
+
+                    DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
+                    DatabaseReference newAnswered = answeredRef.push();
+
+                    //How to get around this hack?
+                    newAnswered.setValue("trigger");
                 }
                 if (size == 0) {
                     Toast.makeText(stla, "Could not find a matching class.", Toast.LENGTH_SHORT).show();
