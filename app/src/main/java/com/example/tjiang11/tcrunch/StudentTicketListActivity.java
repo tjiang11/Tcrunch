@@ -3,6 +3,8 @@ package com.example.tjiang11.tcrunch;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.tjiang11.tcrunch.models.Classroom;
@@ -27,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
@@ -43,6 +47,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private RecyclerView mRecyclerView;
     private SectionedTicketListAdapter mSectionedTicketListAdapter;
     private RecyclerView.LayoutManager mTicketListLayoutManager;
+
+    private NavigationView classListView;
 
     private Section answered;
     private Section unanswered;
@@ -63,6 +69,10 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private ArrayList<String> classList;
 
     private StudentTicketListActivity stla = this;
+
+    private HashMap<String, Classroom> classMap;
+
+    private Classroom currentClass = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +98,26 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         mRecyclerView.setAdapter(mSectionedTicketListAdapter);
         mTicketListLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mTicketListLayoutManager);
+
+        classMap = new HashMap<String, Classroom>();
+        classList = new ArrayList<String>();
+        classListView = (NavigationView) findViewById(R.id.nav_view);
+        classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.toString().equals("Show All")) {
+                    currentClass = null;
+                    getSupportActionBar().setTitle("Tcrunch");
+                } else {
+                    currentClass = classMap.get(item.toString());
+                    getSupportActionBar().setTitle(currentClass.getName());
+                }
+                mDatabaseReferenceStudentAnsweredTickets.addValueEventListener(mValueEventListener);
+                mDrawerLayout.closeDrawers();
+
+                return true;
+            }
+        });
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.student_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -167,10 +197,18 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 mDatabaseReferenceUserClasses.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
+                        classMap.clear();
+                        classListView.getMenu().clear();
+                        for (final DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
                             Classroom cr = classSnapshot.getValue(Classroom.class);
+                            classListView.getMenu().add(cr.getName());
+                            classMap.put(cr.getName(), cr);
                             Log.i("CLASS", cr.toString());
                             String classId = cr.getId();
+                            String className = cr.getName();
+                            if (currentClass != null && !classId.equals(currentClass.getId())) {
+                                continue;
+                            }
                             mDatabaseReferenceTickets.orderByKey().equalTo(classId).addListenerForSingleValueEvent(
                                     new ValueEventListener() {
                                         @Override
@@ -209,6 +247,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                     }
                             );
                         }
+                        classListView.getMenu().add("Show All");
                     }
 
                     @Override

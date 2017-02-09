@@ -349,9 +349,10 @@ public class TeacherTicketListActivity extends AppCompatActivity
             if (currentClass == null) {
                 Toast.makeText(this, "You must select a class first to perform this action.", Toast.LENGTH_LONG).show();
             } else {
+                final TeacherTicketListActivity parent = this;
                 new AlertDialog.Builder(this)
                         .setTitle("Are you sure you want to delete " + this.currentClass.getName() + "?")
-                        .setMessage("This action cannot be undone")
+                        .setMessage("This action cannot be undone. All tickets and responses of this class will be deleted.")
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -360,6 +361,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
                                 mDatabaseReference.child("tickets").child(currentClass.getId()).removeValue();
                                 getSupportActionBar().setTitle("Tcrunch");
                                 currentClass = null;
+                                Toast.makeText(parent, "Class deleted", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
