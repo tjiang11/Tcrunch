@@ -180,10 +180,12 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                                     Ticket ticket = ticketSnapshot.getValue(Ticket.class);
                                                     Log.i("TICKET", ticket.toString());
                                                     Log.i("INFO", ticketSnapshot.toString());
-                                                    if (!hasAnswered.contains(ticket.getId())) {
-                                                        unansweredTickets.add(ticket);
-                                                    } else {
-                                                        answeredTickets.add(ticket);
+                                                    if (ticket.getStartTime() < System.currentTimeMillis()) {
+                                                        if (!hasAnswered.contains(ticket.getId())) {
+                                                            unansweredTickets.add(ticket);
+                                                        } else {
+                                                            answeredTickets.add(ticket);
+                                                        }
                                                     }
                                                     if (answeredTickets.size() == 0) {
                                                         answered.setVisible(false);
