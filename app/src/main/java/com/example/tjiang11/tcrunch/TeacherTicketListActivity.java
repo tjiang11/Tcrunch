@@ -244,7 +244,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 Log.i("TAG", "no class");
                 noClassText.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.GONE);
-                currentClass = new Classroom("empty", "empty", "empty");
+                currentClass = null;
             }
 
             @Override
@@ -345,16 +345,46 @@ public class TeacherTicketListActivity extends AppCompatActivity
             return true;
         }
 
-        if (id == R.id.class_code) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Class Code for " + this.currentClass.getName())
-                    .setMessage(this.currentClass.getCourseCode())
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+        if (id == R.id.delete_class) {
+            if (currentClass == null) {
+                Toast.makeText(this, "You must select a class first to perform this action.", Toast.LENGTH_LONG).show();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Are you sure you want to delete " + this.currentClass.getName() + "?")
+                        .setMessage("This action cannot be undone")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDatabaseReferenceClasses.getRef().child(currentClass.getId()).removeValue();
+                                mDatabaseReference.child("classes").child(currentClass.getId()).removeValue();
+                                mDatabaseReference.child("tickets").child(currentClass.getId()).removeValue();
+                                getSupportActionBar().setTitle("Tcrunch");
+                                currentClass = null;
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    }).show();
+                            }
+                        }).show();
+            }
+        }
+
+        if (id == R.id.class_code) {
+            if (currentClass == null) {
+                Toast.makeText(this, "You must select a class first to perform this action.", Toast.LENGTH_LONG).show();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Class Code for " + this.currentClass.getName())
+                        .setMessage(this.currentClass.getCourseCode())
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

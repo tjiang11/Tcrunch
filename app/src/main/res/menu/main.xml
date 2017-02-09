@@ -21,4 +21,9 @@
         android:orderInCategory="150"
         android:title="Class Code"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/delete_class"
+        android:orderInCategory="51"
+        android:title="Delete class"
+        app:showAsAction="never" />
 </menu>
