@@ -46,6 +46,17 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onTeacherLoginPressed(final String email, final String password) {
         final Activity loginActivity = this;
+
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Please enter an email.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Please enter a password.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
