@@ -288,15 +288,13 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 ticket = unansweredTickets.get(index);
                 break;
         }
-        if (ticket != null) {
+        if (ticket != null && type.equals("not answered")) {
             Intent intent = new Intent(this, SubmitResponseActivity.class);
             intent.putExtra("question", ticket.getQuestion());
             intent.putExtra("start_time", ticket.getStartTime());
             intent.putExtra("end_time", ticket.getEndTime());
             intent.putExtra("ticket_id", ticket.getId());
             startActivity(intent);
-        } else {
-            Log.e("ERR", "Could not find ticket type");
         }
     }
 
