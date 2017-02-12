@@ -78,26 +78,16 @@
         android:layout_toLeftOf="@+id/set_time"
         android:layout_toStartOf="@+id/set_time" />
 
-    <SeekBar
-        android:layout_width="220dp"
-        android:layout_height="50dp"
-        android:id="@+id/seekBarLength"
-        android:layout_below="@+id/set_time"
-        android:layout_toRightOf="@+id/imageView4"
-        android:layout_toEndOf="@+id/imageView4"
-        android:layout_marginTop="19dp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
+    <Button
+        android:text="@string/create"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_hourglass_full_black_24dp"
-        android:id="@+id/imageView5"
-        android:layout_alignLeft="@+id/imageView4"
-        android:layout_alignStart="@+id/imageView4"
-        android:layout_alignBottom="@+id/seekBarLength"
-        android:layout_toLeftOf="@+id/seekBarLength"
-        android:layout_toStartOf="@+id/seekBarLength"
-        android:layout_alignTop="@+id/seekBarLength" />
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/create_ticket_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:id="@+id/ask_question"
@@ -106,39 +96,11 @@
         android:inputType="textMultiLine|textCapSentences"
         android:ems="10"
         android:hint="@string/ask_a_question"
-        android:layout_marginTop="22dp"
-        android:layout_below="@+id/seekBarLength"
+        android:textAlignment="center"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/set_time"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textAlignment="center"/>
-
-    <Button
-        android:text="@string/create"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ask_question"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/colorWhite"
-        android:id="@+id/create_ticket_button" />
-
-    <TextView
-        android:text="Open for"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_alignTop="@+id/seekBarLength"
-        android:layout_toRightOf="@+id/seekBarLength"
-        android:layout_toEndOf="@+id/seekBarLength" />
-
-    <TextView
-        android:text="@string/set_a_length"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/set_length"
-        android:layout_below="@+id/textView2"
-        android:layout_alignRight="@+id/textView2"
-        android:layout_alignEnd="@+id/textView2" />
+        android:layout_above="@+id/create_ticket_button" />
 
 </RelativeLayout>

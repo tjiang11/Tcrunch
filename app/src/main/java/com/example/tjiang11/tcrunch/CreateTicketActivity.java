@@ -42,7 +42,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     private TextView setDate;
     private TextView setTime;
     private TextView setLength;
-    private SeekBar mSeekBar;
+
     private Button createTicketButton;
     private EditText question;
 
@@ -87,8 +87,6 @@ public class CreateTicketActivity extends AppCompatActivity {
 
         setDate = (TextView) findViewById(R.id.set_date);
         setTime = (TextView) findViewById(R.id.set_time);
-        setLength = (TextView) findViewById(R.id.set_length);
-        mSeekBar = (SeekBar) findViewById(R.id.seekBarLength);
         question = (EditText) findViewById(R.id.ask_question);
         createTicketButton = (Button) findViewById(R.id.create_ticket_button);
 
@@ -106,29 +104,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                 showTimePickerDialog();
             }
         });
-        mSeekBar.setMax(23);
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(Integer.toString(progress + 1) + " hour");
-                ticketLength = progress + 1;
-                if (progress != 0) {
-                    sb.append("s");
-                }
-                setLength.setText(sb.toString());
-            }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
         createTicketButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

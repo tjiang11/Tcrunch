@@ -112,7 +112,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     currentClass = classMap.get(item.toString());
                     getSupportActionBar().setTitle(currentClass.getName());
                 }
-                mDatabaseReferenceStudentAnsweredTickets.addValueEventListener(mValueEventListener);
+                mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
                 mDrawerLayout.closeDrawers();
 
                 return true;
