@@ -80,6 +80,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         if (!sharedPrefs.contains("student_name")) {
             DialogFragment createNameDialog = new StudentCreateNameDialog();
+            createNameDialog.setCancelable(false);
             createNameDialog.show(getFragmentManager(), "create name");
         }
         setContentView(R.layout.activity_student_ticket_list);

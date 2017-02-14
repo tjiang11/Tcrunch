@@ -5,45 +5,29 @@
     xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
     tools:context="com.toniebalonie.tjiang11.tcrunch.StudentLoginFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <!--<TextView-->
+    <!--<android.support.design.widget.TextInputLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:text="@string/hello_blank_fragment"-->
-        <!--android:textSize="100dp"-->
-        <!--android:background="@android:color/darker_gray"/>-->
+        <!--android:layout_marginTop="40dp">-->
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp">
+        <!--<android.support.design.widget.TextInputEditText-->
+            <!--android:inputType="number"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_width="240dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="@string/course_code"-->
+            <!--android.support.design:hintEnabled="true"-->
+            <!--android:textAlignment="center"/>-->
 
-        <android.support.design.widget.TextInputEditText
-            android:inputType="number"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/course_code"
-            android.support.design:hintEnabled="true"
-            android:textAlignment="center"/>
-
-    </android.support.design.widget.TextInputLayout>
-
-    <!--<EditText-->
-        <!--android:inputType="number"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_width="200dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginTop="75dp"-->
-        <!--android:textAlignment="center"/>-->
+    <!--</android.support.design.widget.TextInputLayout>-->
 
     <Button
         android:id="@+id/studentLoginButton"
         android:layout_width="240dp"
         android:layout_height="40dp"
-        android:text="@string/start"
+        android:text="@string/enter"
         android:textSize="15sp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhite" />

@@ -30,11 +30,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity" />
         </activity>
-        <activity android:name="com.toniebalonie.tjiang11.tcrunch.TeacherTicketDetailActivity" />
+        <activity
+            android:name="com.toniebalonie.tjiang11.tcrunch.TeacherTicketDetailActivity"
+            android:parentActivityName="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity"/>
+        </activity>
         <activity
             android:name="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.toniebalonie.tjiang11.tcrunch.SubmitResponseActivity"></activity>
+        <activity
+            android:name="com.toniebalonie.tjiang11.tcrunch.SubmitResponseActivity"
+            android:parentActivityName="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity"/>
+        </activity>
     </application>
 
 </manifest>
