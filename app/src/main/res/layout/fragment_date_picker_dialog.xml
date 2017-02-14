@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.tjiang11.tcrunch.DatePickerDialogFragment">
+    tools:context="com.toniebalonie.tjiang11.tcrunch.DatePickerDialogFragment">
 
     <DatePicker
         android:id="@+id/new_ticket_date_picker"

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.tjiang11.tcrunch.TeacherTicketListActivity"
+    tools:context="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity"
     tools:showIn="@layout/app_bar_main">
 
     <android.support.v7.widget.RecyclerView

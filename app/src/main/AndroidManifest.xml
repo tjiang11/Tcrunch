@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.tjiang11.tcrunch">
+    package="com.toniebalonie.tjiang11.tcrunch">
 
     <application
         android:allowBackup="true"
@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name="com.toniebalonie.tjiang11.tcrunch.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,22 +19,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TeacherTicketListActivity"
+            android:name="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity"
             android:label="Tickets"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CreateTicketActivity"
+            android:name="com.toniebalonie.tjiang11.tcrunch.CreateTicketActivity"
             android:label="Create a Ticket"
-            android:parentActivityName=".TeacherTicketListActivity">
+            android:parentActivityName="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".TeacherTicketListActivity" />
+                android:value="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity" />
         </activity>
-        <activity android:name=".TeacherTicketDetailActivity" />
+        <activity android:name="com.toniebalonie.tjiang11.tcrunch.TeacherTicketDetailActivity" />
         <activity
-            android:name=".StudentTicketListActivity"
+            android:name="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SubmitResponseActivity"></activity>
+        <activity android:name="com.toniebalonie.tjiang11.tcrunch.SubmitResponseActivity"></activity>
     </application>
 
 </manifest>

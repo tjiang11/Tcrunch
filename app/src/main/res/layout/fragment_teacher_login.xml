@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.tjiang11.tcrunch.TeacherLoginFragment">
+    tools:context="com.toniebalonie.tjiang11.tcrunch.TeacherLoginFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

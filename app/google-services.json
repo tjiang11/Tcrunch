@@ -49,6 +49,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183896260802:android:a81acaf2f05a876a",
+        "android_client_info": {
+          "package_name": "com.toniebalonie.tjiang11.tcrunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "183896260802-josu0r4msv1p88tj4j90qgo0v1v71bto.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApl_-jzfHIbxMh1PgXqQ-LMv8sR7f_VDQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
