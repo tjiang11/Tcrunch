@@ -426,6 +426,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
             intent.putExtra("end_time", ticket.getEndTime());
             intent.putExtra("ticket_id", ticket.getId());
             intent.putExtra("class_id", getCurrentClass().getId());
+            intent.putExtra("class_name", getCurrentClass().getName());
             startActivity(intent);
         } else {
             Log.e("ERR", "Could not find ticket type");

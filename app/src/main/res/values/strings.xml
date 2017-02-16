@@ -35,4 +35,6 @@
     <string name="enter">enter</string>
 
     <string name="delete">Delete Ticket</string>
+
+    <string name="email_ticket_data">Email Ticket Data</string>
 </resources>
