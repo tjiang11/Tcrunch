@@ -33,4 +33,6 @@
     <string name="no_class_text">You have no classes.</string>
 
     <string name="enter">enter</string>
+
+    <string name="delete">Delete Ticket</string>
 </resources>

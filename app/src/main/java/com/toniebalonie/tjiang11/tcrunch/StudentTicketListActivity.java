@@ -130,59 +130,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
         mFirebaseInstanceId = FirebaseInstanceId.getInstance();
 
-//        mValueEventListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                answeredTickets.clear();
-//                unansweredTickets.clear();
-//                for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
-//                    Classroom cr = classSnapshot.getValue(Classroom.class);
-//                    Log.i("CLASS", cr.toString());
-//                    String classId = cr.getId();
-//                    mDatabaseReferenceTickets.orderByKey().equalTo(classId).addListenerForSingleValueEvent(
-//                            new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                    for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
-//                                        for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
-//                                            Ticket ticket = ticketSnapshot.getValue(Ticket.class);
-//                                            Log.i("TICKET", ticket.toString());
-//                                            Log.i("INFO", ticketSnapshot.toString());
-//                                            if (!hasAnswered.contains(ticket)) {
-//                                                unansweredTickets.add(ticket);
-//                                            } else {
-//                                                answeredTickets.add(ticket);
-//                                            }
-//                                            if (answeredTickets.size() == 0) {
-//                                                answered.setVisible(false);
-//                                            } else {
-//                                                answered.setVisible(true);
-//                                            }
-//                                            if (unansweredTickets.size() == 0) {
-//                                                unanswered.setVisible(false);
-//                                            } else {
-//                                                unanswered.setVisible(true);
-//                                            }
-//                                            mSectionedTicketListAdapter.notifyDataSetChanged();
-//                                        }
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(DatabaseError databaseError) {
-//                                    Log.w("TAG", "loadTickets:onCancelled");
-//                                }
-//                            }
-//                    );
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w("TAG", "loadClasses:onCancelled");
-//            }
-//        };
-
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

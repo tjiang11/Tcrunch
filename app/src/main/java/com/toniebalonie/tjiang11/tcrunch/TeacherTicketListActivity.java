@@ -352,7 +352,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
                                 Toast.makeText(parent, "Class deleted", Toast.LENGTH_SHORT).show();
                             }
                         })
-                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
@@ -425,6 +425,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
             intent.putExtra("start_time", ticket.getStartTime());
             intent.putExtra("end_time", ticket.getEndTime());
             intent.putExtra("ticket_id", ticket.getId());
+            intent.putExtra("class_id", getCurrentClass().getId());
             startActivity(intent);
         } else {
             Log.e("ERR", "Could not find ticket type");
