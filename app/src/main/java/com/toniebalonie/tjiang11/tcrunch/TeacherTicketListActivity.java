@@ -361,6 +361,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
             }
         }
 
+        if (id == R.id.info) {
+            DialogFragment infoDialog = new TeacherInfoDialog();
+            infoDialog.show(getFragmentManager(), "teacher info");
+            return true;
+        }
+
         if (id == R.id.class_code) {
             if (currentClass == null) {
                 Toast.makeText(this, "You must select a class first to perform this action.", Toast.LENGTH_LONG).show();
