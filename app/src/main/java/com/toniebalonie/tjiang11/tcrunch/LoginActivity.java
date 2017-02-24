@@ -55,8 +55,6 @@ public class LoginActivity extends AppCompatActivity
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d("Auth", "signInWithEmail:onComplete:" + task.isSuccessful());
-
                 // If sign in fails, display a message to the user. If sign in succeeds
                 // the auth state listener will be notified and logic to handle the
                 // signed in user can be handled in the listener.
@@ -79,24 +77,16 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void onTeacherRegisterPressed(String email, String password) {
-        Log.i("URI", "Teacher register pressed");
         createTeacherAccount(email, password);
     }
 
     public void createTeacherAccount(final String email, final String password) {
-        Log.d("Auth", email);
-        Log.d("Auth", password);
         final Activity loginActivity = this;
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("AUTH", "createUserWithEmail:onComplete:" + task.isSuccessful());
-                        if (mAuth.getCurrentUser() != null) {
-                            Log.d("AUTH", mAuth.getCurrentUser().getEmail());
-                        }
                         if (!task.isSuccessful()) {
-                            Log.e("Auth", "Sign up failed");
                             Toast.makeText(LoginActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
                         } else {
                             Intent intent = new Intent(loginActivity, TeacherTicketListActivity.class);
@@ -134,19 +124,11 @@ public class LoginActivity extends AppCompatActivity
             return;
         }
         mInstanceId = FirebaseInstanceId.getInstance();
-        Log.i("INSTANCE", mInstanceId.getId());
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d("Auth", "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d("Auth", "onAuthStateChanged:signed_out");
-                }
             }
         };
 

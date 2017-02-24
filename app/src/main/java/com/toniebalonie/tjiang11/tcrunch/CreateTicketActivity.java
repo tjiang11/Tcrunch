@@ -103,11 +103,11 @@ public class CreateTicketActivity extends AppCompatActivity {
     }
 
     private void showDatePickerDialog() {
-        DatePickerDialogFragment.newInstance("dummyArg1", "dummyArg2").show(getFragmentManager(), "f");
+        DatePickerDialogFragment.newInstance().show(getFragmentManager(), "f");
     }
 
     private void showTimePickerDialog() {
-        TimePickerDialogFragment.newInstance("dummyArg1", "dummyArg2").show(getFragmentManager(), "g");
+        TimePickerDialogFragment.newInstance().show(getFragmentManager(), "g");
     }
 
     public void doDatePickerDialogPositiveClick(int day, int month, int year, String dayOfWeek) {
@@ -115,9 +115,6 @@ public class CreateTicketActivity extends AppCompatActivity {
         startyear = year; startmonth = month; startday = day;
 
         setDate.setText(newDate);
-    }
-    public void doDatePickerDialogNegativeClick() {
-        Log.i("CreateTicketActivity", "DatePickerDialogNegativeClick");
     }
 
     public void doTimePickerDialogPositiveClick(int tpHour, int tpMinute) {
@@ -184,7 +181,6 @@ public class CreateTicketActivity extends AppCompatActivity {
 
         } else {
             Toast.makeText(this, "Could not find current user.", Toast.LENGTH_SHORT).show();
-            Log.d("auth", "Could not find currently authenticated user.");
         }
     }
 }

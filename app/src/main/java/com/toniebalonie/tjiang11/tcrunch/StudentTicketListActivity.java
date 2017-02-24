@@ -39,6 +39,8 @@ import static com.toniebalonie.tjiang11.tcrunch.LoginActivity.PREFS_NAME;
 
 public class StudentTicketListActivity extends AppCompatActivity implements ItemClickListener {
 
+    private static final String TAG = StudentTicketListActivity.class.getName();
+
     private SharedPreferences sharedPrefs;
 
     private DrawerLayout mDrawerLayout;
@@ -137,7 +139,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 answeredTickets.clear();
                 unansweredTickets.clear();
                 for (DataSnapshot ticketSnapshot : dataSnapshot.getChildren()) {
-                    Log.i("ASAS", ticketSnapshot.toString());
                     hasAnswered.add(ticketSnapshot.getValue().toString());
                 }
 
@@ -150,7 +151,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                             Classroom cr = classSnapshot.getValue(Classroom.class);
                             classListView.getMenu().add(cr.getName());
                             classMap.put(cr.getName(), cr);
-                            Log.i("CLASS", cr.toString());
                             String classId = cr.getId();
                             String className = cr.getName();
                             if (currentClass != null && !classId.equals(currentClass.getId())) {
@@ -163,8 +163,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                             for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
                                                 for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
                                                     Ticket ticket = ticketSnapshot.getValue(Ticket.class);
-                                                    Log.i("TICKET", ticket.toString());
-                                                    Log.i("INFO", ticketSnapshot.toString());
                                                     if (ticket.getStartTime() < System.currentTimeMillis()) {
                                                         if (!hasAnswered.contains(ticket.getId())) {
                                                             unansweredTickets.add(ticket);
@@ -225,8 +223,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     public void onClick(View view, int position, String type) {
         Ticket ticket = null;
         int index = determineIndex(position);
-        Log.i("position", Integer.toString(index));
-        Log.i("type", type);
         switch (type) {
             case "answered":
                 ticket = answeredTickets.get(index);

@@ -38,6 +38,8 @@ import java.util.Locale;
 
 public class TeacherTicketDetailActivity extends AppCompatActivity {
 
+    private static final String TAG = TeacherTicketDetailActivity.class.getName();
+
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     private ResponseListAdapter mAdapter;
@@ -89,7 +91,7 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("error", "response reference cancelled");
+                Log.w(TAG, "response reference cancelled");
             }
         });
 
@@ -196,7 +198,7 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Log.w("TAG", e.toString());
+            Log.w(TAG, e.toString());
         }
     }
 
