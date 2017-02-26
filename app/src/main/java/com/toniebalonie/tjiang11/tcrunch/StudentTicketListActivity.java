@@ -294,6 +294,12 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
             return true;
         }
 
+        if (id == R.id.FAQ) {
+            DialogFragment infoDialog = new StudentInfoDialog();
+            infoDialog.show(getFragmentManager(), "student info");
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

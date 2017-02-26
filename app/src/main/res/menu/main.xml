@@ -28,7 +28,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/info"
-        android:orderInCategory="52"
-        android:title="Info"
+        android:orderInCategory="250"
+        android:title="FAQ"
         app:showAsAction="never" />
 </menu>
