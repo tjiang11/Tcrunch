@@ -1,8 +1,10 @@
 package com.toniebalonie.tjiang11.tcrunch;
 
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -144,43 +146,31 @@ public class CreateTicketActivity extends AppCompatActivity {
         calendar.add(Calendar.HOUR, 12);
         long startTime = calendar.getTimeInMillis();
 
-        int msPerHour = 3600000;
+        final int msPerHour = 3600000;
         long endTime = startTime + ticketLength * msPerHour;
         Ticket dummyTicket = new Ticket(question.getText().toString(),
                 Ticket.QuestionType.FreeResponse, startTime, endTime, classSpinner.getSelectedItem().toString());
         ArrayList<String> answerChoices = new ArrayList<>(Arrays.asList("Choice A", "Choice B", "Choice C"));
         dummyTicket.setAnswerChoices(answerChoices);
-//        List<Response> responses = new ArrayList<Response>();
-//        responses.add(new Response("tony", "i don't know the answer sorry prof"));
-//        responses.add(new Response("caty", "four"));
-//        responses.add(new Response("Anonymouse cat", "I like to type really long answers, so here's a really long answer. Do you know why I like really long answers? I think I do. It's because long answers make me sound smart."));
-//        responses.add(new Response("Cheshire cat", "Peek-a-boo!"));
-//        responses.add(new Response("Seamus", "Wingardium Leviosa"));
-//        responses.add(new Response("Fred", "Hmmmmmmmmmmmm"));
-//        responses.add(new Response("Lucy", "Uh... five?"));
-//        responses.add(new Response("Matt", "WINDMILLS"));
-        //DatabaseReference newTicketRef = mDatabase.child("tickets").push();
         if (mAuth.getCurrentUser() != null) {
-//            DatabaseReference newTicketRef = mDatabase.child("classes").child(classId).push();
-//            String newTicketId = newTicketRef.getKey();
-//            newTicketRef.setValue(dummyTicket);
-//
-
             String theClassId = classMap.get(classSpinner.getSelectedItem().toString()).getId();
             DatabaseReference newTicketRef2 = mDatabase.child("tickets").child(theClassId).push();
             String newTicketId = newTicketRef2.getKey();
             dummyTicket.setId(newTicketId);
             newTicketRef2.setValue(dummyTicket);
             finish();
-
-//            DatabaseReference responsesRef = mDatabase.child("responses").child(newTicketId);
-//            for (Response response : responses) {
-//                DatabaseReference newResponseRef = responsesRef.push();
-//                newResponseRef.setValue(response);
-//            }
-
         } else {
             Toast.makeText(this, "Could not find current user.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
     }
 }

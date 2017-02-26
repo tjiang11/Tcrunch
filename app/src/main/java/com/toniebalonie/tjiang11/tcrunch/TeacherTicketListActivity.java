@@ -46,10 +46,11 @@ public class TeacherTicketListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ItemClickListener {
 
+    private static final String TAG = TeacherTicketListActivity.class.getName();
+
     private SharedPreferences sharedPrefs;
 
     private RecyclerView mTicketListRecyclerView;
-    //private TicketListAdapter mTicketListAdapter;
     private SectionedTicketListAdapter mSectionedTicketListAdapter;
     private RecyclerView.LayoutManager mTicketListLayoutManager;
 
@@ -94,15 +95,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String courseCode = Long.toString(System.currentTimeMillis(), 36);
-        currentClass = new Classroom("default", "my class", courseCode);
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG
-//                        .setAction("Action", null).show();
+                Log.i(TAG, ttla.getCurrentClass().getName());
+                Log.i(TAG, ttla.getCurrentClass().toString());
                 Intent intent = new Intent(view.getContext(), CreateTicketActivity.class);
                 intent.putExtra("classId", ttla.getCurrentClass().getId());
                 intent.putExtra("className", ttla.getCurrentClass().getName());
@@ -123,12 +121,9 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 currentClassName = item.getTitle().toString();
                 currentClass = classMap.get(currentClassName);
                 mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-                //mDatabaseReferenceTickets = mDatabaseReference.child("classes").child(currentClassId).child("tickets");
                 mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
                 mDrawerLayout.closeDrawers();
                 getSupportActionBar().setTitle(currentClassName);
-                Log.i("MENU", item.getTitle().toString());
-
                 return true;
             }
         });
@@ -145,19 +140,11 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mTicketListLayoutManager = new LinearLayoutManager(this);
         mTicketListRecyclerView.setLayoutManager(mTicketListLayoutManager);
 
-        ArrayList<String> empty = new ArrayList<String>();
-//        testList[0] = new Ticket("What is an eigenvector? How is an eigenvector useful? Describe how you find an eigenvetor. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues. What are eigenvalues? Describe the process for finding eigenvalues.", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-//        testList[1] = new Ticket("question1", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-//        testList[2] = new Ticket("question2", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-//        testList[3] = new Ticket("question3", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-//        testList[4] = new Ticket("question4", Ticket.QuestionType.FreeResponse, empty, empty, "start", "end");
-
         classMap = new HashMap<String, Classroom>();
 
         ticketList = new ArrayList<Ticket>();
         launchedTickets = new ArrayList<Ticket>();
         upcomingTickets = new ArrayList<Ticket>();
-        //ticketList.add(new Ticket("question1", Ticket.QuestionType.FreeResponse, 0, 0, "class name"));
         mSectionedTicketListAdapter = new SectionedTicketListAdapter();
         upcoming = new TicketSection("UPCOMING", upcomingTickets, this);
         launched = new TicketSection("LAUNCHED", launchedTickets, this);
@@ -168,13 +155,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mSectionedTicketListAdapter.addSection(launched);
 
         noClassText = (TextView) findViewById(R.id.no_class_view);
-        //mTicketListAdapter = new TicketListAdapter(ticketList);
+
         mTicketListRecyclerView.setAdapter(mSectionedTicketListAdapter);
 
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //ticketList.clear();
                 launchedTickets.clear();
                 upcomingTickets.clear();
                 for (DataSnapshot ticketSnapshot: dataSnapshot.getChildren()) {
@@ -184,7 +170,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
                     } else {
                         upcomingTickets.add(mTicket);
                     }
-                    //ticketList.add(mTicket);
                 }
                 if (launchedTickets.size() == 0) {
                     launched.setVisible(false);
@@ -196,7 +181,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 } else {
                     upcoming.setVisible(true);
                 }
-                //Collections.sort(ticketList, Ticket.TicketTimeComparator);
                 Collections.sort(upcomingTickets, Ticket.TicketTimeComparator);
                 Collections.sort(launchedTickets, Ticket.TicketTimeComparator);
                 Collections.reverse(launchedTickets);
@@ -205,20 +189,17 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-        mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
-
-
         mClassesSingleValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
+                    Log.i(TAG, "single value event");
                     Classroom cr = classSnapshot.getValue(Classroom.class);
                     //condense
                     currentClass = cr;
@@ -228,8 +209,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
                     noClassText.setVisibility(View.GONE);
                     return;
                 }
-
-                Log.i("TAG", "no class");
                 noClassText.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.GONE);
                 currentClass = null;
@@ -253,9 +232,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
                     classListView.getMenu().add(cr.getName());
                     classList.add(cr.getName());
                     classMap.put(cr.getName(), cr);
-                    if (!classesExist) {
-                        currentClass = cr;
-                    }
                     classesExist = true;
                 }
                 if (classesExist) {
@@ -263,12 +239,11 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 } else {
                     noClassText.setVisibility(View.VISIBLE);
                 }
-                Log.i("cm", classMap.toString());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG", "classEvent:onCancelled", databaseError.toException());
+                Log.w(TAG, "classEvent:onCancelled", databaseError.toException());
             }
         };
         mDatabaseReferenceClasses = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid());
@@ -276,9 +251,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mDatabaseReferenceClasses.addValueEventListener(mClassesValueEventListener);
 
         mAuth = FirebaseAuth.getInstance();
-
-        Log.d("TeacherTicketList", mAuth.getCurrentUser().getEmail());
-
     }
 
     @Override
@@ -398,8 +370,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
     public void onClick(View view, int position, String type) {
         Ticket ticket = null;
         int index = determineIndex(position);
-        Log.i("position", Integer.toString(index));
-        Log.i("type", type);
         switch (type) {
             case "launched":
                 ticket = launchedTickets.get(index);
@@ -440,7 +410,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
             }
         }
 
-
         DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
         String newClassId = newClassRef.getKey();
         String courseCode = Long.toString(System.currentTimeMillis(), 36);
@@ -453,10 +422,10 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
         classListView.getMenu().add(className);
         currentClass = newClassroom;
+        Log.i(TAG, currentClass.toString());
         getSupportActionBar().setTitle(currentClass.getName());
         fab.setVisibility(View.VISIBLE);
         mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-        //mDatabaseReferenceTickets = mDatabaseReference.child("classes").child(currentClassId).child("tickets");
         mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
     }
 

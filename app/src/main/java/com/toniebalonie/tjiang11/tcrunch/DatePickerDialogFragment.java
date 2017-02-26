@@ -39,7 +39,6 @@ public class DatePickerDialogFragment extends DialogFragment {
      *
      * @return A new instance of fragment DatePickerDialogFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static DatePickerDialogFragment newInstance() {
         DatePickerDialogFragment fragment = new DatePickerDialogFragment();
         Bundle args = new Bundle();
@@ -75,13 +74,6 @@ public class DatePickerDialogFragment extends DialogFragment {
                         }
                 )
                 .create();
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
