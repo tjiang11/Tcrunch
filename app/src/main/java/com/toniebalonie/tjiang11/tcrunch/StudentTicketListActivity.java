@@ -272,12 +272,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -315,17 +311,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     addClass.setValue(classToAdd);
 
                     DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
-                    DatabaseReference newAnswered = answeredRef.push();
-
-                    //How to get around this hack?
-                    newAnswered.setValue("trigger");
+                    answeredRef.addListenerForSingleValueEvent(mValueEventListener);
                 }
                 if (size == 0) {
                     Toast.makeText(stla, "Could not find a matching class.", Toast.LENGTH_SHORT).show();
                 }
-
-                //DatabaseReference mDatabaseReferenceStudent = mDatabaseReference.child("students").child(mFirebaseInstanceId.getId());
-                //DatabaseReference addClassRef = mDatabaseReferenceStudent.push();
             }
 
             @Override
