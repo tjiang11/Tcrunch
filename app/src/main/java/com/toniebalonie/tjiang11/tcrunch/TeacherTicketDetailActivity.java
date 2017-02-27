@@ -84,7 +84,13 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
                 for (DataSnapshot responseSnapshot : dataSnapshot.getChildren()) {
                     responseList.add(responseSnapshot.getValue(Response.class));
                 }
-                String resp = responseList.size() + " " + getResources().getString(R.string.responses);
+                String responseTextString;
+                if (responseList.size() == 1) {
+                    responseTextString = "RESPONSE";
+                } else {
+                    responseTextString = "RESPONSES";
+                }
+                String resp = responseList.size() + " " + responseTextString;
                 responsesText.setText(resp);
                 mAdapter.notifyDataSetChanged();
             }

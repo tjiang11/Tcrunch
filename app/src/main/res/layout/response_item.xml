@@ -10,23 +10,29 @@
         android:id="@+id/response_item_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorGray"
-        android:text="Anonymous"/>
+        android:textColor="@color/colorGray" />
 
     <TextView
         android:id="@+id/response_item_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text="text"
         android:padding="4dp"
         android:minHeight="40dp">
     </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorGray"
+        android:gravity="end"
+        android:id="@+id/response_item_time" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorLightGray">
     </View>
+
 
 </LinearLayout>

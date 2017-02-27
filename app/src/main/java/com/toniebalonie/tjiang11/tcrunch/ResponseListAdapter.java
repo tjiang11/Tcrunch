@@ -8,7 +8,10 @@ import android.widget.TextView;
 
 import com.toniebalonie.tjiang11.tcrunch.models.Response;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by tjiang11 on 1/7/17.
@@ -26,6 +29,11 @@ public class ResponseListAdapter extends RecyclerView.Adapter<ResponseListAdapte
     public void onBindViewHolder(ResponseViewHolder holder, int position) {
         holder.responseView.setText(mResponses.get(position).getResponse());
         holder.authorView.setText(mResponses.get(position).getAuthor());
+
+        Date date = new Date(mResponses.get(position).getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEEEE M/d h:mm a", Locale.US);
+        String dateFormatted = formatter.format(date);
+        holder.timeView.setText(dateFormatted);
     }
 
     @Override
@@ -43,10 +51,12 @@ public class ResponseListAdapter extends RecyclerView.Adapter<ResponseListAdapte
     public static class ResponseViewHolder extends RecyclerView.ViewHolder {
         private TextView responseView;
         private TextView authorView;
+        private TextView timeView;
         public ResponseViewHolder(View v) {
             super(v);
             responseView = (TextView) v.findViewById(R.id.response_item_text_view);
             authorView = (TextView) v.findViewById(R.id.response_item_author);
+            timeView = (TextView) v.findViewById(R.id.response_item_time);
         }
     }
 }

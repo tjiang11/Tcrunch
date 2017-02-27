@@ -11,17 +11,20 @@ public class Response implements Parcelable {
 
     private String author;
     private String response;
+    private long time;
 
     public Response() {}
 
-    public Response(String author, String response) {
+    public Response(String author, String response, long time) {
         this.author = author;
         this.response = response;
+        this.time = time;
     }
 
     public Response(Parcel in) {
         this.author = in.readString();
         this.response = in.readString();
+        this.time = in.readLong();
     }
 
 
@@ -33,6 +36,8 @@ public class Response implements Parcelable {
         return this.response;
     }
 
+    public long getTime() { return this.time; }
+
     @Override
     public int describeContents() {
         return 0;
@@ -42,6 +47,7 @@ public class Response implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(author);
         dest.writeString(response);
+        dest.writeLong(time);
     }
 
     public static final Parcelable.Creator<Response> CREATOR = new Parcelable.Creator<Response>() {
