@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/log_out"
-        android:orderInCategory="200"
-        android:title="@string/log_out"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/add_class"
-        android:orderInCategory="50"
+        android:orderInCategory="1"
         android:title="Add class"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/class_code"
-        android:orderInCategory="150"
+        android:orderInCategory="2"
         android:title="Class Code"
         app:showAsAction="never" />
     <item
         android:id="@+id/delete_class"
-        android:orderInCategory="51"
+        android:orderInCategory="3"
         android:title="Delete class"
         app:showAsAction="never" />
     <item
         android:id="@+id/info"
-        android:orderInCategory="250"
+        android:orderInCategory="4"
         android:title="FAQ"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/log_out"
+        android:orderInCategory="5"
+        android:title="@string/log_out"
         app:showAsAction="never" />
 </menu>

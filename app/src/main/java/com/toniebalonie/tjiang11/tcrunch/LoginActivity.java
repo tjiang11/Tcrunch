@@ -55,9 +55,6 @@ public class LoginActivity extends AppCompatActivity
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                // If sign in fails, display a message to the user. If sign in succeeds
-                // the auth state listener will be notified and logic to handle the
-                // signed in user can be handled in the listener.
                 if (!task.isSuccessful()) {
                     Log.w("Auth", "signInWithEmail:failed", task.getException());
                     Toast.makeText(LoginActivity.this, "Invalid username/password",
@@ -77,6 +74,15 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void onTeacherRegisterPressed(String email, String password) {
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Please enter an email.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Please enter a password.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         createTeacherAccount(email, password);
     }
 
@@ -87,7 +93,7 @@ public class LoginActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
                         } else {
                             Intent intent = new Intent(loginActivity, TeacherTicketListActivity.class);
                             startActivity(intent);
