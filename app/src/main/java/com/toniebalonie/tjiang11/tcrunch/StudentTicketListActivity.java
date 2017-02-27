@@ -1,12 +1,14 @@
 package com.toniebalonie.tjiang11.tcrunch;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -229,8 +231,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         mDatabaseReferenceTickets = mDatabaseReference.child("tickets");
         mDatabaseReferenceClasses = mDatabaseReference.child("classes");
         mDatabaseReferenceUserClasses = mDatabaseReference.child("students").child(mFirebaseInstanceId.getId());
-        //mDatabaseReferenceUserClasses.addValueEventListener(mValueEventListener);
-
         mDatabaseReferenceStudentAnsweredTickets = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
         mDatabaseReferenceStudentAnsweredTickets.addValueEventListener(mValueEventListener);
     }
@@ -304,6 +304,33 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
             DialogFragment addClassDialog = new StudentAddClassDialog();
             addClassDialog.show(getFragmentManager(), "add class");
             return true;
+        }
+
+        if (id == R.id.delete_class) {
+            if (currentClass == null) {
+                Toast.makeText(this, "You must select a class first to perform this action.", Toast.LENGTH_LONG).show();
+            } else {
+                final StudentTicketListActivity parent = this;
+                new AlertDialog.Builder(this)
+                        .setTitle("Are you sure you want to leave " + this.currentClass.getName() + "?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDatabaseReference.child("students").child(mFirebaseInstanceId.getId())
+                                        .child(currentClass.getId()).removeValue();
+                                mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
+                                getSupportActionBar().setTitle("Tcrunch");
+                                Toast.makeText(parent, "You left " + currentClass.getName(), Toast.LENGTH_SHORT).show();
+                                currentClass = null;
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).show();
+            }
         }
 
         if (id == R.id.FAQ) {
