@@ -193,10 +193,13 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
             csvWriter.writeNext(launchDate);
             csvWriter.writeNext(numResponses);
             csvWriter.writeNext(new String[] {});
-            String[] headers = {"USER", "RESPONSE"};
+            String[] headers = {"USER", "RESPONSE", "TIME"};
             csvWriter.writeNext(headers);
             for (Response r : responseList) {
-                String[] data = { r.getAuthor(), r.getResponse() };
+                Date date = new Date(r.getTime());
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy EEEE, MMMM d, h:mm a", Locale.US);
+                questionDate = formatter.format(date);
+                String[] data = { r.getAuthor(), r.getResponse(), questionDate };
                 csvWriter.writeNext(data);
             }
             csvWriter.close();

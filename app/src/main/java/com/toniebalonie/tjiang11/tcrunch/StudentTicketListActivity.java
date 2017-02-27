@@ -52,6 +52,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     private NavigationView classListView;
 
+    private TextView noTicketText;
+
     private Section answered;
     private Section unanswered;
 
@@ -67,8 +69,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     private ArrayList<Ticket> answeredTickets;
     private ArrayList<Ticket> unansweredTickets;
-
-    private ArrayList<String> classList;
 
     private StudentTicketListActivity stla = this;
 
@@ -89,6 +89,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         setContentView(R.layout.activity_student_ticket_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.student_toolbar);
         setSupportActionBar(toolbar);
+        noTicketText = (TextView) findViewById(R.id.no_ticket_view);
         mRecyclerView = (RecyclerView) findViewById(R.id.student_ticket_list_recycler_view);
         answeredTickets = new ArrayList<Ticket>();
         unansweredTickets = new ArrayList<Ticket>();
@@ -102,8 +103,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         mTicketListLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mTicketListLayoutManager);
 
+
         classMap = new HashMap<String, Classroom>();
-        classList = new ArrayList<String>();
         classListView = (NavigationView) findViewById(R.id.nav_view);
         View header = classListView.getHeaderView(0);
         TextView userEmail = (TextView) header.findViewById(R.id.user_info);
@@ -156,7 +157,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                             classListView.getMenu().add(cr.getName());
                             classMap.put(cr.getName(), cr);
                             String classId = cr.getId();
-                            String className = cr.getName();
                             if (currentClass != null && !classId.equals(currentClass.getId())) {
                                 continue;
                             }
@@ -174,34 +174,46 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                                             answeredTickets.add(ticket);
                                                         }
                                                     }
-                                                    if (answeredTickets.size() == 0) {
-                                                        answered.setVisible(false);
-                                                    } else {
-                                                        answered.setVisible(true);
-                                                    }
-                                                    if (unansweredTickets.size() == 0) {
-                                                        unanswered.setVisible(false);
-                                                    } else {
-                                                        unanswered.setVisible(true);
-                                                    }
                                                     mSectionedTicketListAdapter.notifyDataSetChanged();
                                                 }
+                                            }
+                                            if (answeredTickets.size() == 0) {
+                                                answered.setVisible(false);
+                                            } else {
+                                                answered.setVisible(true);
+                                                noTicketText.setVisibility(View.GONE);
+                                            }
+                                            if (unansweredTickets.size() == 0) {
+                                                unanswered.setVisible(false);
+                                            } else {
+                                                unanswered.setVisible(true);
+                                                noTicketText.setVisibility(View.GONE);
                                             }
                                         }
 
                                         @Override
                                         public void onCancelled(DatabaseError databaseError) {
-                                            Log.w("TAG", "loadTickets:onCancelled");
+                                            Log.w(TAG, "loadTickets:onCancelled");
                                         }
                                     }
                             );
                         }
+                        if (answeredTickets.size() == 0) {
+                            answered.setVisible(false);
+                        }
+                        if (unansweredTickets.size() == 0) {
+                            unanswered.setVisible(false);
+                        }
+                        if (answeredTickets.size() == 0 && unansweredTickets.size() == 0) {
+                            noTicketText.setVisibility(View.VISIBLE);
+                        }
                         classListView.getMenu().add("Show All");
+                        mSectionedTicketListAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.w("WARN", "mValueEventListener:onCancelled");
+                        Log.w(TAG, "mValueEventListener:onCancelled");
                     }
                 });
 
@@ -209,7 +221,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG", "loadClasses:onCancelled");
+                Log.w(TAG, "loadClasses:onCancelled");
             }
         };
 
@@ -277,10 +289,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         if (id == R.id.log_out) {
             SharedPreferences.Editor sharedPrefsEditor = sharedPrefs.edit();

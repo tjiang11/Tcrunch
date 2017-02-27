@@ -70,14 +70,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
     private ArrayList<Ticket> upcomingTickets;
     private ArrayList<Ticket> launchedTickets;
-    private ArrayList<Ticket> ticketList;
 
     private String currentClassName;
     private Classroom currentClass;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView classListView;
-    private ArrayAdapter classListViewAdapter;
     private ArrayList<String> classList;
 
     private HashMap<String, Classroom> classMap;
@@ -112,7 +110,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         classList = new ArrayList<String>();
-        classListViewAdapter = new ArrayAdapter<String>(this, R.layout.class_list_item, classList);
         classListView = (NavigationView) findViewById(R.id.nav_view);
         View header = classListView.getHeaderView(0);
         TextView userEmail = (TextView) header.findViewById(R.id.user_info);
@@ -145,7 +142,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
         classMap = new HashMap<String, Classroom>();
 
-        ticketList = new ArrayList<Ticket>();
         launchedTickets = new ArrayList<Ticket>();
         upcomingTickets = new ArrayList<Ticket>();
         mSectionedTicketListAdapter = new SectionedTicketListAdapter();
@@ -284,10 +280,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         if (id == R.id.log_out) {
             SharedPreferences.Editor sharedPrefsEditor = sharedPrefs.edit();
             sharedPrefsEditor.putBoolean("teacher_logged_in", false);
@@ -401,36 +393,52 @@ public class TeacherTicketListActivity extends AppCompatActivity
         }
     }
 
-    public void doNewClassDialogPositiveClick(String className) {
+    public void doNewClassDialogPositiveClick(final String className) {
         for (String c : classList) {
             if (className.equals(c)) {
-                Toast.makeText(this, "A class with that name already exists.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "You already have a class with that name.", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
-        DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
-        String newClassId = newClassRef.getKey();
-        String courseCode = Long.toString(System.currentTimeMillis(), 36);
+        Query classRef = mDatabaseReference.child("classes").orderByChild("name").equalTo(className);
+        final TeacherTicketListActivity ttla = this;
+        classRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    Toast.makeText(ttla, "That class name is taken.", Toast.LENGTH_SHORT).show();
+                } else {
+                    DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
+                    String newClassId = newClassRef.getKey();
+                    String courseCode = Long.toString(System.currentTimeMillis(), 36);
 
-        Classroom newClassroom = new Classroom(newClassId, className, courseCode);
-        newClassRef.setValue(newClassroom);
+                    Classroom newClassroom = new Classroom(newClassId, className, courseCode);
+                    newClassRef.setValue(newClassroom);
 
-        DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
-        newClassRefClasses.setValue(newClassroom);
+                    DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
+                    newClassRefClasses.setValue(newClassroom);
 
-        classListView.getMenu().add(className);
-        currentClass = newClassroom;
-        Log.i(TAG, currentClass.toString());
-        getSupportActionBar().setTitle(currentClass.getName());
-        fab.setVisibility(View.VISIBLE);
-        mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-        mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                    classListView.getMenu().add(className);
+                    currentClass = newClassroom;
+                    Log.i(TAG, currentClass.toString());
+                    getSupportActionBar().setTitle(currentClass.getName());
+                    fab.setVisibility(View.VISIBLE);
+                    mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
+                    mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i(TAG, "Error creating class");
+            }
+        });
+
+
     }
 
     public Classroom getCurrentClass() {
         return this.currentClass;
     }
-
-    public HashMap<String, Classroom> getClassMap() { return this.classMap; }
 }
