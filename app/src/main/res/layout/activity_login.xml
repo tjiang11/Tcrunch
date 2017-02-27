@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@color/colorPrimary">
+    android:layout_height="match_parent" android:background="@drawable/login_background">
 
-    <TextView
-        android:text="@string/app_name_lower"
-        android:layout_height="100dp"
-        android:layout_width="200dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="70dp"
-        android:textAlignment="center"
-        android:textSize="45sp"
-        android:typeface="monospace"
-        android:textColor="@color/colorWhite"/>
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="125dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        app:srcCompat="@drawable/tcrunch_logo"
+        android:id="@+id/imageView5" />
 
     <FrameLayout
         android:id="@+id/login_content_fragment"

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.toniebalonie.tjiang11.tcrunch.models.Classroom;
@@ -104,6 +105,9 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         classMap = new HashMap<String, Classroom>();
         classList = new ArrayList<String>();
         classListView = (NavigationView) findViewById(R.id.nav_view);
+        View header = classListView.getHeaderView(0);
+        TextView userEmail = (TextView) header.findViewById(R.id.user_info);
+        userEmail.setText(sharedPrefs.getString("student_name", "No name specified"));
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

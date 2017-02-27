@@ -33,6 +33,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -84,6 +86,7 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
                 for (DataSnapshot responseSnapshot : dataSnapshot.getChildren()) {
                     responseList.add(responseSnapshot.getValue(Response.class));
                 }
+                Collections.sort(responseList, Response.ResponseTimeComparator);
                 String responseTextString;
                 if (responseList.size() == 1) {
                     responseTextString = "RESPONSE";
@@ -100,8 +103,6 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
                 Log.w(TAG, "response reference cancelled");
             }
         });
-
-        //ArrayList<Response> responseList = getIntent().getParcelableArrayListExtra("responses");
 
         TextView questionText = (TextView) findViewById(R.id.ticket_detail_question);
         TextView startTimeText = (TextView) findViewById(R.id.ticket_detail_start_time);
@@ -141,6 +142,7 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
 
         if (id == R.id.email_ticket_data) {
             exportTicketToCSV();
+            return true;
         }
 
         if (id == R.id.delete_ticket) {
@@ -163,6 +165,12 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
 
                         }
                     }).show();
+            return true;
+        }
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

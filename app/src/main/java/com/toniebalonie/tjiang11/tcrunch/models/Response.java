@@ -3,6 +3,8 @@ package com.toniebalonie.tjiang11.tcrunch.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
+
 /**
  * Created by tjiang11 on 12/30/16.
  */
@@ -59,6 +61,13 @@ public class Response implements Parcelable {
         @Override
         public Response[] newArray(int size) {
             return new Response[size];
+        }
+    };
+
+    public static Comparator<Response> ResponseTimeComparator = new Comparator<Response>() {
+        @Override
+        public int compare(Response o1, Response o2) {
+            return o1.getTime() < o2.getTime() ? 1 : -1;
         }
     };
 }

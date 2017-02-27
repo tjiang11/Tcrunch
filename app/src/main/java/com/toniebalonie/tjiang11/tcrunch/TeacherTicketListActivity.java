@@ -114,6 +114,9 @@ public class TeacherTicketListActivity extends AppCompatActivity
         classList = new ArrayList<String>();
         classListViewAdapter = new ArrayAdapter<String>(this, R.layout.class_list_item, classList);
         classListView = (NavigationView) findViewById(R.id.nav_view);
+        View header = classListView.getHeaderView(0);
+        TextView userEmail = (TextView) header.findViewById(R.id.user_info);
+        userEmail.setText(sharedPrefs.getString("email", "No email specified"));
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -279,12 +282,8 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -427,10 +426,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
         fab.setVisibility(View.VISIBLE);
         mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
         mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
-    }
-
-    public String getCurrentClassName() {
-        return this.currentClassName;
     }
 
     public Classroom getCurrentClass() {
