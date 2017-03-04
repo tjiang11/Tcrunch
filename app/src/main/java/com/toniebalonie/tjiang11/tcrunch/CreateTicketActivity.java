@@ -8,7 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +40,19 @@ public class CreateTicketActivity extends AppCompatActivity {
     private Button createTicketButton;
     private EditText question;
 
+    private CheckBox mcCheckBox;
+    private EditText choiceOne;
+    private EditText choiceTwo;
+    private EditText choiceThree;
+    private EditText choiceFour;
+    private EditText choiceFive;
+    private TextView addChoice;
+    private ImageView removeChoiceOne;
+    private ImageView removeChoiceTwo;
+    private ImageView removeChoiceThree;
+    private ImageView removeChoiceFour;
+    private ImageView removeChoiceFive;
+
     private int startyear; private int startmonth; private int startday;
     private int starthour; private int startminute;
     private int endyear; private int endmonth; private int endday;
@@ -45,6 +61,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     private Long startTime;
     private Long endTime;
     private int ticketLength;
+    private int choiceNum;
 
     private String classId;
     private String className;
@@ -81,6 +98,57 @@ public class CreateTicketActivity extends AppCompatActivity {
         question = (EditText) findViewById(R.id.ask_question);
         createTicketButton = (Button) findViewById(R.id.create_ticket_button);
 
+        mcCheckBox = (CheckBox) findViewById(R.id.multipleChoiceCheckbox);
+        choiceOne = (EditText) findViewById(R.id.choiceOne);
+        choiceTwo = (EditText) findViewById(R.id.choiceTwo);
+        choiceThree = (EditText) findViewById(R.id.choiceThree);
+        choiceFour = (EditText) findViewById(R.id.choiceFour);
+        choiceFive = (EditText) findViewById(R.id.choiceFive);
+        addChoice = (TextView) findViewById(R.id.add_choice);
+        removeChoiceOne = (ImageView) findViewById(R.id.removeChoiceOne);
+        removeChoiceTwo = (ImageView) findViewById(R.id.removeChoiceTwo);
+        removeChoiceThree = (ImageView) findViewById(R.id.removeChoiceThree);
+        removeChoiceFour = (ImageView) findViewById(R.id.removeChoiceFour);
+        removeChoiceFive = (ImageView) findViewById(R.id.removeChoiceFive);
+        removeChoiceOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeAnswerChoice(1);
+            }
+        });
+        removeChoiceTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeAnswerChoice(2);
+            }
+        });
+        removeChoiceThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeAnswerChoice(3);
+            }
+        });
+        removeChoiceFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeAnswerChoice(4);
+            }
+        });
+        removeChoiceFive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeAnswerChoice(5);
+            }
+        });
+
+        choiceNum = 0;
+        addChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addAnswerChoice();
+            }
+        });
+
         ticketLength = 1;
 
         setDate.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +161,51 @@ public class CreateTicketActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showTimePickerDialog();
+            }
+        });
+
+        mcCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Log.i("CreateTicketActivity", "checked!");
+                    if (choiceNum < 4) {
+                        addChoice.setVisibility(View.VISIBLE);
+                    }
+                    switch (choiceNum) {
+                        case 4:
+                            choiceFive.setVisibility(View.VISIBLE);
+                            removeChoiceFive.setVisibility(View.VISIBLE);
+                        case 3:
+                            choiceFour.setVisibility(View.VISIBLE);
+                            removeChoiceFour.setVisibility(View.VISIBLE);
+                        case 2:
+                            choiceThree.setVisibility(View.VISIBLE);
+                            removeChoiceThree.setVisibility(View.VISIBLE);
+                        case 1:
+                            choiceTwo.setVisibility(View.VISIBLE);
+                            removeChoiceTwo.setVisibility(View.VISIBLE);
+                        case 0:
+                            choiceOne.setVisibility(View.VISIBLE);
+                            removeChoiceOne.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }
+                else {
+                    Log.i("CreateTicketActivity", "unchecked!");
+                    addChoice.setVisibility(View.GONE);
+                    choiceOne.setVisibility(View.GONE);
+                    choiceTwo.setVisibility(View.GONE);
+                    choiceThree.setVisibility(View.GONE);
+                    choiceFour.setVisibility(View.GONE);
+                    choiceFive.setVisibility(View.GONE);
+                    removeChoiceOne.setVisibility(View.GONE);
+                    removeChoiceTwo.setVisibility(View.GONE);
+                    removeChoiceThree.setVisibility(View.GONE);
+                    removeChoiceFour.setVisibility(View.GONE);
+                    removeChoiceFive.setVisibility(View.GONE);
+                }
+
             }
         });
 
@@ -172,5 +285,72 @@ public class CreateTicketActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    private void removeAnswerChoice(int choiceToRemove) {
+        addChoice.setVisibility(View.VISIBLE);
+
+        switch (choiceToRemove) {
+            case 1:
+                choiceOne.setText(choiceTwo.getText());
+            case 2:
+                choiceTwo.setText(choiceThree.getText());
+            case 3:
+                choiceThree.setText(choiceFour.getText());
+            case 4:
+                choiceFour.setText(choiceFive.getText());
+                break;
+        }
+
+        switch (choiceNum) {
+            case 4:
+                choiceFive.setVisibility(View.GONE);
+                choiceFive.setText("");
+                break;
+            case 3:
+                choiceFour.setVisibility(View.GONE);
+                choiceFour.setText("");
+                break;
+            case 2:
+                choiceThree.setVisibility(View.GONE);
+                choiceThree.setText("");
+                break;
+            case 1:
+                choiceTwo.setVisibility(View.GONE);
+                choiceTwo.setText("");
+                break;
+        }
+        if (choiceNum > 0) {
+            choiceNum--;
+        }
+    }
+
+    private void addAnswerChoice() {
+        switch (choiceNum) {
+            case 0:
+                choiceTwo.setVisibility(View.VISIBLE);
+                removeChoiceTwo.setVisibility(View.VISIBLE);
+                choiceTwo.requestFocus();
+                break;
+            case 1:
+                choiceThree.setVisibility(View.VISIBLE);
+                removeChoiceThree.setVisibility(View.VISIBLE);
+                choiceThree.requestFocus();
+                break;
+            case 2:
+                choiceFour.setVisibility(View.VISIBLE);
+                removeChoiceFour.setVisibility(View.VISIBLE);
+                choiceFour.requestFocus();
+                break;
+            case 3:
+                choiceFive.setVisibility(View.VISIBLE);
+                removeChoiceFive.setVisibility(View.VISIBLE);
+                choiceFive.requestFocus();
+                addChoice.setVisibility(View.GONE);
+                break;
+        }
+        if (choiceNum <= 3) {
+            choiceNum++;
+        }
     }
 }

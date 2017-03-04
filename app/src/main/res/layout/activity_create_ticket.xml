@@ -1,104 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_create_ticket"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    tools:context="com.toniebalonie.tjiang11.tcrunch.CreateTicketActivity">
-
-    <Spinner
-        android:id="@+id/class_spinner"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:srcCompat="@drawable/class_icon"
-        android:id="@+id/imageView2"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/class_spinner"
-        android:layout_toStartOf="@+id/class_spinner" />
-
-    <TextView
-        android:text="@string/set_a_date"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="20dp"
-        android:padding="9dp"
-        android:id="@+id/set_date"
-        android:layout_below="@+id/class_spinner"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_event_black_24dp"
-        android:id="@+id/imageView3"
-        android:layout_alignTop="@+id/set_date"
-        android:layout_alignLeft="@+id/imageView2"
-        android:layout_alignStart="@+id/imageView2"
-        android:layout_alignBottom="@+id/set_date"
-        android:layout_toLeftOf="@+id/set_date"
-        android:layout_toStartOf="@+id/set_date" />
-
-    <TextView
-        android:text="@string/set_a_time"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:padding="9dp"
-        android:id="@+id/set_time"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/set_date"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_schedule_black_24dp"
-        android:layout_alignTop="@+id/set_time"
-        android:layout_alignLeft="@+id/imageView3"
-        android:layout_alignStart="@+id/imageView3"
-        android:id="@+id/imageView4"
-        android:layout_alignBottom="@+id/set_time"
-        android:layout_toLeftOf="@+id/set_time"
-        android:layout_toStartOf="@+id/set_time" />
-
-    <Button
-        android:text="@string/create"
+    android:layout_width="match_parent"
+    android:fillViewport="true">
+    <RelativeLayout
+        android:id="@+id/activity_create_ticket"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/colorWhite"
-        android:id="@+id/create_ticket_button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        tools:context="com.toniebalonie.tjiang11.tcrunch.CreateTicketActivity">
 
-    <EditText
-        android:id="@+id/ask_question"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:inputType="textMultiLine|textCapSentences"
-        android:ems="10"
-        android:hint="@string/ask_a_question"
-        android:textAlignment="center"
-        android:layout_marginTop="12dp"
-        android:layout_below="@+id/set_time"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/create_ticket_button" />
+        <Spinner
+            android:id="@+id/class_spinner"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-</RelativeLayout>
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/class_icon"
+            android:id="@+id/imageView2"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/class_spinner"
+            android:layout_toStartOf="@+id/class_spinner" />
+
+        <TextView
+            android:text="@string/set_a_date"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:padding="9dp"
+            android:id="@+id/set_date"
+            android:layout_below="@+id/class_spinner"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_event_black_24dp"
+            android:id="@+id/imageView3"
+            android:layout_alignTop="@+id/set_date"
+            android:layout_alignLeft="@+id/imageView2"
+            android:layout_alignStart="@+id/imageView2"
+            android:layout_alignBottom="@+id/set_date"
+            android:layout_toLeftOf="@+id/set_date"
+            android:layout_toStartOf="@+id/set_date" />
+
+        <TextView
+            android:text="@string/set_a_time"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:padding="9dp"
+            android:id="@+id/set_time"
+            android:layout_marginTop="18dp"
+            android:layout_below="@+id/set_date"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_schedule_black_24dp"
+            android:layout_alignTop="@+id/set_time"
+            android:layout_alignLeft="@+id/imageView3"
+            android:layout_alignStart="@+id/imageView3"
+            android:id="@+id/imageView4"
+            android:layout_alignBottom="@+id/set_time"
+            android:layout_toLeftOf="@+id/set_time"
+            android:layout_toStartOf="@+id/set_time" />
+
+        <EditText
+            android:id="@+id/ask_question"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:inputType="textMultiLine|textCapSentences"
+            android:ems="10"
+            android:hint="@string/ask_a_question"
+            android:textAlignment="center"
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/set_time"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <CheckBox
+            android:text="Multiple Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/multipleChoiceCheckbox"
+            android:layout_below="@+id/ask_question"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="11dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="textPersonName"
+            android:hint="Choice 1"
+            android:ems="10"
+            android:id="@+id/choiceOne"
+            android:layout_below="@+id/multipleChoiceCheckbox"
+            android:layout_toRightOf="@+id/imageView4"
+            android:layout_toEndOf="@+id/imageView4" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/removeChoiceOne"
+            android:visibility="gone"
+            android:contentDescription="Remove Choice One"
+            app:srcCompat="@drawable/ic_remove_black_24dp"
+            android:tint="#FF0000"
+            android:layout_toRightOf="@id/choiceOne"
+            android:layout_alignBottom="@id/choiceOne"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="textPersonName"
+            android:hint="Choice 2"
+            android:ems="10"
+            android:layout_below="@+id/choiceOne"
+            android:layout_alignRight="@+id/choiceOne"
+            android:layout_alignEnd="@+id/choiceOne"
+            android:id="@+id/choiceTwo" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/removeChoiceTwo"
+            android:visibility="gone"
+            android:contentDescription="Remove Choice Two"
+            app:srcCompat="@drawable/ic_remove_black_24dp"
+            android:tint="#FF0000"
+            android:layout_toRightOf="@+id/choiceTwo"
+            android:layout_alignBottom="@id/choiceTwo"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="textPersonName"
+            android:hint="Choice 3"
+            android:ems="10"
+            android:id="@+id/choiceThree"
+            android:layout_below="@+id/choiceTwo"
+            android:layout_alignLeft="@+id/choiceTwo"
+            android:layout_alignStart="@+id/choiceTwo" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/removeChoiceThree"
+            android:visibility="gone"
+            android:contentDescription="Remove Choice Three"
+            app:srcCompat="@drawable/ic_remove_black_24dp"
+            android:tint="#FF0000"
+            android:layout_toRightOf="@+id/choiceThree"
+            android:layout_alignBottom="@id/choiceThree"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="textPersonName"
+            android:hint="Choice 4"
+            android:ems="10"
+            android:id="@+id/choiceFour"
+            android:layout_below="@+id/choiceThree"
+            android:layout_alignLeft="@+id/choiceTwo"
+            android:layout_alignStart="@+id/choiceTwo" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/removeChoiceFour"
+            android:visibility="gone"
+            android:contentDescription="Remove Choice Four"
+            app:srcCompat="@drawable/ic_remove_black_24dp"
+            android:tint="#FF0000"
+            android:layout_toRightOf="@+id/choiceFour"
+            android:layout_alignBottom="@id/choiceFour"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="textPersonName"
+            android:hint="Choice 5"
+            android:ems="10"
+            android:id="@+id/choiceFive"
+            android:layout_below="@+id/choiceFour"
+            android:layout_alignLeft="@+id/choiceTwo"
+            android:layout_alignStart="@+id/choiceTwo"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/removeChoiceFive"
+            android:visibility="gone"
+            android:contentDescription="Remove Choice Five"
+            app:srcCompat="@drawable/ic_remove_black_24dp"
+            android:tint="#FF0000"
+            android:layout_toRightOf="@+id/choiceFive"
+            android:layout_alignBottom="@id/choiceFive"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:text="@string/create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/create_ticket_button"
+            android:layout_below="@+id/choiceFive"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="25dp" />
+
+        <TextView
+            android:id="@+id/add_choice"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#42c5f4"
+            android:text="+ Add choice"
+            android:layout_below="@+id/choiceFive"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp" />
+
+
+    </RelativeLayout>
+</ScrollView>
