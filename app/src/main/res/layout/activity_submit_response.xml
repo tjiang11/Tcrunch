@@ -1,48 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_submit_response"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.toniebalonie.tjiang11.tcrunch.SubmitResponseActivity">
-
-    <TextView
-        android:id="@+id/submit_response_question"
+    android:layout_width="match_parent"
+    android:fillViewport="true">
+    <LinearLayout
+        android:id="@+id/activity_submit_response"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="60dp"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:textColor="@color/colorPrimary"
-        android:gravity="center_vertical"/>
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        tools:context="com.toniebalonie.tjiang11.tcrunch.SubmitResponseActivity">
 
-    <EditText
-        android:id="@+id/submit_response_edittext"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:inputType="textCapSentences"
-        android:hint="Type your response..."
-        android:gravity="top"/>
+        <TextView
+            android:id="@+id/submit_response_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center_vertical"/>
 
-    <CheckBox
-        android:text="Submit Anonymously"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:id="@+id/submit_anon"/>
+        <EditText
+            android:id="@+id/submit_response_edittext"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:inputType="textCapSentences"
+            android:hint="Type your response..."
+            android:gravity="top"/>
 
-    <Button
-        android:text="Submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/colorWhite"
-        android:id="@+id/submit_response_button" />
+        <RadioGroup
+            android:id="@+id/submit_multiple_choice"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/choice_one"
+                android:visibility="gone"
+                android:text="Choice 1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"/>
+            <RadioButton
+                android:id="@+id/choice_two"
+                android:visibility="gone"
+                android:text="Choice 2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"/>
+            <RadioButton
+                android:id="@+id/choice_three"
+                android:visibility="gone"
+                android:text="Choice 3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"/>
+            <RadioButton
+                android:id="@+id/choice_four"
+                android:visibility="gone"
+                android:text="Choice 4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"/>
+            <RadioButton
+                android:id="@+id/choice_five"
+                android:visibility="gone"
+                android:text="Choice 5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"/>
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:gravity="center|bottom"
+            android:orientation="vertical" >
+            <CheckBox
+                android:text="Submit Anonymously"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:id="@+id/submit_anon"/>
+
+            <Button
+                android:text="Submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
+                android:id="@+id/submit_response_button" />
+        </LinearLayout>
+    </LinearLayout>
 
 
-</LinearLayout>
+</ScrollView>
+

@@ -261,19 +261,37 @@ public class CreateTicketActivity extends AppCompatActivity {
 
         final int msPerHour = 3600000;
         long endTime = startTime + ticketLength * msPerHour;
-        Ticket dummyTicket = new Ticket(question.getText().toString(),
+        Ticket newTicket = new Ticket(question.getText().toString(),
                 Ticket.QuestionType.FreeResponse, startTime, endTime, classSpinner.getSelectedItem().toString());
-        ArrayList<String> answerChoices = new ArrayList<>(Arrays.asList("Choice A", "Choice B", "Choice C"));
-        dummyTicket.setAnswerChoices(answerChoices);
+        ArrayList<String> answerChoices = new ArrayList<>();
+        if (mcCheckBox.isChecked()) {
+            if (choiceOne.getVisibility() == View.VISIBLE && !choiceOne.getText().toString().isEmpty()) {
+                answerChoices.add(choiceOne.getText().toString());
+            }
+            if (choiceTwo.getVisibility() == View.VISIBLE && !choiceTwo.getText().toString().isEmpty()) {
+                answerChoices.add(choiceTwo.getText().toString());
+            }
+            if (choiceThree.getVisibility() == View.VISIBLE && !choiceThree.getText().toString().isEmpty()) {
+                answerChoices.add(choiceThree.getText().toString());
+            }
+            if (choiceFour.getVisibility() == View.VISIBLE && !choiceFour.getText().toString().isEmpty()) {
+                answerChoices.add(choiceFour.getText().toString());
+            }
+            if (choiceFive.getVisibility() == View.VISIBLE && !choiceFive.getText().toString().isEmpty()) {
+                answerChoices.add(choiceFive.getText().toString());
+            }
+        }
+        newTicket.setAnswerChoices(answerChoices);
         if (mAuth.getCurrentUser() != null) {
             String theClassId = classMap.get(classSpinner.getSelectedItem().toString()).getId();
             DatabaseReference newTicketRef2 = mDatabase.child("tickets").child(theClassId).push();
             String newTicketId = newTicketRef2.getKey();
-            dummyTicket.setId(newTicketId);
-            newTicketRef2.setValue(dummyTicket);
+            newTicket.setId(newTicketId);
+            newTicketRef2.setValue(newTicket);
             finish();
         } else {
-            Toast.makeText(this, "Could not find current user.", Toast.LENGTH_SHORT).show();
+            Log.w("CreateTicketActivity", "User not logged in.");
+            Toast.makeText(this, "Error: Could not find current user.", Toast.LENGTH_SHORT).show();
         }
     }
 

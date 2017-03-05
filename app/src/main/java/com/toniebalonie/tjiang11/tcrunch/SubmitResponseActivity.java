@@ -5,17 +5,23 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.toniebalonie.tjiang11.tcrunch.models.Response;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.ArrayList;
 
 public class SubmitResponseActivity extends AppCompatActivity {
 
@@ -24,10 +30,23 @@ public class SubmitResponseActivity extends AppCompatActivity {
     private Button submitResponse;
     private DatabaseReference mDatabaseReference;
     private CheckBox anon;
+    private RadioGroup submitMultipleChoice;
+    private RadioButton choiceOne;
+    private RadioButton choiceTwo;
+    private RadioButton choiceThree;
+    private RadioButton choiceFour;
+    private RadioButton choiceFive;
 
     private String ticketId;
 
     private FirebaseInstanceId mFirebaseInstanceId;
+
+    private enum QuestionType {
+        FREE_RESPONSE,
+        MULTIPLE_CHOICE
+    }
+
+    private QuestionType questionType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +61,7 @@ public class SubmitResponseActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         String question = bundle.getString("question");
+        ArrayList<String> answerChoices = bundle.getStringArrayList("answer_choices");
         ticketId = bundle.getString("ticket_id");
 
         questionText = (TextView) findViewById(R.id.submit_response_question);
@@ -54,9 +74,49 @@ public class SubmitResponseActivity extends AppCompatActivity {
                 submitResponse();
             }
         });
+
+        submitMultipleChoice = (RadioGroup) findViewById(R.id.submit_multiple_choice);
+        choiceOne = (RadioButton) findViewById(R.id.choice_one);
+        choiceTwo = (RadioButton) findViewById(R.id.choice_two);
+        choiceThree = (RadioButton) findViewById(R.id.choice_three);
+        choiceFour = (RadioButton) findViewById(R.id.choice_four);
+        choiceFive = (RadioButton) findViewById(R.id.choice_five);
+
+        if (answerChoices != null && !answerChoices.isEmpty()) {
+            questionType = QuestionType.MULTIPLE_CHOICE;
+            submitMultipleChoice.setVisibility(View.VISIBLE);
+            switch (answerChoices.size()) {
+                case 5:
+                    choiceFive.setVisibility(View.VISIBLE);
+                    choiceFive.setText(answerChoices.get(4));
+                case 4:
+                    choiceFour.setVisibility(View.VISIBLE);
+                    choiceFour.setText(answerChoices.get(3));
+                case 3:
+                    choiceThree.setVisibility(View.VISIBLE);
+                    choiceThree.setText(answerChoices.get(2));
+                case 2:
+                    choiceTwo.setVisibility(View.VISIBLE);
+                    choiceTwo.setText(answerChoices.get(1));
+                case 1:
+                    choiceOne.setVisibility(View.VISIBLE);
+                    choiceOne.setText(answerChoices.get(0));
+            }
+        } else {
+            questionType = QuestionType.FREE_RESPONSE;
+            response.setVisibility(View.VISIBLE);
+        }
     }
 
     private void submitResponse() {
+        if (questionType == QuestionType.MULTIPLE_CHOICE && submitMultipleChoice.getCheckedRadioButtonId() == -1) {
+            Toast.makeText(this, "You must select a choice.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (questionType == QuestionType.FREE_RESPONSE && response.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Please enter a response before submitting.", Toast.LENGTH_LONG).show();
+            return;
+        }
         SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
         String author = sharedPreferences.getString("student_name", "Anonymous");
         if (anon.isChecked()) {
@@ -64,8 +124,14 @@ public class SubmitResponseActivity extends AppCompatActivity {
         }
         DatabaseReference responsesRef = mDatabaseReference.child("responses").child(ticketId);
         DatabaseReference newResponse = responsesRef.push();
-        newResponse.setValue(new Response(author, response.getText().toString(), System.currentTimeMillis()));
 
+        if (questionType == QuestionType.FREE_RESPONSE) {
+            newResponse.setValue(new Response(author, response.getText().toString(), System.currentTimeMillis()));
+        } else {
+            int choiceId = submitMultipleChoice.getCheckedRadioButtonId();
+            RadioButton selected = (RadioButton) submitMultipleChoice.findViewById(choiceId);
+            newResponse.setValue(new Response(author, selected.getText().toString(), System.currentTimeMillis()));
+        }
         DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
         DatabaseReference newAnswered = answeredRef.push();
         newAnswered.setValue(ticketId);
