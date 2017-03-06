@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout
         android:id="@+id/activity_teacher_ticket_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,9 +47,28 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/ticket_detail_responses_recycler_view"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </android.support.v7.widget.RecyclerView>
 
+        <com.androidplot.xy.XYPlot
+            style="@style/APDefacto.Light"
+            android:visibility="gone"
+            android:id="@+id/plot"
+            android:layout_width="fill_parent"
+            android:layout_height="300dp"
+            ap:title="A Simple XY Plot"
+            ap:rangeTitle="range"
+            ap:domainTitle="domain"
+            ap:lineLabels="left|bottom"
+            ap:lineLabelRotationBottom="-30"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/multiple_choice_plot_legend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+        
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
