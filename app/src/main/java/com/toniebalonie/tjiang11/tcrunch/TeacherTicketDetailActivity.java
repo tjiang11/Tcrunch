@@ -149,6 +149,7 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
             plot.getBorderPaint().setColor(Color.TRANSPARENT);
             plot.getGraph().getBackgroundPaint().setColor(Color.TRANSPARENT);
             plot.getGraph().getDomainGridLinePaint().setColor(Color.TRANSPARENT);
+            plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).getPaint().setColor(Color.TRANSPARENT);
             plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
                 private String[] LABELS = {"A", "B", "C", "D", "E"};
                 @Override
