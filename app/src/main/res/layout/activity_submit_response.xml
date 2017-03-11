@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:minHeight="60dp"
             android:textAlignment="center"
-            android:textSize="16sp"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:gravity="center_vertical"/>
 
