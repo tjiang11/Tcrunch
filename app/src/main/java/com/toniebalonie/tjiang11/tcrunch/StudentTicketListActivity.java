@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.toniebalonie.tjiang11.tcrunch.models.AnsweredTicketActivity;
 import com.toniebalonie.tjiang11.tcrunch.models.Classroom;
 import com.toniebalonie.tjiang11.tcrunch.models.Ticket;
 import com.google.firebase.database.DataSnapshot;
@@ -255,6 +256,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
             intent.putExtra("end_time", ticket.getEndTime());
             intent.putExtra("ticket_id", ticket.getId());
             intent.putStringArrayListExtra("answer_choices", new ArrayList<>(ticket.getAnswerChoices()));
+            startActivity(intent);
+        } else if (ticket != null && type.equals("answered")) {
+            Intent intent = new Intent(this, AnsweredTicketActivity.class);
+            intent.putExtra("question", ticket.getQuestion());
+            intent.putExtra("ticket_id", ticket.getId());
             startActivity(intent);
         }
     }

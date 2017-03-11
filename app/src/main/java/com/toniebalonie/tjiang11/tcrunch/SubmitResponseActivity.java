@@ -122,15 +122,14 @@ public class SubmitResponseActivity extends AppCompatActivity {
         if (anon.isChecked()) {
             author = "Anonymous";
         }
-        DatabaseReference responsesRef = mDatabaseReference.child("responses").child(ticketId);
-        DatabaseReference newResponse = responsesRef.push();
+        DatabaseReference responsesRef = mDatabaseReference.child("responses").child(ticketId).child(mFirebaseInstanceId.getId());
 
         if (questionType == QuestionType.FREE_RESPONSE) {
-            newResponse.setValue(new Response(author, response.getText().toString(), System.currentTimeMillis()));
+            responsesRef.setValue(new Response(author, response.getText().toString(), System.currentTimeMillis()));
         } else {
             int choiceId = submitMultipleChoice.getCheckedRadioButtonId();
             RadioButton selected = (RadioButton) submitMultipleChoice.findViewById(choiceId);
-            newResponse.setValue(new Response(author, selected.getText().toString(), System.currentTimeMillis()));
+            responsesRef.setValue(new Response(author, selected.getText().toString(), System.currentTimeMillis()));
         }
         DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
         DatabaseReference newAnswered = answeredRef.push();

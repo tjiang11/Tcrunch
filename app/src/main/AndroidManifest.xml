@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.toniebalonie.tjiang11.tcrunch">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/tcrunch_ic"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.toniebalonie.tjiang11.tcrunch.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -20,34 +22,37 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity"
+            android:name=".TeacherTicketListActivity"
             android:label="Tickets"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.toniebalonie.tjiang11.tcrunch.CreateTicketActivity"
+            android:name=".CreateTicketActivity"
             android:label="Create a Ticket"
-            android:parentActivityName="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity">
+            android:parentActivityName=".TeacherTicketListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity" />
         </activity>
         <activity
-            android:name="com.toniebalonie.tjiang11.tcrunch.TeacherTicketDetailActivity"
-            android:parentActivityName="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity">
+            android:name=".TeacherTicketDetailActivity"
+            android:parentActivityName=".TeacherTicketListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity"/>
+                android:value="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity" />
         </activity>
         <activity
-            android:name="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity"
+            android:name=".StudentTicketListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.toniebalonie.tjiang11.tcrunch.SubmitResponseActivity"
-            android:parentActivityName="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity">
+            android:name=".SubmitResponseActivity"
+            android:parentActivityName=".StudentTicketListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity"/>
+                android:value="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity" />
         </activity>
+        <activity
+            android:name=".models.AnsweredTicketActivity"
+            android:parentActivityName=".StudentTicketListActivity"/>
     </application>
 
 </manifest>

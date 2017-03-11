@@ -32,9 +32,9 @@
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            android:inputType="textCapSentences"
+            android:inputType="textCapSentences|textMultiLine"
             android:hint="Type your response..."
-            android:gravity="top"/>
+            android:gravity="top" />
 
         <RadioGroup
             android:id="@+id/submit_multiple_choice"

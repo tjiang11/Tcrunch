@@ -38,4 +38,6 @@
     <string name="delete">Delete Ticket</string>
 
     <string name="email_ticket_data">Email Ticket Data</string>
+
+    <string name="your_response">Your Response</string>
 </resources>
