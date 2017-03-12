@@ -15,9 +15,9 @@
     <FrameLayout
         android:id="@+id/login_content_fragment"
         android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_height="335dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:background="@color/colorWhite"/>
+        android:background="@color/colorWhite" />
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 /**
@@ -24,6 +25,7 @@ public class TeacherLoginFragment extends Fragment {
 
     private Button teacherLoginButton;
     private Button teacherRegisterButton;
+    private TextView forgotPassword;
 
     private EditText teacherEmail;
     private EditText teacherPassword;
@@ -38,17 +40,11 @@ public class TeacherLoginFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment TeacherLoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TeacherLoginFragment newInstance(String param1, String param2) {
+    public static TeacherLoginFragment newInstance() {
         TeacherLoginFragment fragment = new TeacherLoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -66,6 +62,7 @@ public class TeacherLoginFragment extends Fragment {
         teacherPassword = (EditText) view.findViewById(R.id.teacher_password_input_text);
         teacherLoginButton = (Button) view.findViewById(R.id.teacherLoginButton);
         teacherRegisterButton = (Button) view.findViewById(R.id.teacherRegisterButton);
+        forgotPassword = (TextView) view.findViewById(R.id.forgotPassword);
         teacherLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +73,12 @@ public class TeacherLoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 onRegisterButtonPressed(teacherEmail.getText().toString(), teacherPassword.getText().toString());
+            }
+        });
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onForgotPasswordPressed();
             }
         });
         return view;
@@ -91,6 +94,12 @@ public class TeacherLoginFragment extends Fragment {
     public void onRegisterButtonPressed(String email, String password) {
         if (mListener != null) {
             mListener.onTeacherRegisterPressed(email, password);
+        }
+    }
+
+    public void onForgotPasswordPressed() {
+        if (mListener != null) {
+            mListener.onForgotPasswordPressed();
         }
     }
 
@@ -124,5 +133,6 @@ public class TeacherLoginFragment extends Fragment {
     public interface OnTeacherLoginListener {
         void onTeacherLoginPressed(String email, String password);
         void onTeacherRegisterPressed(String email, String password);
+        void onForgotPasswordPressed();
     }
 }

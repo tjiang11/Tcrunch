@@ -1,6 +1,8 @@
 package com.toniebalonie.tjiang11.tcrunch;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -9,8 +11,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -84,6 +88,11 @@ public class LoginActivity extends AppCompatActivity
             return;
         }
         createTeacherAccount(email, password);
+    }
+
+    public void onForgotPasswordPressed() {
+        DialogFragment forgotPasswordDialog = new ForgotPasswordDialog();
+        forgotPasswordDialog.show(getFragmentManager(), "Forgot password");
     }
 
     public void createTeacherAccount(final String email, final String password) {
