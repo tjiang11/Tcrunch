@@ -40,6 +40,8 @@ public class CreateTicketActivity extends AppCompatActivity {
     private Button createTicketButton;
     private EditText question;
 
+    private CheckBox anonymousCheckBox;
+
     private CheckBox mcCheckBox;
     private EditText choiceOne;
     private EditText choiceTwo;
@@ -97,7 +99,7 @@ public class CreateTicketActivity extends AppCompatActivity {
         setTime = (TextView) findViewById(R.id.set_time);
         question = (EditText) findViewById(R.id.ask_question);
         createTicketButton = (Button) findViewById(R.id.create_ticket_button);
-
+        anonymousCheckBox = (CheckBox) findViewById(R.id.anonResponseCheckbox);
         mcCheckBox = (CheckBox) findViewById(R.id.multipleChoiceCheckbox);
         choiceOne = (EditText) findViewById(R.id.choiceOne);
         choiceTwo = (EditText) findViewById(R.id.choiceTwo);
@@ -262,7 +264,8 @@ public class CreateTicketActivity extends AppCompatActivity {
         final int msPerHour = 3600000;
         long endTime = startTime + ticketLength * msPerHour;
         Ticket newTicket = new Ticket(question.getText().toString(),
-                Ticket.QuestionType.FreeResponse, startTime, endTime, classSpinner.getSelectedItem().toString());
+                Ticket.QuestionType.FreeResponse, startTime, endTime,
+                classSpinner.getSelectedItem().toString(), anonymousCheckBox.isChecked());
         ArrayList<String> answerChoices = new ArrayList<>();
         if (mcCheckBox.isChecked()) {
             if (choiceOne.getVisibility() == View.VISIBLE && !choiceOne.getText().toString().isEmpty()) {

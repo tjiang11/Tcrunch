@@ -375,6 +375,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
             intent.putExtra("start_time", ticket.getStartTime());
             intent.putExtra("end_time", ticket.getEndTime());
             intent.putExtra("ticket_id", ticket.getId());
+            intent.putExtra("anonymous", ticket.isAnonymous());
             intent.putStringArrayListExtra("answer_choices", new ArrayList<>(ticket.getAnswerChoices()));
             intent.putExtra("class_id", getCurrentClass().getId());
             intent.putExtra("class_name", getCurrentClass().getName());

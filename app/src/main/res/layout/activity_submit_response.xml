@@ -31,7 +31,7 @@
             android:id="@+id/submit_response_edittext"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="390dp"
             android:inputType="textCapSentences|textMultiLine"
             android:hint="Type your response..."
             android:gravity="top" />
@@ -84,12 +84,11 @@
             android:layout_weight="1"
             android:gravity="center|bottom"
             android:orientation="vertical" >
-            <CheckBox
-                android:text="Submit Anonymously"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:id="@+id/submit_anon"/>
-
+            <TextView
+                android:id="@+id/anonymous_indicator"
+                android:text="Your response will be anonymous."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
             <Button
                 android:text="Submit"
                 android:layout_width="match_parent"

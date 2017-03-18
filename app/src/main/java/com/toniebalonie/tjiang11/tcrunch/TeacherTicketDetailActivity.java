@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -74,11 +75,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import static com.toniebalonie.tjiang11.tcrunch.LoginActivity.PREFS_NAME;
+
 public class TeacherTicketDetailActivity extends AppCompatActivity {
 
     private static final String TAG = TeacherTicketDetailActivity.class.getName();
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
+
+    private SharedPreferences sharedPrefs;
 
     private ResponseListAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -88,6 +93,7 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
     private TextView responsesText;
 
     private ArrayList<Response> responseList;
+    private ArrayList<String> userResponseList;
 
     private String question;
     private String questionDate;
@@ -96,6 +102,8 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
     private String ticketId;
     private String classId;
     private String className;
+
+    private boolean anonymous;
 
     private XYPlot plot;
 
@@ -112,6 +120,7 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_ticket_detail);
+        sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         Bundle bundle = getIntent().getExtras();
         ticketId = (String) bundle.get("ticket_id");
         question = (String) bundle.get("question");
@@ -124,10 +133,12 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
         long startTime = (long) bundle.get("start_time");
         classId = (String) bundle.get("class_id");
         className = (String) bundle.get("class_name");
+        anonymous = (boolean) bundle.get("anonymous");
 
         getSupportActionBar().setTitle(className);
 
         responseList = new ArrayList<Response>();
+        userResponseList = new ArrayList<String>();
 
         responsesText = (TextView) findViewById(R.id.responses_text);
 
@@ -201,7 +212,12 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
                     responseMap.put(answerChoices.get(i), 0);
                 }
                 for (DataSnapshot responseSnapshot : dataSnapshot.getChildren()) {
-                    responseList.add(responseSnapshot.getValue(Response.class));
+                    Response resp = responseSnapshot.getValue(Response.class);
+                    if (anonymous) {
+                        userResponseList.add(resp.getAuthor());
+                        resp.setAuthor("Anonymous");
+                    }
+                    responseList.add(resp);
                 }
                 Collections.sort(responseList, Response.ResponseTimeComparator);
                 String responseTextString;
@@ -338,20 +354,38 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
             csvWriter.writeNext(launchDate);
             csvWriter.writeNext(numResponses);
             csvWriter.writeNext(new String[] {});
-            String[] headers = {"USER", "RESPONSE", "TIME"};
-            csvWriter.writeNext(headers);
-            for (Response r : responseList) {
-                Date date = new Date(r.getTime());
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy EEEE, MMMM d, h:mm a", Locale.US);
-                questionDate = formatter.format(date);
-                String[] data = { r.getAuthor(), r.getResponse(), questionDate };
-                csvWriter.writeNext(data);
+
+            if (!anonymous) {
+                String[] headers = {"USER", "RESPONSE", "TIME"};
+                csvWriter.writeNext(headers);
+                for (Response r : responseList) {
+                    Date date = new Date(r.getTime());
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy EEEE, MMMM d, h:mm a", Locale.US);
+                    questionDate = formatter.format(date);
+                    String[] data = {r.getAuthor(), r.getResponse(), questionDate};
+                    csvWriter.writeNext(data);
+                }
+            } else {
+                String[] usersHeader = {"USERS"};
+                String[] responseHeader = {"RESPONSES"};
+                csvWriter.writeNext(usersHeader);
+                for (String u : userResponseList) {
+                    String[] data = {u};
+                    csvWriter.writeNext(data);
+                }
+                csvWriter.writeNext(new String[] {});
+                csvWriter.writeNext(responseHeader);
+                Collections.shuffle(responseList);
+                for (Response r : responseList) {
+                    String[] data = {r.getResponse()};
+                    csvWriter.writeNext(data);
+                }
             }
             csvWriter.close();
 
             Intent emailIntent = new Intent(Intent.ACTION_SEND);
             emailIntent.setType("text/csv");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, "tjiang11@jhu.edu");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, sharedPrefs.getString("email", ""));
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Tcrunch: Your ticket data");
             emailIntent.putExtra(Intent.EXTRA_TEXT, "Your ticket data is attached.");
             emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(ticketDataFile));

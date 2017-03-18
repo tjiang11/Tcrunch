@@ -19,23 +19,18 @@ public class Ticket {
 
     private long startTime;
     private long endTime;
-//    private HashMap<String, Object> startTime;
-//    private HashMap<String, Object> endTime;
-
+    private boolean anonymous;
     public Ticket() {}
 
-    public Ticket(String question,
-                  QuestionType questionType, //ArrayList<String> answerChoices, //ArrayList<String> responses,
-                  //HashMap<String, Object> startTime, HashMap<String, Object> endTime) {
-                  long startTime, long endTime, String className) {
+    public Ticket(String question, QuestionType questionType, long startTime, long endTime,
+                  String className, boolean anonymous) {
         this.question = question;
         this.questionType = questionType;
-        this.answerChoices = answerChoices;
-        //HashMap<String, Object> startTimeObj = new HashMap<String, Object>();
-        //startTimeObj.put("date", ServerValue.TIMESTAMP);
+
         this.startTime = startTime;
         this.endTime = endTime;
         this.className = className;
+        this.anonymous = anonymous;
     }
     public String getId() { return this.id; }
     public void setId(String id) { this.id = id; }
@@ -47,7 +42,7 @@ public class Ticket {
     public QuestionType getQuestionType() { return this. questionType; }
     public List<String> getAnswerChoices() { return this.answerChoices; }
     public void setAnswerChoices(ArrayList<String> answerChoices) { this.answerChoices = answerChoices; }
-
+    public boolean isAnonymous() { return this.anonymous; }
     public void setClassName(String className) {
         this.className = className;
     }

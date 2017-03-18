@@ -103,6 +103,15 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="11dp" />
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/anonResponseCheckbox"
+            android:text="Anonymous Responses"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/multipleChoiceCheckbox"
+            android:layout_alignTop="@id/multipleChoiceCheckbox"/>
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

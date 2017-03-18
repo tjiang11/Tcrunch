@@ -34,6 +34,10 @@ public class Response implements Parcelable {
         return this.author;
     }
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     public String getResponse() {
         return this.response;
     }

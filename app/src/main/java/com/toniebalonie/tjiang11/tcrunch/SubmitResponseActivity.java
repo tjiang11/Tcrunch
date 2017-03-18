@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class SubmitResponseActivity extends AppCompatActivity {
@@ -29,15 +31,16 @@ public class SubmitResponseActivity extends AppCompatActivity {
     private EditText response;
     private Button submitResponse;
     private DatabaseReference mDatabaseReference;
-    private CheckBox anon;
     private RadioGroup submitMultipleChoice;
     private RadioButton choiceOne;
     private RadioButton choiceTwo;
     private RadioButton choiceThree;
     private RadioButton choiceFour;
     private RadioButton choiceFive;
+    private TextView anonIndicator;
 
     private String ticketId;
+    private boolean anonymous;
 
     private FirebaseInstanceId mFirebaseInstanceId;
 
@@ -57,12 +60,12 @@ public class SubmitResponseActivity extends AppCompatActivity {
         mFirebaseInstanceId = FirebaseInstanceId.getInstance();
 
         response = (EditText) findViewById(R.id.submit_response_edittext);
-        anon = (CheckBox) findViewById(R.id.submit_anon);
 
         Bundle bundle = getIntent().getExtras();
         String question = bundle.getString("question");
         ArrayList<String> answerChoices = bundle.getStringArrayList("answer_choices");
         ticketId = bundle.getString("ticket_id");
+        anonymous = bundle.getBoolean("anonymous");
 
         questionText = (TextView) findViewById(R.id.submit_response_question);
         questionText.setText(question);
@@ -81,7 +84,10 @@ public class SubmitResponseActivity extends AppCompatActivity {
         choiceThree = (RadioButton) findViewById(R.id.choice_three);
         choiceFour = (RadioButton) findViewById(R.id.choice_four);
         choiceFive = (RadioButton) findViewById(R.id.choice_five);
-
+        anonIndicator = (TextView) findViewById(R.id.anonymous_indicator);
+        if (!anonymous) {
+            anonIndicator.setVisibility(View.GONE);
+        }
         if (answerChoices != null && !answerChoices.isEmpty()) {
             questionType = QuestionType.MULTIPLE_CHOICE;
             submitMultipleChoice.setVisibility(View.VISIBLE);
@@ -118,10 +124,8 @@ public class SubmitResponseActivity extends AppCompatActivity {
             return;
         }
         SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
-        String author = sharedPreferences.getString("student_name", "Anonymous");
-        if (anon.isChecked()) {
-            author = "Anonymous";
-        }
+        String author = sharedPreferences.getString("student_name", "Unidentified");
+
         DatabaseReference responsesRef = mDatabaseReference.child("responses").child(ticketId).child(mFirebaseInstanceId.getId());
 
         if (questionType == QuestionType.FREE_RESPONSE) {

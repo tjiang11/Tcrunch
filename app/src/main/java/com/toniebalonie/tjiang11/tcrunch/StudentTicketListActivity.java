@@ -170,7 +170,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                             for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
                                                 for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
                                                     Ticket ticket = ticketSnapshot.getValue(Ticket.class);
-                                                    Log.i(TAG, ticket.getAnswerChoices().toString());
                                                     if (ticket.getStartTime() < System.currentTimeMillis()) {
                                                         if (!hasAnswered.contains(ticket.getId())) {
                                                             unansweredTickets.add(ticket);
@@ -255,6 +254,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
             intent.putExtra("start_time", ticket.getStartTime());
             intent.putExtra("end_time", ticket.getEndTime());
             intent.putExtra("ticket_id", ticket.getId());
+            intent.putExtra("anonymous", ticket.isAnonymous());
             intent.putStringArrayListExtra("answer_choices", new ArrayList<>(ticket.getAnswerChoices()));
             startActivity(intent);
         } else if (ticket != null && type.equals("answered")) {
