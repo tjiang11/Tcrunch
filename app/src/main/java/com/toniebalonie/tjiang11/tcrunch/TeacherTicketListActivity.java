@@ -83,6 +83,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
     private FloatingActionButton fab;
 
     TextView noClassText;
+    TextView noTicketText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +155,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
         mSectionedTicketListAdapter.addSection(launched);
 
         noClassText = (TextView) findViewById(R.id.no_class_view);
+        noTicketText = (TextView) findViewById(R.id.no_ticket_view);
 
         mTicketListRecyclerView.setAdapter(mSectionedTicketListAdapter);
 
@@ -179,6 +181,11 @@ public class TeacherTicketListActivity extends AppCompatActivity
                     upcoming.setVisible(false);
                 } else {
                     upcoming.setVisible(true);
+                }
+                if (launchedTickets.size() == 0 && upcomingTickets.size() == 0) {
+                    noTicketText.setVisibility(View.VISIBLE);
+                } else {
+                    noTicketText.setVisibility(View.GONE);
                 }
                 Collections.sort(upcomingTickets, Ticket.TicketTimeComparator);
                 Collections.sort(launchedTickets, Ticket.TicketTimeComparator);
