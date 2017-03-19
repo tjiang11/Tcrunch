@@ -246,14 +246,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        answered.setVisible(false);
-        unanswered.setVisible(false);
-        loadingIndicator.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void onClick(View view, int position, String type) {
         Ticket ticket = null;
         int index = determineIndex(position);
