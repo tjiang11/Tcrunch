@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private NavigationView classListView;
 
     private TextView noTicketText;
+    private RelativeLayout loadingIndicator;
 
     private Section answered;
     private Section unanswered;
@@ -94,6 +96,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         setSupportActionBar(toolbar);
         noTicketText = (TextView) findViewById(R.id.no_ticket_view);
         mRecyclerView = (RecyclerView) findViewById(R.id.student_ticket_list_recycler_view);
+        loadingIndicator = (RelativeLayout) findViewById(R.id.loadingPanel);
         answeredTickets = new ArrayList<Ticket>();
         unansweredTickets = new ArrayList<Ticket>();
         hasAnswered = new HashSet<String>();
@@ -115,6 +118,9 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                answered.setVisible(false);
+                unanswered.setVisible(false);
+                loadingIndicator.setVisibility(View.VISIBLE);
                 if (item.toString().equals("Show All")) {
                     currentClass = null;
                     getSupportActionBar().setTitle("Tcrunch");
@@ -124,7 +130,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 }
                 mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
                 mDrawerLayout.closeDrawers();
-
                 return true;
             }
         });
@@ -155,6 +160,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         classMap.clear();
                         classListView.getMenu().clear();
+                        if (dataSnapshot.getValue() == null) {
+                            noTicketText.setVisibility(View.VISIBLE);
+                            loadingIndicator.setVisibility(View.GONE);
+                        }
+
                         for (final DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
                             Classroom cr = classSnapshot.getValue(Classroom.class);
                             classListView.getMenu().add(cr.getName());
@@ -185,12 +195,19 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                             } else {
                                                 answered.setVisible(true);
                                                 noTicketText.setVisibility(View.GONE);
+                                                Log.i("TAG", "InVisible");
                                             }
                                             if (unansweredTickets.size() == 0) {
                                                 unanswered.setVisible(false);
                                             } else {
                                                 unanswered.setVisible(true);
                                                 noTicketText.setVisibility(View.GONE);
+                                                Log.i("TAG", "InVisible");
+                                            }
+                                            loadingIndicator.setVisibility(View.GONE);
+                                            if (answeredTickets.size() == 0 && unansweredTickets.size() == 0) {
+                                                noTicketText.setVisibility(View.VISIBLE);
+                                                Log.i("TAG", "Visible");
                                             }
                                         }
 
@@ -201,15 +218,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                     }
                             );
                         }
-                        if (answeredTickets.size() == 0) {
-                            answered.setVisible(false);
-                        }
-                        if (unansweredTickets.size() == 0) {
-                            unanswered.setVisible(false);
-                        }
-                        if (answeredTickets.size() == 0 && unansweredTickets.size() == 0) {
-                            noTicketText.setVisibility(View.VISIBLE);
-                        }
+
                         classListView.getMenu().add("Show All");
                         mSectionedTicketListAdapter.notifyDataSetChanged();
                     }
@@ -326,6 +335,9 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                             public void onClick(DialogInterface dialog, int which) {
                                 mDatabaseReference.child("students").child(mFirebaseInstanceId.getId())
                                         .child(currentClass.getId()).removeValue();
+                                answered.setVisible(false);
+                                unanswered.setVisible(false);
+                                loadingIndicator.setVisibility(View.VISIBLE);
                                 mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
                                 getSupportActionBar().setTitle("Tcrunch");
                                 Toast.makeText(parent, "You left " + currentClass.getName(), Toast.LENGTH_SHORT).show();
@@ -351,6 +363,10 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     }
 
     public void doNewClassDialogPositiveClick(String classCode) {
+        noTicketText.setVisibility(View.GONE);
+        answered.setVisible(false);
+        unanswered.setVisible(false);
+        loadingIndicator.setVisibility(View.VISIBLE);
         Query classToAdd = mDatabaseReferenceClasses.orderByChild("courseCode").equalTo(classCode).limitToFirst(1);
         classToAdd.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
