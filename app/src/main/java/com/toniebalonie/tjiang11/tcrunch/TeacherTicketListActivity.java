@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +83,8 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
     private FloatingActionButton fab;
 
+    private RelativeLayout loadingIndicator;
+
     TextView noClassText;
     TextView noTicketText;
 
@@ -118,6 +121,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                loadingIndicator.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.VISIBLE);
                 currentClassName = item.getTitle().toString();
                 currentClass = classMap.get(currentClassName);
@@ -137,6 +141,8 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
         mTicketListRecyclerView = (RecyclerView) findViewById(R.id.ticket_list_recycler_view);
         mTicketListRecyclerView.setHasFixedSize(true);
+
+        loadingIndicator = (RelativeLayout) findViewById(R.id.loadingPanelTeacher);
 
         mTicketListLayoutManager = new LinearLayoutManager(this);
         mTicketListRecyclerView.setLayoutManager(mTicketListLayoutManager);
@@ -190,6 +196,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 Collections.sort(upcomingTickets, Ticket.TicketTimeComparator);
                 Collections.sort(launchedTickets, Ticket.TicketTimeComparator);
                 Collections.reverse(launchedTickets);
+                loadingIndicator.setVisibility(View.GONE);
                 mSectionedTicketListAdapter.notifyDataSetChanged();
             }
 
