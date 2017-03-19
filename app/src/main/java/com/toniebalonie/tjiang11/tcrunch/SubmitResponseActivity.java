@@ -123,6 +123,24 @@ public class SubmitResponseActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a response before submitting.", Toast.LENGTH_LONG).show();
             return;
         }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to submit? You may not edit your response.")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendResponse();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+    }
+
+    private void sendResponse() {
         SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
         String author = sharedPreferences.getString("student_name", "Unidentified");
 

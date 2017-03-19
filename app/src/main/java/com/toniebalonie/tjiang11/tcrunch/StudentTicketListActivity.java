@@ -84,7 +84,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTitle("All classes");
         sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         if (!sharedPrefs.contains("student_name")) {
             DialogFragment createNameDialog = new StudentCreateNameDialog();
@@ -123,7 +123,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 loadingIndicator.setVisibility(View.VISIBLE);
                 if (item.toString().equals("Show All")) {
                     currentClass = null;
-                    getSupportActionBar().setTitle("Tcrunch");
+                    getSupportActionBar().setTitle("All classes");
                 } else {
                     currentClass = classMap.get(item.toString());
                     getSupportActionBar().setTitle(currentClass.getName());
@@ -246,6 +246,14 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        answered.setVisible(false);
+        unanswered.setVisible(false);
+        loadingIndicator.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void onClick(View view, int position, String type) {
         Ticket ticket = null;
         int index = determineIndex(position);
@@ -339,7 +347,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                 unanswered.setVisible(false);
                                 loadingIndicator.setVisibility(View.VISIBLE);
                                 mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
-                                getSupportActionBar().setTitle("Tcrunch");
+                                getSupportActionBar().setTitle("All classes");
                                 Toast.makeText(parent, "You left " + currentClass.getName(), Toast.LENGTH_SHORT).show();
                                 currentClass = null;
                             }
