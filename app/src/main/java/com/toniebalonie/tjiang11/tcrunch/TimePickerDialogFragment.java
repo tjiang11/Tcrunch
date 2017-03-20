@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.TimePicker;
 
+import java.util.Calendar;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,37 +44,15 @@ public class TimePickerDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
     }
 
-
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new TimePickerDialog.Builder(getActivity())
-                .setTitle("Pick a Date")
-                .setView(getActivity().getLayoutInflater().inflate(R.layout.fragment_time_picker_dialog, null))
-                .setPositiveButton(R.string.time_picker_dialog_ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                tp = (TimePicker) getDialog().findViewById(R.id.new_ticket_time_picker);
-                                int hour; int minute;
-                                if (Build.VERSION.SDK_INT >= 23) {
-                                    hour = tp.getHour();
-                                    minute = tp.getMinute();
-                                } else {
-                                    hour = tp.getCurrentHour();
-                                    minute = tp.getCurrentMinute();
-                                }
-                                ((CreateTicketActivity)getActivity()).doTimePickerDialogPositiveClick(hour, minute);
-                            }
-                        }
-                )
-                .setNegativeButton(R.string.time_picker_dialog_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ((CreateTicketActivity)getActivity()).doTimePickerDialogNegativeClick();
-                            }
-                        }
-                )
-                .create();
+        Calendar currentTime = Calendar.getInstance();
+        currentTime.add(Calendar.MINUTE, -1);
+        return new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                ((CreateTicketActivity)getActivity()).doTimePickerDialogPositiveClick(hourOfDay, minute);
+            }
+        }, currentTime.get(Calendar.HOUR_OF_DAY), currentTime.get(Calendar.MINUTE), false);
     }
-
 }

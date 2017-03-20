@@ -34,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -68,6 +69,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private Query mDatabaseReferenceUserClasses;
     private Query mDatabaseReferenceStudentAnsweredTickets;
     private ValueEventListener mValueEventListener;
+    private ValueEventListener innerValueEventListener;
     private FirebaseInstanceId mFirebaseInstanceId;
 
     private HashSet<String> hasAnswered;
@@ -80,6 +82,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private HashMap<String, Classroom> classMap;
 
     private Classroom currentClass = null;
+
+    boolean showingAll = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,11 +128,14 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 if (item.toString().equals("Show All")) {
                     currentClass = null;
                     getSupportActionBar().setTitle("All classes");
+                    showingAll = true;
                 } else {
+                    showingAll = false;
                     currentClass = classMap.get(item.toString());
                     getSupportActionBar().setTitle(currentClass.getName());
                 }
                 mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
+
                 mDrawerLayout.closeDrawers();
                 return true;
             }
@@ -144,13 +151,59 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         unanswered.setVisible(false);
 
         mFirebaseInstanceId = FirebaseInstanceId.getInstance();
+        innerValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!showingAll) {
+                    answeredTickets.clear();
+                    unansweredTickets.clear();
+                }
+                Log.i("innerValueEventListener", "D");
+                for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
+                    Log.i("classSnapshot2", classSnapshot2.toString());
+                    for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
+                        Log.i("ticketSnapshot", ticketSnapshot.toString());
+                        Ticket ticket = ticketSnapshot.getValue(Ticket.class);
+                        if (ticket.getStartTime() < System.currentTimeMillis()) {
+                            if (!hasAnswered.contains(ticket.getId())) {
+                                unansweredTickets.add(ticket);
+                            } else {
+                                answeredTickets.add(ticket);
+                            }
+                        }
+                        mSectionedTicketListAdapter.notifyDataSetChanged();
+                    }
+                }
+                if (answeredTickets.size() == 0) {
+                    answered.setVisible(false);
+                } else {
+                    answered.setVisible(true);
+                    noTicketText.setVisibility(View.GONE);
+                }
+                if (unansweredTickets.size() == 0) {
+                    unanswered.setVisible(false);
+                } else {
+                    unanswered.setVisible(true);
+                    noTicketText.setVisibility(View.GONE);
+                }
+                loadingIndicator.setVisibility(View.GONE);
+                if (answeredTickets.size() == 0 && unansweredTickets.size() == 0) {
+                    noTicketText.setVisibility(View.VISIBLE);
+                }
+                Collections.sort(unansweredTickets, Ticket.TicketTimeComparator);
+                Collections.sort(answeredTickets, Ticket.TicketTimeComparator);
+                Collections.reverse(answeredTickets);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadTickets:onCancelled");
+            }
+        };
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 hasAnswered.clear();
-                answeredTickets.clear();
-                unansweredTickets.clear();
                 for (DataSnapshot ticketSnapshot : dataSnapshot.getChildren()) {
                     hasAnswered.add(ticketSnapshot.getValue().toString());
                 }
@@ -159,6 +212,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         classMap.clear();
+                        answeredTickets.clear();
+                        unansweredTickets.clear();
                         classListView.getMenu().clear();
                         if (dataSnapshot.getValue() == null) {
                             noTicketText.setVisibility(View.VISIBLE);
@@ -170,52 +225,14 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                             classListView.getMenu().add(cr.getName());
                             classMap.put(cr.getName(), cr);
                             String classId = cr.getId();
+                            mDatabaseReferenceTickets.orderByKey().equalTo(classId).removeEventListener(
+                                    innerValueEventListener
+                            );
                             if (currentClass != null && !classId.equals(currentClass.getId())) {
                                 continue;
                             }
-                            mDatabaseReferenceTickets.orderByKey().equalTo(classId).addListenerForSingleValueEvent(
-                                    new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
-                                                for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
-                                                    Ticket ticket = ticketSnapshot.getValue(Ticket.class);
-                                                    if (ticket.getStartTime() < System.currentTimeMillis()) {
-                                                        if (!hasAnswered.contains(ticket.getId())) {
-                                                            unansweredTickets.add(ticket);
-                                                        } else {
-                                                            answeredTickets.add(ticket);
-                                                        }
-                                                    }
-                                                    mSectionedTicketListAdapter.notifyDataSetChanged();
-                                                }
-                                            }
-                                            if (answeredTickets.size() == 0) {
-                                                answered.setVisible(false);
-                                            } else {
-                                                answered.setVisible(true);
-                                                noTicketText.setVisibility(View.GONE);
-                                                Log.i("TAG", "InVisible");
-                                            }
-                                            if (unansweredTickets.size() == 0) {
-                                                unanswered.setVisible(false);
-                                            } else {
-                                                unanswered.setVisible(true);
-                                                noTicketText.setVisibility(View.GONE);
-                                                Log.i("TAG", "InVisible");
-                                            }
-                                            loadingIndicator.setVisibility(View.GONE);
-                                            if (answeredTickets.size() == 0 && unansweredTickets.size() == 0) {
-                                                noTicketText.setVisibility(View.VISIBLE);
-                                                Log.i("TAG", "Visible");
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                            Log.w(TAG, "loadTickets:onCancelled");
-                                        }
-                                    }
+                            mDatabaseReferenceTickets.orderByKey().equalTo(classId).addValueEventListener(
+                                    innerValueEventListener
                             );
                         }
 
