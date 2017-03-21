@@ -43,8 +43,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 
 import static com.toniebalonie.tjiang11.tcrunch.LoginActivity.PREFS_NAME;
 
-public class TeacherTicketListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
+public class TeacherTicketListActivity extends AppCompatActivity implements
         ItemClickListener {
 
     private static final String TAG = TeacherTicketListActivity.class.getName();
@@ -87,6 +86,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
     TextView noClassText;
     TextView noTicketText;
+    TextView classDeletedText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +121,10 @@ public class TeacherTicketListActivity extends AppCompatActivity
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.no_class_item) {
+                    return false;
+                }
+                classDeletedText.setVisibility(View.GONE);
                 loadingIndicator.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.VISIBLE);
                 currentClassName = item.getTitle().toString();
@@ -162,8 +166,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
 
         noClassText = (TextView) findViewById(R.id.no_class_view);
         noTicketText = (TextView) findViewById(R.id.no_ticket_view);
+        classDeletedText = (TextView) findViewById(R.id.class_deleted_view);
 
         mTicketListRecyclerView.setAdapter(mSectionedTicketListAdapter);
+
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
         mValueEventListener = new ValueEventListener() {
             @Override
@@ -188,10 +196,12 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 } else {
                     upcoming.setVisible(true);
                 }
-                if (launchedTickets.size() == 0 && upcomingTickets.size() == 0) {
+                if (launchedTickets.size() == 0 && upcomingTickets.size() == 0 && classList.size() != 0) {
                     noTicketText.setVisibility(View.VISIBLE);
+                    noClassText.setVisibility(View.GONE);
                 } else {
                     noTicketText.setVisibility(View.GONE);
+                    fab.setVisibility(View.VISIBLE);
                 }
                 Collections.sort(upcomingTickets, Ticket.TicketTimeComparator);
                 Collections.sort(launchedTickets, Ticket.TicketTimeComparator);
@@ -205,8 +215,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mAuth = FirebaseAuth.getInstance();
 
         mClassesSingleValueEventListener = new ValueEventListener() {
             @Override
@@ -223,6 +231,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
                     return;
                 }
                 noClassText.setVisibility(View.VISIBLE);
+                noTicketText.setVisibility(View.GONE);
                 fab.setVisibility(View.GONE);
                 currentClass = null;
             }
@@ -251,6 +260,7 @@ public class TeacherTicketListActivity extends AppCompatActivity
                     noClassText.setVisibility(View.GONE);
                 } else {
                     noClassText.setVisibility(View.VISIBLE);
+                    classListView.getMenu().add(0, R.id.no_class_item, 0, "No classes yet");
                 }
             }
 
@@ -260,8 +270,25 @@ public class TeacherTicketListActivity extends AppCompatActivity
             }
         };
         mDatabaseReferenceClasses = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid());
-        mDatabaseReferenceClasses.addListenerForSingleValueEvent(mClassesSingleValueEventListener);
-        mDatabaseReferenceClasses.addValueEventListener(mClassesValueEventListener);
+        mDatabaseReferenceClasses.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    mDatabaseReferenceClasses.addListenerForSingleValueEvent(mClassesSingleValueEventListener);
+                } else {
+                    loadingIndicator.setVisibility(View.GONE);
+                    noClassText.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.GONE);
+                }
+                mDatabaseReferenceClasses.addValueEventListener(mClassesValueEventListener);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -326,6 +353,10 @@ public class TeacherTicketListActivity extends AppCompatActivity
                                 mDatabaseReference.child("tickets").child(currentClass.getId()).removeValue();
                                 getSupportActionBar().setTitle("Tcrunch");
                                 currentClass = null;
+                                fab.setVisibility(View.GONE);
+                                noTicketText.setVisibility(View.GONE);
+                                if (classList.size() > 1)
+                                classDeletedText.setVisibility(View.VISIBLE);
                                 Toast.makeText(parent, "Class deleted", Toast.LENGTH_SHORT).show();
                             }
                         })
@@ -361,14 +392,6 @@ public class TeacherTicketListActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override

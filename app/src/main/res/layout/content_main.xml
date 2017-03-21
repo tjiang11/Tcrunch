@@ -41,4 +41,12 @@
         android:visibility="gone"
         android:text="This class has no tickets yet."/>
 
+    <TextView
+        android:id="@+id/class_deleted_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="Your class was deleted. Select another class."/>
+
 </RelativeLayout>
