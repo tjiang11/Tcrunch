@@ -70,6 +70,9 @@ public class CreateTicketActivity extends AppCompatActivity {
     private ArrayList<String> classList;
     private HashMap<String, Classroom> classMap;
 
+    private boolean launchDateSet = false;
+    private boolean launchTimeSet = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,8 +233,8 @@ public class CreateTicketActivity extends AppCompatActivity {
     public void doDatePickerDialogPositiveClick(int day, int month, int year, String dayOfWeek) {
         String newDate = dayOfWeek + ", " + (month + 1) + "/" + day + "/" + year;
         startyear = year; startmonth = month; startday = day;
-
         setDate.setText(newDate);
+        launchDateSet = true;
     }
 
     public void doTimePickerDialogPositiveClick(int tpHour, int tpMinute) {
@@ -245,21 +248,32 @@ public class CreateTicketActivity extends AppCompatActivity {
         String newTime = "" + hour + ":" + zeroPad + tpMinute + " " + AM_PM;
 
         starthour = tpHour; startminute = tpMinute;
-
         setTime.setText(newTime);
-    }
-
-    public void doTimePickerDialogNegativeClick() {
-        Log.i("CreateTicketActivity", "TimePickerDialogNegativeClick");
+        launchTimeSet = true;
     }
 
     public void createTicket() {
+        if (!launchDateSet) {
+            Toast.makeText(this, "Please select a launch date.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!launchTimeSet) {
+            Toast.makeText(this, "Please select a launch time.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (question.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Ticket cannot be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Calendar calendar = Calendar.getInstance();
         calendar.set(startyear, startmonth, startday - 1);
         calendar.set(Calendar.HOUR, starthour);
         calendar.set(Calendar.MINUTE, startminute);
         calendar.add(Calendar.HOUR, 12);
         long startTime = calendar.getTimeInMillis();
+        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+            Toast.makeText(this, "Your ticket has been launched.", Toast.LENGTH_SHORT).show();
+        }
 
         final int msPerHour = 3600000;
         long endTime = startTime + ticketLength * msPerHour;
