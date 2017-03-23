@@ -54,7 +54,7 @@ public class ForgotPasswordDialog extends DialogFragment {
         super.onStart();
         AlertDialog d = (AlertDialog) getDialog();
         if (d != null) {
-            Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
+            Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -55,6 +55,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private SectionedTicketListAdapter mSectionedTicketListAdapter;
     private RecyclerView.LayoutManager mTicketListLayoutManager;
 
+    private TextView userDisplayName;
     private NavigationView classListView;
 
     private TextView noTicketText;
@@ -117,8 +118,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         classMap = new HashMap<String, Classroom>();
         classListView = (NavigationView) findViewById(R.id.nav_view);
         View header = classListView.getHeaderView(0);
-        TextView userEmail = (TextView) header.findViewById(R.id.user_info);
-        userEmail.setText(sharedPrefs.getString("student_name", "No name specified"));
+        userDisplayName = (TextView) header.findViewById(R.id.user_info);
+        userDisplayName.setText(sharedPrefs.getString("student_name", "No name specified"));
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -158,11 +159,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     answeredTickets.clear();
                     unansweredTickets.clear();
                 }
-                Log.i("innerValueEventListener", "D");
                 for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
-                    Log.i("classSnapshot2", classSnapshot2.toString());
                     for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
-                        Log.i("ticketSnapshot", ticketSnapshot.toString());
                         Ticket ticket = ticketSnapshot.getValue(Ticket.class);
                         if (ticket.getStartTime() < System.currentTimeMillis()) {
                             if (!hasAnswered.contains(ticket.getId())) {
@@ -376,6 +374,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
             return true;
         }
 
+        if (id == R.id.edit_display_name) {
+            DialogFragment createNameDialog = new StudentCreateNameDialog();
+            createNameDialog.show(getFragmentManager(), "edit name");
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -415,5 +418,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString("student_name", name);
         editor.apply();
+        userDisplayName.setText(name);
     }
 }

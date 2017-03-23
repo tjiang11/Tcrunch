@@ -13,13 +13,18 @@
         android:title="Leave class"
         app:showAsAction="never" />
     <item
-        android:id="@+id/FAQ"
+        android:id="@+id/edit_display_name"
         android:orderInCategory="3"
+        android:title="Edit Display Name"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/FAQ"
+        android:orderInCategory="4"
         android:title="FAQ"
         app:showAsAction="never" />
     <item
         android:id="@+id/log_out"
-        android:orderInCategory="4"
+        android:orderInCategory="5"
         android:title="@string/log_out"
         app:showAsAction="never" />
 </menu>
