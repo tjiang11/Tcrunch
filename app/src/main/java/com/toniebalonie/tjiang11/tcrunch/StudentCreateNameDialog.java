@@ -29,9 +29,9 @@ public class StudentCreateNameDialog extends DialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //Do nothing here because we override this button later to change the close behaviour.
-                        //However, we still need this because on older versions of Android unless we
-                        //pass a handler the button doesn't get instantiated
+                    //Do nothing here because we override this button later to change the close behaviour.
+                    //However, we still need this because on older versions of Android unless we
+                    //pass a handler the button doesn't get instantiated
                     }
                 });
         builder.setView(view);
