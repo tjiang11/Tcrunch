@@ -232,7 +232,7 @@ public class CreateTicketActivity extends AppCompatActivity {
 
     public void doDatePickerDialogPositiveClick(int day, int month, int year, String dayOfWeek) {
         String newDate = dayOfWeek + ", " + (month + 1) + "/" + day + "/" + year;
-        startyear = year; startmonth = month; startday = day;
+        startyear = year; startmonth = month; startday = day + 1;
         setDate.setText(newDate);
         launchDateSet = true;
     }
@@ -247,9 +247,41 @@ public class CreateTicketActivity extends AppCompatActivity {
         if (tpMinute < 10) zeroPad = "0";
         String newTime = "" + hour + ":" + zeroPad + tpMinute + " " + AM_PM;
 
-        starthour = tpHour; startminute = tpMinute;
+        starthour = tpHour;
+        startminute = tpMinute;
+        if (launchDateSet) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(startyear, startmonth, startday - 1);
+            calendar.set(Calendar.HOUR_OF_DAY, starthour);
+            calendar.set(Calendar.MINUTE, startminute);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            if (calendar.getTimeInMillis() < System.currentTimeMillis() - 120000) {
+                Toast.makeText(this, "You've selected a launch time in the past. We've set the time to be now.", Toast.LENGTH_LONG).show();
+                calendar = Calendar.getInstance();
+                tpHour = calendar.get(Calendar.HOUR_OF_DAY);
+                tpMinute = calendar.get(Calendar.MINUTE);
+                starthour = tpHour;
+                startminute = tpMinute;
+                AM_PM = tpHour < 12 ? "AM" : "PM";
+                if (tpHour == 0) hour = 12;
+                if (tpHour > 12) hour = tpHour - 12;
+                if (tpMinute < 10) zeroPad = "0";
+                newTime = "" + hour + ":" + zeroPad + tpMinute + " " + AM_PM;
+
+                String newDate = getDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK)) + ", " +
+                        (calendar.get(Calendar.MONTH) + 1) + "/" +
+                        calendar.get(Calendar.DAY_OF_MONTH) + "/" +
+                        calendar.get(Calendar.YEAR);
+                startyear = calendar.get(Calendar.YEAR);
+                startmonth = calendar.get(Calendar.MONTH);
+                startday = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+                setDate.setText(newDate);
+            }
+        }
         setTime.setText(newTime);
         launchTimeSet = true;
+
     }
 
     public void createTicket() {
@@ -267,9 +299,10 @@ public class CreateTicketActivity extends AppCompatActivity {
         }
         Calendar calendar = Calendar.getInstance();
         calendar.set(startyear, startmonth, startday - 1);
-        calendar.set(Calendar.HOUR, starthour);
+        calendar.set(Calendar.HOUR_OF_DAY, starthour);
         calendar.set(Calendar.MINUTE, startminute);
-        calendar.add(Calendar.HOUR, 12);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         long startTime = calendar.getTimeInMillis();
         if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
             Toast.makeText(this, "Your ticket has been launched.", Toast.LENGTH_SHORT).show();
@@ -387,5 +420,33 @@ public class CreateTicketActivity extends AppCompatActivity {
         if (choiceNum <= 3) {
             choiceNum++;
         }
+    }
+
+    private String getDayOfWeek(int value) {
+        String day = "";
+        switch (value) {
+            case 1:
+                day = "Sunday";
+                break;
+            case 2:
+                day = "Monday";
+                break;
+            case 3:
+                day = "Tuesday";
+                break;
+            case 4:
+                day = "Wednesday";
+                break;
+            case 5:
+                day = "Thursday";
+                break;
+            case 6:
+                day = "Friday";
+                break;
+            case 7:
+                day = "Saturday";
+                break;
+        }
+        return day;
     }
 }

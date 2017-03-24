@@ -180,7 +180,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 upcomingTickets.clear();
                 for (DataSnapshot ticketSnapshot: dataSnapshot.getChildren()) {
                     Ticket mTicket = ticketSnapshot.getValue(Ticket.class);
-                    if (mTicket.getStartTime() < System.currentTimeMillis()) {
+                    if (mTicket.getStartTime() <= System.currentTimeMillis()) {
                         launchedTickets.add(mTicket);
                     } else {
                         upcomingTickets.add(mTicket);
@@ -432,49 +432,60 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         }
     }
 
-    public void doNewClassDialogPositiveClick(final String className) {
+    public void doNewClassDialogPositiveClick(final String className, final String classCode) {
         for (String c : classList) {
             if (className.equals(c)) {
                 Toast.makeText(this, "You already have a class with that name.", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
-
-        Query classRef = mDatabaseReference.child("classes").orderByChild("name").equalTo(className);
         final TeacherTicketListActivity ttla = this;
-        classRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query classRefByCode = mDatabaseReference.child("classes").orderByChild("courseCode").equalTo(classCode);
+        final Query classRef = mDatabaseReference.child("classes").orderByChild("name").equalTo(className);
+        classRefByCode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    Toast.makeText(ttla, "That class name is taken.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ttla, "That class code is taken.", Toast.LENGTH_SHORT).show();
                 } else {
-                    DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
-                    String newClassId = newClassRef.getKey();
-                    String courseCode = Long.toString(System.currentTimeMillis(), 36);
+                    classRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                Toast.makeText(ttla, "That class name is taken.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
+                                String newClassId = newClassRef.getKey();
+                                String courseCode = classCode;
 
-                    Classroom newClassroom = new Classroom(newClassId, className, courseCode);
-                    newClassRef.setValue(newClassroom);
+                                Classroom newClassroom = new Classroom(newClassId, className, courseCode);
+                                newClassRef.setValue(newClassroom);
 
-                    DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
-                    newClassRefClasses.setValue(newClassroom);
+                                DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
+                                newClassRefClasses.setValue(newClassroom);
 
-                    classListView.getMenu().add(className);
-                    currentClass = newClassroom;
-                    Log.i(TAG, currentClass.toString());
-                    getSupportActionBar().setTitle(currentClass.getName());
-                    fab.setVisibility(View.VISIBLE);
-                    mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-                    mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                                classListView.getMenu().add(className);
+                                currentClass = newClassroom;
+                                Log.i(TAG, currentClass.toString());
+                                getSupportActionBar().setTitle(currentClass.getName());
+                                fab.setVisibility(View.VISIBLE);
+                                mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
+                                mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "Error creating class: " + databaseError.toString());
+                        }
+                    });
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.i(TAG, "Error creating class");
+                Log.w(TAG, "Error creating class: " + databaseError.toString());
             }
         });
-
-
     }
 
     public Classroom getCurrentClass() {

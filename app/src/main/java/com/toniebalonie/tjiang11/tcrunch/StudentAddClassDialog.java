@@ -19,8 +19,8 @@ public class StudentAddClassDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final View view = getActivity().getLayoutInflater().inflate(R.layout.addclass_edittext, null);
-        final EditText input = (EditText) view.findViewById(R.id.add_class_input);
+        final View view = getActivity().getLayoutInflater().inflate(R.layout.add_class_student, null);
+        final EditText input = (EditText) view.findViewById(R.id.class_code);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setHint("Course Code");
         builder.setMessage("Add a new class")

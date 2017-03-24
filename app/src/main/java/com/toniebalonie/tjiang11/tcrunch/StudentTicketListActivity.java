@@ -219,10 +219,10 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                         }
 
                         for (final DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
-                            Classroom cr = classSnapshot.getValue(Classroom.class);
-                            classListView.getMenu().add(cr.getName());
-                            classMap.put(cr.getName(), cr);
-                            String classId = cr.getId();
+                            Classroom newClass = classSnapshot.getValue(Classroom.class);
+                            classListView.getMenu().add(newClass.getName());
+                            classMap.put(newClass.getName(), newClass);
+                            String classId = newClass.getId();
                             mDatabaseReferenceTickets.orderByKey().equalTo(classId).removeEventListener(
                                     innerValueEventListener
                             );
@@ -353,10 +353,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                                 answered.setVisible(false);
                                 unanswered.setVisible(false);
                                 loadingIndicator.setVisibility(View.VISIBLE);
-                                mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
-                                getSupportActionBar().setTitle("All classes");
                                 Toast.makeText(parent, "You left " + currentClass.getName(), Toast.LENGTH_SHORT).show();
                                 currentClass = null;
+                                showingAll = true;
+                                mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
+                                getSupportActionBar().setTitle("All classes");
                             }
                         })
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -383,27 +384,34 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     }
 
     public void doNewClassDialogPositiveClick(String classCode) {
-        noTicketText.setVisibility(View.GONE);
+        final boolean answeredVisible = answered.isVisible();
+        final boolean unansweredVisible = unanswered.isVisible();
         answered.setVisible(false);
         unanswered.setVisible(false);
+        noTicketText.setVisibility(View.GONE);
         loadingIndicator.setVisibility(View.VISIBLE);
         Query classToAdd = mDatabaseReferenceClasses.orderByChild("courseCode").equalTo(classCode).limitToFirst(1);
         classToAdd.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int size = 0;
+                boolean newClassExists = false;
                 for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
-                    size++;
+                    newClassExists = true;
                     Classroom classToAdd = classSnapshot.getValue(Classroom.class);
                     DatabaseReference addClass = mDatabaseReference.child("students")
                             .child(mFirebaseInstanceId.getId()).child(classToAdd.getId());
                     addClass.setValue(classToAdd);
-
+                    currentClass = classToAdd;
+                    getSupportActionBar().setTitle(currentClass.getName());
                     DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
                     answeredRef.addListenerForSingleValueEvent(mValueEventListener);
+                    Toast.makeText(stla, "Joined class " + classToAdd.getName(), Toast.LENGTH_SHORT).show();
                 }
-                if (size == 0) {
+                if (!newClassExists) {
+                    if (answeredVisible) { answered.setVisible(true); }
+                    if (unansweredVisible) { answered.setVisible(true); }
                     Toast.makeText(stla, "Could not find a matching class.", Toast.LENGTH_SHORT).show();
+                    loadingIndicator.setVisibility(View.GONE);
                 }
             }
 

@@ -23,9 +23,8 @@ public class StudentCreateNameDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final View view = getActivity().getLayoutInflater().inflate(R.layout.addclass_edittext, null);
-        input = (EditText) view.findViewById(R.id.add_class_input);
-        input.setHint("Your Name");
+        final View view = getActivity().getLayoutInflater().inflate(R.layout.create_name_student, null);
+        input = (EditText) view.findViewById(R.id.student_name);
         builder.setMessage("What's your full name?")
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override

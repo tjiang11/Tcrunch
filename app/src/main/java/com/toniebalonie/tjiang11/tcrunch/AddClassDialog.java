@@ -20,12 +20,15 @@ public class AddClassDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = getActivity().getLayoutInflater().inflate(R.layout.addclass_edittext, null);
         final EditText input = (EditText) view.findViewById(R.id.add_class_input);
+        final EditText classCodeInput = (EditText) view.findViewById(R.id.class_code);
         builder.setMessage("Add a new class")
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ((TeacherTicketListActivity) getActivity())
-                                .doNewClassDialogPositiveClick(input.getText().toString());
+                                .doNewClassDialogPositiveClick(
+                                        input.getText().toString(),
+                                        classCodeInput.getText().toString());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
