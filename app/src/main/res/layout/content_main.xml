@@ -39,7 +39,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="This class has no tickets yet."/>
+        android:text="@string/class_has_no_tickets"/>
 
     <TextView
         android:id="@+id/class_deleted_view"
@@ -47,6 +47,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="Your class was deleted. Select another class."/>
+        android:text="@string/class_deleted"/>
 
 </RelativeLayout>

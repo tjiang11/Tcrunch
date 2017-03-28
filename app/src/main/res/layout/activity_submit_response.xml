@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="390dp"
             android:inputType="textCapSentences|textMultiLine"
-            android:hint="Type your response..."
+            android:hint="@string/type_your_response"
             android:gravity="top" />
 
         <RadioGroup
@@ -44,35 +44,30 @@
             <RadioButton
                 android:id="@+id/choice_one"
                 android:visibility="gone"
-                android:text="Choice 1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
             <RadioButton
                 android:id="@+id/choice_two"
                 android:visibility="gone"
-                android:text="Choice 2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
             <RadioButton
                 android:id="@+id/choice_three"
                 android:visibility="gone"
-                android:text="Choice 3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
             <RadioButton
                 android:id="@+id/choice_four"
                 android:visibility="gone"
-                android:text="Choice 4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
             <RadioButton
                 android:id="@+id/choice_five"
                 android:visibility="gone"
-                android:text="Choice 5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
@@ -86,11 +81,11 @@
             android:orientation="vertical" >
             <TextView
                 android:id="@+id/anonymous_indicator"
-                android:text="Your response will be anonymous."
+                android:text="@string/student_anon_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
-                android:text="Submit"
+                android:text="@string/submit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -100,7 +95,5 @@
                 android:id="@+id/submit_response_button" />
         </LinearLayout>
     </LinearLayout>
-
-
 </ScrollView>
 

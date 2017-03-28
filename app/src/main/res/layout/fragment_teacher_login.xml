@@ -65,7 +65,7 @@
         android:id="@+id/forgotPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Forgot Password?"
+        android:text="@string/forgot_password_question"
         android:layout_below="@id/teacherRegisterButton"
         android:textAlignment="center"
         android:layout_marginTop="10dp"

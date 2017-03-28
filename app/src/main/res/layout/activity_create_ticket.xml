@@ -94,7 +94,7 @@
             android:layout_alignParentStart="true" />
 
         <CheckBox
-            android:text="Multiple Choice"
+            android:text="@string/multiple_choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/multipleChoiceCheckbox"
@@ -107,9 +107,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/anonResponseCheckbox"
-            android:text="Anonymous Responses"
+            android:text="@string/anonymous_responses"
             android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
             android:layout_toRightOf="@id/multipleChoiceCheckbox"
+            android:layout_toEndOf="@id/multipleChoiceCheckbox"
             android:layout_alignTop="@id/multipleChoiceCheckbox"/>
 
         <EditText
@@ -117,7 +119,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:inputType="textCapSentences"
-            android:hint="Choice 1"
+            android:hint="@string/choice_one"
             android:ems="10"
             android:id="@+id/choiceOne"
             android:layout_below="@+id/multipleChoiceCheckbox"
@@ -129,10 +131,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/removeChoiceOne"
             android:visibility="gone"
-            android:contentDescription="Remove Choice One"
+            android:contentDescription="@string/remove_choice_one"
             app:srcCompat="@drawable/ic_remove_black_24dp"
             android:tint="#FF0000"
             android:layout_toRightOf="@id/choiceOne"
+            android:layout_toEndOf="@id/choiceOne"
             android:layout_alignBottom="@id/choiceOne"
             android:layout_marginBottom="10dp"/>
 
@@ -141,7 +144,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:inputType="textCapSentences"
-            android:hint="Choice 2"
+            android:hint="@string/choice_two"
             android:ems="10"
             android:layout_below="@+id/choiceOne"
             android:layout_alignRight="@+id/choiceOne"
@@ -153,10 +156,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/removeChoiceTwo"
             android:visibility="gone"
-            android:contentDescription="Remove Choice Two"
+            android:contentDescription="@string/remove_choice_two"
             app:srcCompat="@drawable/ic_remove_black_24dp"
             android:tint="#FF0000"
             android:layout_toRightOf="@+id/choiceTwo"
+            android:layout_toEndOf="@id/choiceTwo"
             android:layout_alignBottom="@id/choiceTwo"
             android:layout_marginBottom="10dp"/>
 
@@ -165,7 +169,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:inputType="textCapSentences"
-            android:hint="Choice 3"
+            android:hint="@string/choice_three"
             android:ems="10"
             android:id="@+id/choiceThree"
             android:layout_below="@+id/choiceTwo"
@@ -177,10 +181,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/removeChoiceThree"
             android:visibility="gone"
-            android:contentDescription="Remove Choice Three"
+            android:contentDescription="@string/remove_choice_three"
             app:srcCompat="@drawable/ic_remove_black_24dp"
             android:tint="#FF0000"
             android:layout_toRightOf="@+id/choiceThree"
+            android:layout_toEndOf="@id/choiceThree"
             android:layout_alignBottom="@id/choiceThree"
             android:layout_marginBottom="10dp"/>
 
@@ -189,7 +194,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:inputType="textCapSentences"
-            android:hint="Choice 4"
+            android:hint="@string/choice_four"
             android:ems="10"
             android:id="@+id/choiceFour"
             android:layout_below="@+id/choiceThree"
@@ -201,10 +206,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/removeChoiceFour"
             android:visibility="gone"
-            android:contentDescription="Remove Choice Four"
+            android:contentDescription="@string/remove_choice_four"
             app:srcCompat="@drawable/ic_remove_black_24dp"
             android:tint="#FF0000"
             android:layout_toRightOf="@+id/choiceFour"
+            android:layout_toEndOf="@id/choiceFour"
             android:layout_alignBottom="@id/choiceFour"
             android:layout_marginBottom="10dp"/>
 
@@ -213,7 +219,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:inputType="textCapSentences"
-            android:hint="Choice 5"
+            android:hint="@string/choice_five"
             android:ems="10"
             android:id="@+id/choiceFive"
             android:layout_below="@+id/choiceFour"
@@ -225,10 +231,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/removeChoiceFive"
             android:visibility="gone"
-            android:contentDescription="Remove Choice Five"
+            android:contentDescription="@string/remove_choice_five"
             app:srcCompat="@drawable/ic_remove_black_24dp"
             android:tint="#FF0000"
             android:layout_toRightOf="@+id/choiceFive"
+            android:layout_toEndOf="@+id/choiceFive"
             android:layout_alignBottom="@id/choiceFive"
             android:layout_marginBottom="10dp"/>
 
@@ -250,11 +257,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#42c5f4"
-            android:text="+ Add choice"
+            android:text="@string/add_choice"
             android:layout_below="@+id/choiceFive"
             android:layout_marginLeft="30dp"
             android:layout_marginStart="30dp" />
-
-
     </RelativeLayout>
 </ScrollView>

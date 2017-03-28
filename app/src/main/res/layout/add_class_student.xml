@@ -11,5 +11,5 @@
         android:layout_marginLeft="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:hint="Class Code"/>
+        android:hint="@string/class_code"/>
 </LinearLayout>

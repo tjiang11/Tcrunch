@@ -1,43 +1,54 @@
 <resources>
     <string name="app_name">Tcrunch</string>
     <string name="app_name_lower">tcrunch</string>
-
     <string name="course_code">Course Code</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="start">start</string>
     <string name="enter_email">E-mail address</string>
     <string name="enter_password">Password</string>
     <string name="sign_in">Sign in</string>
     <string name="register">Register</string>
-
     <string name="action_settings">Settings</string>
-
     <string name="time_picker_dialog_ok">OK</string>
     <string name="time_picker_dialog_cancel">@android:string/cancel</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="set_a_date">Set a launch date</string>
     <string name="set_a_time">Pick a launch time</string>
     <string name="set_a_length">1 hour</string>
     <string name="ask_a_question">Ask a question&#8230;</string>
     <string name="create">Create</string>
-
     <string name="responses">RESPONSES</string>
-
     <string name="log_out">Log out</string>
-
     <string name="no_class_text">You have no classes.</string>
     <string name="no_ticket_text">No tickets to show.</string>
-
     <string name="enter">enter</string>
-
     <string name="delete">Delete Ticket</string>
-
     <string name="email_ticket_data">Email Ticket Data</string>
-
     <string name="your_response">Your Response</string>
+    <string name="multiple_choice">Multiple Choice</string>
+    <string name="anonymous_responses">Anonymous Responses</string>
+    <string name="choice_one">Choice 1</string>
+    <string name="choice_two">Choice 2</string>
+    <string name="choice_three">Choice 3</string>
+    <string name="choice_four">Choice 4</string>
+    <string name="choice_five">Choice 5</string>
+    <string name="remove_choice_one">Remove Choice One</string>
+    <string name="remove_choice_two">Remove Choice Two</string>
+    <string name="remove_choice_three">Remove Choice Three</string>
+    <string name="remove_choice_four">Remove Choice Four</string>
+    <string name="remove_choice_five">Remove Choice Five</string>
+    <string name="add_choice">+ Add choice</string>
+    <string name="type_your_response">Type your response&#8230;</string>
+    <string name="student_anon_indicator">Your response will be anonymous.</string>
+    <string name="submit">Submit</string>
+    <string name="class_code">Class Code</string>
+    <string name="class_name">Class Name</string>
+    <string name="class_has_no_tickets">This class has no tickets yet.</string>
+    <string name="class_deleted">Your class was deleted. Select another class.</string>
+    <string name="your_name">Your Name</string>
+    <string name="pw_reset_instr">Type in the email address you want to reset the password for and we\'ll send you instructions for resetting your password.</string>
+    <string name="email">E-mail</string>
+    <string name="forgot_password_question">Forgot Password?</string>
+    <string name="app_icon">App Icon</string>
 </resources>
