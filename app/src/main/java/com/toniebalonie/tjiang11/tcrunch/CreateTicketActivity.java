@@ -248,7 +248,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                 calendar = Calendar.getInstance();
                 startyear = calendar.get(Calendar.YEAR);
                 startmonth = calendar.get(Calendar.MONTH);
-                startday = calendar.get(Calendar.DAY_OF_MONTH);
+                startday = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                 starthour = calendar.get(Calendar.HOUR_OF_DAY);
                 startminute = calendar.get(Calendar.MINUTE);
 
