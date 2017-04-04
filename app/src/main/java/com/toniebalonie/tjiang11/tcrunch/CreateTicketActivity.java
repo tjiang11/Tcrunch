@@ -235,6 +235,41 @@ public class CreateTicketActivity extends AppCompatActivity {
         startyear = year; startmonth = month; startday = day + 1;
         setDate.setText(newDate);
         launchDateSet = true;
+
+        if (launchTimeSet) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(startyear, startmonth, startday - 1);
+            calendar.set(Calendar.HOUR_OF_DAY, starthour);
+            calendar.set(Calendar.MINUTE, startminute);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            if (calendar.getTimeInMillis() < System.currentTimeMillis() - 120000) {
+                Toast.makeText(this, "You've selected a launch time in the past. We've set the time to be now.", Toast.LENGTH_LONG).show();
+                calendar = Calendar.getInstance();
+                startyear = calendar.get(Calendar.YEAR);
+                startmonth = calendar.get(Calendar.MONTH);
+                startday = calendar.get(Calendar.DAY_OF_MONTH);
+                starthour = calendar.get(Calendar.HOUR_OF_DAY);
+                startminute = calendar.get(Calendar.MINUTE);
+
+                int hour = starthour;
+                int minute = startminute;
+                String zeroPad = "";
+                String AM_PM = hour < 12 ? "AM" : "PM";
+                if (hour == 0) hour = 12;
+                if (hour > 12) hour = hour - 12;
+                if (minute < 10) zeroPad = "0";
+
+                String newTime = "" + hour + ":" + zeroPad + minute + " " + AM_PM;
+                setTime.setText(newTime);
+
+                newDate = getDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK)) + ", " +
+                        (calendar.get(Calendar.MONTH) + 1) + "/" +
+                        calendar.get(Calendar.DAY_OF_MONTH) + "/" +
+                        calendar.get(Calendar.YEAR);
+                setDate.setText(newDate);
+            }
+        }
     }
 
     public void doTimePickerDialogPositiveClick(int tpHour, int tpMinute) {
@@ -448,5 +483,9 @@ public class CreateTicketActivity extends AppCompatActivity {
                 break;
         }
         return day;
+    }
+
+    private void checkTimeInPast() {
+
     }
 }

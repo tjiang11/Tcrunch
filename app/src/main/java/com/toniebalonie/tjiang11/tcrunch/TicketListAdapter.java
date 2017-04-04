@@ -66,6 +66,4 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Vi
 
         ticketTime.setText(dateFormatted);
     }
-
-
 }
