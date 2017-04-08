@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -97,12 +98,21 @@ public class LoginActivity extends AppCompatActivity
 
     public void createTeacherAccount(final String email, final String password) {
         final Activity loginActivity = this;
+        if (password.length() <= 5) {
+            Toast.makeText(this, "Password must be at least 6 characters long.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                            try {
+                                task.getResult();
+                            }
+                            catch (Exception e) {
+                                Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Intent intent = new Intent(loginActivity, TeacherTicketListActivity.class);
                             startActivity(intent);
