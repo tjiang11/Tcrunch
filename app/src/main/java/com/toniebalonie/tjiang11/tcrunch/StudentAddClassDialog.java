@@ -23,8 +23,8 @@ public class StudentAddClassDialog extends DialogFragment {
         final EditText input = (EditText) view.findViewById(R.id.class_code);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setHint("Course Code");
-        builder.setMessage("Add a new class")
-                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+        builder.setMessage("Join a class")
+                .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ((StudentTicketListActivity) getActivity())

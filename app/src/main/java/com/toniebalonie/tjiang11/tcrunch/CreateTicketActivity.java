@@ -4,6 +4,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -35,9 +36,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     private Spinner classSpinner;
     private TextView setDate;
     private TextView setTime;
-    private TextView setLength;
 
-    private Button createTicketButton;
     private EditText question;
 
     private CheckBox anonymousCheckBox;
@@ -101,7 +100,6 @@ public class CreateTicketActivity extends AppCompatActivity {
         setDate = (TextView) findViewById(R.id.set_date);
         setTime = (TextView) findViewById(R.id.set_time);
         question = (EditText) findViewById(R.id.ask_question);
-        createTicketButton = (Button) findViewById(R.id.create_ticket_button);
         anonymousCheckBox = (CheckBox) findViewById(R.id.anonResponseCheckbox);
         mcCheckBox = (CheckBox) findViewById(R.id.multipleChoiceCheckbox);
         choiceOne = (EditText) findViewById(R.id.choiceOne);
@@ -213,13 +211,6 @@ public class CreateTicketActivity extends AppCompatActivity {
 
             }
         });
-
-        createTicketButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createTicket();
-            }
-        });
     }
 
     private void showDatePickerDialog() {
@@ -316,7 +307,6 @@ public class CreateTicketActivity extends AppCompatActivity {
         }
         setTime.setText(newTime);
         launchTimeSet = true;
-
     }
 
     public void createTicket() {
@@ -330,6 +320,15 @@ public class CreateTicketActivity extends AppCompatActivity {
         }
         if (question.getText().toString().isEmpty()) {
             Toast.makeText(this, "Ticket cannot be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mcCheckBox.isChecked() &&
+                choiceOne.getText().toString().isEmpty() &&
+                choiceTwo.getText().toString().isEmpty() &&
+                choiceThree.getText().toString().isEmpty() &&
+                choiceFour.getText().toString().isEmpty() &&
+                choiceFive.getText().toString().isEmpty()) {
+            Toast.makeText(this, "You must have at least one answer choice.", Toast.LENGTH_SHORT).show();
             return;
         }
         Calendar calendar = Calendar.getInstance();
@@ -386,7 +385,16 @@ public class CreateTicketActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 break;
+            case R.id.create:
+                createTicket();
+                break;
         }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_create_ticket, menu);
         return true;
     }
 
@@ -408,18 +416,22 @@ public class CreateTicketActivity extends AppCompatActivity {
         switch (choiceNum) {
             case 4:
                 choiceFive.setVisibility(View.GONE);
+                removeChoiceFive.setVisibility(View.GONE);
                 choiceFive.setText("");
                 break;
             case 3:
                 choiceFour.setVisibility(View.GONE);
+                removeChoiceFour.setVisibility(View.GONE);
                 choiceFour.setText("");
                 break;
             case 2:
                 choiceThree.setVisibility(View.GONE);
+                removeChoiceThree.setVisibility(View.GONE);
                 choiceThree.setText("");
                 break;
             case 1:
                 choiceTwo.setVisibility(View.GONE);
+                removeChoiceTwo.setVisibility(View.GONE);
                 choiceTwo.setText("");
                 break;
         }
@@ -483,9 +495,5 @@ public class CreateTicketActivity extends AppCompatActivity {
                 break;
         }
         return day;
-    }
-
-    private void checkTimeInPast() {
-
     }
 }
