@@ -156,6 +156,7 @@ public class SubmitResponseActivity extends AppCompatActivity {
         DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
         DatabaseReference newAnswered = answeredRef.push();
         newAnswered.setValue(ticketId);
+        PollingService.setLastAnsweredTime();
         finish();
     }
 

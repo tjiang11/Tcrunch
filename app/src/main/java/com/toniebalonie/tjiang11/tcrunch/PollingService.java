@@ -1,6 +1,7 @@
 package com.toniebalonie.tjiang11.tcrunch;
 
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by tjiang11 on 4/9/17.
@@ -33,13 +35,32 @@ import java.util.Iterator;
 public class PollingService extends GcmTaskService {
 
     private static final String TAG = "PollingService";
+
+    //The minimum number of hours that must elapse since the last time a
+    //notification was sent to the user before another notification is sent.
+    private static final int HOURS_BETWEEN_NOTIFS = 1;
+    private static final long NUM_MS_IN_HR = 3600000;
+
+    //The minimum number of minutes that mast elapse since the last time the student
+    //submitted a response before sending a notification.
+    private static final int MINUTES_SINCE_LAST_ANSWERED = 10;
+    private static final int NUM_MS_IN_MINUTE = 60000;
+
     private String studentId;
     private HashSet<String> answered;
 
     //Use to check all queries for tickets for specific classes have resolved.
     private HashSet<String> classes;
-
     private HashMap<String, String> tickets;
+
+    //The last time a notification was sent.
+    private static long lastNotificationTime;
+
+    //The last number of unanswered tickets when polling.
+    private static long lastNumUnanswered;
+
+    //The last time the student answered a ticket.
+    private static long lastAnsweredTime;
 
     @Override
     public int onRunTask(TaskParams taskParams) {
@@ -150,7 +171,8 @@ public class PollingService extends GcmTaskService {
                         .setSmallIcon(R.drawable.tcrunch_ic)
                         .setContentTitle(title)
                         .setContentText(msg)
-                        .setContentIntent(contentIntent);
+                        .setContentIntent(contentIntent)
+                        .setAutoCancel(true);
         mNotificationManager.notify(0, mBuilder.build());
     }
 
@@ -159,10 +181,47 @@ public class PollingService extends GcmTaskService {
         for (String key : answered) {
             tickets.remove(key);
         }
-        if (tickets.size() > 0) {
+        if (!isAppRunning(this, "com.toniebalonie.tjiang11.tcrunch") &&
+                tickets.size() > 0 &&
+                (sufficientTimeElapsedSinceLastNotif()
+                        || (numUnansweredChanged() && sufficientTimeElapsedSinceLastAnswer()))) {
+            lastNotificationTime = System.currentTimeMillis();
             String msg = (String) tickets.values().toArray()[0];
             sendNotification(
                     "You have " + tickets.size() + " unanswered tickets", msg);
         }
+        lastNumUnanswered = tickets.size();
+    }
+
+    private boolean sufficientTimeElapsedSinceLastNotif() {
+        return System.currentTimeMillis() - lastNotificationTime >
+                HOURS_BETWEEN_NOTIFS * NUM_MS_IN_HR;
+    }
+
+    private boolean sufficientTimeElapsedSinceLastAnswer() {
+        return System.currentTimeMillis() - lastAnsweredTime >
+                MINUTES_SINCE_LAST_ANSWERED * NUM_MS_IN_MINUTE;
+    }
+
+    private boolean numUnansweredChanged() {
+        return lastNumUnanswered != tickets.size();
+    }
+
+    public static void setLastAnsweredTime() {
+        lastAnsweredTime = System.currentTimeMillis();
+    }
+
+    public static boolean isAppRunning(final Context context, final String packageName) {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        if (procInfos != null)
+        {
+            for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+                if (processInfo.processName.equals(packageName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
