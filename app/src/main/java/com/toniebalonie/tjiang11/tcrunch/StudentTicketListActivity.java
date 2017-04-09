@@ -22,6 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
 import com.toniebalonie.tjiang11.tcrunch.models.AnsweredTicketActivity;
 import com.toniebalonie.tjiang11.tcrunch.models.Classroom;
 import com.toniebalonie.tjiang11.tcrunch.models.Ticket;
@@ -89,6 +92,17 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Task task = new PeriodicTask.Builder()
+                .setService(PollingService.class)
+                .setPeriod(30)
+                .setFlex(10)
+                .setTag("PollingService")
+                .setPersisted(true)
+                .build();
+
+        GcmNetworkManager.getInstance(this).schedule(task);
+
         setTitle("All classes");
         sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         if (!sharedPrefs.contains("student_name")) {
