@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +30,6 @@ public class SubmitResponseActivity extends AppCompatActivity {
 
     private TextView questionText;
     private EditText response;
-    private Button submitResponse;
     private DatabaseReference mDatabaseReference;
     private RadioGroup submitMultipleChoice;
     private RadioButton choiceOne;
@@ -69,14 +69,6 @@ public class SubmitResponseActivity extends AppCompatActivity {
 
         questionText = (TextView) findViewById(R.id.submit_response_question);
         questionText.setText(question);
-
-        submitResponse = (Button) findViewById(R.id.submit_response_button);
-        submitResponse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitResponse();
-            }
-        });
 
         submitMultipleChoice = (RadioGroup) findViewById(R.id.submit_multiple_choice);
         choiceOne = (RadioButton) findViewById(R.id.choice_one);
@@ -166,7 +158,16 @@ public class SubmitResponseActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 break;
+            case R.id.submit:
+                submitResponse();
+                break;
         }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_submit_response, menu);
         return true;
     }
 

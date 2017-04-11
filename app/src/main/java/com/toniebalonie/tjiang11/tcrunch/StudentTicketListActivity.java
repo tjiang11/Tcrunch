@@ -441,5 +441,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         editor.putString("student_name", name);
         editor.apply();
         userDisplayName.setText(name);
+        Toast.makeText(this, "Your name has been set to " + name, Toast.LENGTH_SHORT).show();
     }
 }

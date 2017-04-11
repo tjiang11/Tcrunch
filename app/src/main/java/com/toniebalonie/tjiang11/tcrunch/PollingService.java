@@ -181,8 +181,7 @@ public class PollingService extends GcmTaskService {
         for (String key : answered) {
             tickets.remove(key);
         }
-        if (!isAppRunning(this, "com.toniebalonie.tjiang11.tcrunch") &&
-                tickets.size() > 0 &&
+        if (tickets.size() > 0 &&
                 (sufficientTimeElapsedSinceLastNotif()
                         || (numUnansweredChanged() && sufficientTimeElapsedSinceLastAnswer()))) {
             lastNotificationTime = System.currentTimeMillis();
