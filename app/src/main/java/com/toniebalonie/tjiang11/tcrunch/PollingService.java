@@ -38,7 +38,7 @@ public class PollingService extends GcmTaskService {
 
     //The minimum number of hours that must elapse since the last time a
     //notification was sent to the user before another notification is sent.
-    private static final int HOURS_BETWEEN_NOTIFS = 1;
+    private static final int HOURS_BETWEEN_NOTIFS = 4;
     private static final long NUM_MS_IN_HR = 3600000;
 
     //The minimum number of minutes that mast elapse since the last time the student
@@ -58,9 +58,6 @@ public class PollingService extends GcmTaskService {
 
     //The last number of unanswered tickets when polling.
     private static long lastNumUnanswered;
-
-    //The last time the student answered a ticket.
-    private static long lastAnsweredTime;
 
     @Override
     public int onRunTask(TaskParams taskParams) {
@@ -181,9 +178,7 @@ public class PollingService extends GcmTaskService {
         for (String key : answered) {
             tickets.remove(key);
         }
-        if (tickets.size() > 0 &&
-                (sufficientTimeElapsedSinceLastNotif()
-                        || (numUnansweredChanged() && sufficientTimeElapsedSinceLastAnswer()))) {
+        if (tickets.size() > 0 && (sufficientTimeElapsedSinceLastNotif() || numUnansweredIncreased())) {
             lastNotificationTime = System.currentTimeMillis();
             String msg = (String) tickets.values().toArray()[0];
             sendNotification(
@@ -196,18 +191,8 @@ public class PollingService extends GcmTaskService {
         return System.currentTimeMillis() - lastNotificationTime >
                 HOURS_BETWEEN_NOTIFS * NUM_MS_IN_HR;
     }
-
-    private boolean sufficientTimeElapsedSinceLastAnswer() {
-        return System.currentTimeMillis() - lastAnsweredTime >
-                MINUTES_SINCE_LAST_ANSWERED * NUM_MS_IN_MINUTE;
-    }
-
-    private boolean numUnansweredChanged() {
-        return lastNumUnanswered != tickets.size();
-    }
-
-    public static void setLastAnsweredTime() {
-        lastAnsweredTime = System.currentTimeMillis();
+    private boolean numUnansweredIncreased() {
+        return lastNumUnanswered < tickets.size();
     }
 
     public static boolean isAppRunning(final Context context, final String packageName) {

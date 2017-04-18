@@ -392,11 +392,7 @@ public class CreateTicketActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_create_ticket, menu);
-        return true;
-    }
+
 
     private void removeAnswerChoice(int choiceToRemove) {
         addChoice.setVisibility(View.VISIBLE);

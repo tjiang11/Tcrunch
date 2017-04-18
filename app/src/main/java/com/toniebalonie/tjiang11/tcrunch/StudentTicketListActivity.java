@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.toniebalonie.tjiang11.tcrunch.models.AnsweredTicketActivity;
@@ -342,6 +343,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
             sharedPrefsEditor.commit();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            GcmNetworkManager.getInstance(this).cancelAllTasks(PollingService.class);
             finish();
             return true;
         }
