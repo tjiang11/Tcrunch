@@ -18,6 +18,7 @@
     <string name="set_a_length">1 hour</string>
     <string name="ask_a_question">Ask a question&#8230;</string>
     <string name="create">Create</string>
+    <string name="update">Update</string>
     <string name="responses">RESPONSES</string>
     <string name="log_out">Log out</string>
     <string name="no_class_text">You have no classes.</string>

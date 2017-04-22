@@ -124,6 +124,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 if (item.getItemId() == R.id.no_class_item) {
                     return false;
                 }
+                Log.i(TAG, "Navigation item selected");
                 classDeletedText.setVisibility(View.GONE);
                 loadingIndicator.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.VISIBLE);
@@ -219,6 +220,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         mClassesSingleValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i(TAG, "monkey");
                 for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
                     Log.i(TAG, "single value event");
                     Classroom cr = classSnapshot.getValue(Classroom.class);
@@ -398,27 +400,51 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
     public void onClick(View view, int position, String type) {
         Ticket ticket = null;
         int index = determineIndex(position);
+        Intent intent;
         switch (type) {
             case "launched":
                 ticket = launchedTickets.get(index);
+                intent = new Intent(this, TeacherTicketDetailActivity.class);
+                intent.putExtra("question", ticket.getQuestion());
+                intent.putExtra("start_time", ticket.getStartTime());
+                intent.putExtra("end_time", ticket.getEndTime());
+                intent.putExtra("ticket_id", ticket.getId());
+                intent.putExtra("anonymous", ticket.isAnonymous());
+                intent.putStringArrayListExtra("answer_choices", new ArrayList<>(ticket.getAnswerChoices()));
+                intent.putExtra("class_id", getCurrentClass().getId());
+                intent.putExtra("class_name", getCurrentClass().getName());
+                startActivity(intent);
                 break;
             case "upcoming":
                 ticket = upcomingTickets.get(index);
+                intent = new Intent(this, CreateTicketActivity.class);
+                intent.putExtra("question", ticket.getQuestion());
+                intent.putExtra("start_time", ticket.getStartTime());
+                intent.putExtra("end_time", ticket.getEndTime());
+                intent.putExtra("ticket_id", ticket.getId());
+                intent.putExtra("anonymous", ticket.isAnonymous());
+                intent.putStringArrayListExtra("answer_choices", new ArrayList<>(ticket.getAnswerChoices()));
+                intent.putExtra("class_id", getCurrentClass().getId());
+                intent.putExtra("className", getCurrentClass().getName());
+                intent.putExtra("classes", classList);
+                intent.putExtra("classMap", classMap);
+                intent.putExtra("is_editing", true);
+                startActivityForResult(intent, 0);
                 break;
         }
-        if (ticket != null) {
-            Intent intent = new Intent(this, TeacherTicketDetailActivity.class);
-            intent.putExtra("question", ticket.getQuestion());
-            intent.putExtra("start_time", ticket.getStartTime());
-            intent.putExtra("end_time", ticket.getEndTime());
-            intent.putExtra("ticket_id", ticket.getId());
-            intent.putExtra("anonymous", ticket.isAnonymous());
-            intent.putStringArrayListExtra("answer_choices", new ArrayList<>(ticket.getAnswerChoices()));
-            intent.putExtra("class_id", getCurrentClass().getId());
-            intent.putExtra("class_name", getCurrentClass().getName());
-            startActivity(intent);
-        } else {
+        if (ticket == null) {
             Log.e("ERR", "Could not find ticket type");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String updatedClass = data.getStringExtra("class_name");
+                currentClass = classMap.get(updatedClass);
+                getSupportActionBar().setTitle(updatedClass);
+            }
         }
     }
 

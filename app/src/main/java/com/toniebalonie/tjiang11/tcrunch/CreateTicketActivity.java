@@ -1,5 +1,6 @@
 package com.toniebalonie.tjiang11.tcrunch;
 
+import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,10 +24,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class CreateTicketActivity extends AppCompatActivity {
 
@@ -59,12 +63,13 @@ public class CreateTicketActivity extends AppCompatActivity {
     private int endyear; private int endmonth; private int endday;
     private int endhour; private int endminute;
 
-    private Long startTime;
-    private Long endTime;
+    private long startTime;
+    private long endTime;
     private int ticketLength;
     private int choiceNum;
 
     private String classId;
+    private String origClassId;
     private String className;
     private ArrayList<String> classList;
     private HashMap<String, Classroom> classMap;
@@ -77,10 +82,14 @@ public class CreateTicketActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_ticket);
 
-        classId = getIntent().getStringExtra("classId");
+        if (getIntent().hasExtra("is_editing")) {
+            getSupportActionBar().setTitle("Edit Ticket");
+        }
+
         className = getIntent().getStringExtra("className");
         classList = getIntent().getStringArrayListExtra("classes");
         classMap = (HashMap<String, Classroom>) getIntent().getSerializableExtra("classMap");
+        classId = classMap.get(className).getId();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -145,6 +154,10 @@ public class CreateTicketActivity extends AppCompatActivity {
         });
 
         choiceNum = 0;
+        if (getIntent().hasExtra("is_editing")) {
+            prepopulateData();
+        }
+
         addChoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +166,6 @@ public class CreateTicketActivity extends AppCompatActivity {
         });
 
         ticketLength = 1;
-
         setDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,6 +321,77 @@ public class CreateTicketActivity extends AppCompatActivity {
         launchTimeSet = true;
     }
 
+    public void updateTicket() {
+        if (question.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Ticket cannot be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mcCheckBox.isChecked() &&
+                choiceOne.getText().toString().isEmpty() &&
+                choiceTwo.getText().toString().isEmpty() &&
+                choiceThree.getText().toString().isEmpty() &&
+                choiceFour.getText().toString().isEmpty() &&
+                choiceFive.getText().toString().isEmpty()) {
+            Toast.makeText(this, "You must have at least one answer choice.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(startyear, startmonth, startday - 1);
+        calendar.set(Calendar.HOUR_OF_DAY, starthour);
+        calendar.set(Calendar.MINUTE, startminute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        startTime = calendar.getTimeInMillis();
+        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+            Toast.makeText(this, "Your ticket has been launched.", Toast.LENGTH_SHORT).show();
+        }
+
+        final int msPerHour = 3600000;
+        endTime = startTime + ticketLength * msPerHour;
+        Ticket newTicket = new Ticket(question.getText().toString(),
+                Ticket.QuestionType.FreeResponse, startTime, endTime,
+                classSpinner.getSelectedItem().toString(), anonymousCheckBox.isChecked());
+        ArrayList<String> answerChoices = new ArrayList<>();
+        if (mcCheckBox.isChecked()) {
+            if (choiceOne.getVisibility() == View.VISIBLE && !choiceOne.getText().toString().isEmpty()) {
+                answerChoices.add(choiceOne.getText().toString());
+            }
+            if (choiceTwo.getVisibility() == View.VISIBLE && !choiceTwo.getText().toString().isEmpty()) {
+                answerChoices.add(choiceTwo.getText().toString());
+            }
+            if (choiceThree.getVisibility() == View.VISIBLE && !choiceThree.getText().toString().isEmpty()) {
+                answerChoices.add(choiceThree.getText().toString());
+            }
+            if (choiceFour.getVisibility() == View.VISIBLE && !choiceFour.getText().toString().isEmpty()) {
+                answerChoices.add(choiceFour.getText().toString());
+            }
+            if (choiceFive.getVisibility() == View.VISIBLE && !choiceFive.getText().toString().isEmpty()) {
+                answerChoices.add(choiceFive.getText().toString());
+            }
+        }
+        newTicket.setAnswerChoices(answerChoices);
+        if (mAuth.getCurrentUser() != null) {
+            String ticketId = getIntent().getStringExtra("ticket_id");
+            if (!className.equals(classSpinner.getSelectedItem().toString())) {
+                DatabaseReference oldTicketRef = mDatabase.child("tickets").child(classId).child(ticketId);
+                oldTicketRef.removeValue();
+            }
+
+            String theClassId = classMap.get(classSpinner.getSelectedItem().toString()).getId();
+            DatabaseReference newTicketRef = mDatabase.child("tickets").child(theClassId).child(ticketId);
+            newTicket.setId(ticketId);
+            newTicketRef.setValue(newTicket);
+            Intent intent = new Intent();
+            intent.putExtra("class_name", classSpinner.getSelectedItem().toString());
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            Log.e("CreateTicketActivity", "User not logged in.");
+            Toast.makeText(this, "Error: Could not find current user.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void createTicket() {
         if (!launchDateSet) {
             Toast.makeText(this, "Please select a launch date.", Toast.LENGTH_SHORT).show();
@@ -331,19 +414,20 @@ public class CreateTicketActivity extends AppCompatActivity {
             Toast.makeText(this, "You must have at least one answer choice.", Toast.LENGTH_SHORT).show();
             return;
         }
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(startyear, startmonth, startday - 1);
         calendar.set(Calendar.HOUR_OF_DAY, starthour);
         calendar.set(Calendar.MINUTE, startminute);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        long startTime = calendar.getTimeInMillis();
+        startTime = calendar.getTimeInMillis();
         if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
             Toast.makeText(this, "Your ticket has been launched.", Toast.LENGTH_SHORT).show();
         }
 
         final int msPerHour = 3600000;
-        long endTime = startTime + ticketLength * msPerHour;
+        endTime = startTime + ticketLength * msPerHour;
         Ticket newTicket = new Ticket(question.getText().toString(),
                 Ticket.QuestionType.FreeResponse, startTime, endTime,
                 classSpinner.getSelectedItem().toString(), anonymousCheckBox.isChecked());
@@ -368,13 +452,13 @@ public class CreateTicketActivity extends AppCompatActivity {
         newTicket.setAnswerChoices(answerChoices);
         if (mAuth.getCurrentUser() != null) {
             String theClassId = classMap.get(classSpinner.getSelectedItem().toString()).getId();
-            DatabaseReference newTicketRef2 = mDatabase.child("tickets").child(theClassId).push();
-            String newTicketId = newTicketRef2.getKey();
+            DatabaseReference newTicketRef = mDatabase.child("tickets").child(theClassId).push();
+            String newTicketId = newTicketRef.getKey();
             newTicket.setId(newTicketId);
-            newTicketRef2.setValue(newTicket);
+            newTicketRef.setValue(newTicket);
             finish();
         } else {
-            Log.w("CreateTicketActivity", "User not logged in.");
+            Log.e("CreateTicketActivity", "User not logged in.");
             Toast.makeText(this, "Error: Could not find current user.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -388,11 +472,23 @@ public class CreateTicketActivity extends AppCompatActivity {
             case R.id.create:
                 createTicket();
                 break;
+            case R.id.update:
+                updateTicket();
+                break;
         }
         return true;
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (getIntent().hasExtra("is_editing")) {
+            getMenuInflater().inflate(R.menu.menu_update_ticket, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_create_ticket, menu);
+        }
+        return true;
+    }
 
     private void removeAnswerChoice(int choiceToRemove) {
         addChoice.setVisibility(View.VISIBLE);
@@ -491,5 +587,66 @@ public class CreateTicketActivity extends AppCompatActivity {
                 break;
         }
         return day;
+    }
+
+    private void prepopulateData() {
+        long time = getIntent().getLongExtra("start_time", 0);
+        Date date = new Date(time);
+        SimpleDateFormat formatterDate = new SimpleDateFormat("EEEE, M/d/yyyy", Locale.US);
+        SimpleDateFormat formatterTime = new SimpleDateFormat("h:mm a", Locale.US);
+        String dateFormatted = formatterDate.format(date);
+        String timeFormatted = formatterTime.format(date);
+
+        launchDateSet = true;
+        launchTimeSet = true;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        startyear = cal.get(Calendar.YEAR);
+        startmonth = cal.get(Calendar.MONTH);
+        startday = cal.get(Calendar.DAY_OF_MONTH) + 1;
+        starthour = cal.get(Calendar.HOUR_OF_DAY);
+        startminute = cal.get(Calendar.MINUTE);
+
+        setDate.setText(dateFormatted);
+        setTime.setText(timeFormatted);
+        question.setText(getIntent().getStringExtra("question"));
+
+        boolean isAnonymous = getIntent().getBooleanExtra("anonymous", false);
+        if (isAnonymous) {
+            anonymousCheckBox.setChecked(true);
+        }
+
+        ArrayList<String> answerChoices = getIntent().getStringArrayListExtra("answer_choices");
+        if (!answerChoices.isEmpty()) {
+            mcCheckBox.setChecked(true);
+            choiceNum = answerChoices.size() - 1;
+            switch (answerChoices.size()) {
+                case 5:
+                    choiceFive.setVisibility(View.VISIBLE);
+                    choiceFive.setText(answerChoices.get(4));
+                    removeChoiceFive.setVisibility(View.VISIBLE);
+                case 4:
+                    choiceFour.setVisibility(View.VISIBLE);
+                    choiceFour.setText(answerChoices.get(3));
+                    removeChoiceFour.setVisibility(View.VISIBLE);
+                case 3:
+                    choiceThree.setVisibility(View.VISIBLE);
+                    choiceThree.setText(answerChoices.get(2));
+                    removeChoiceThree.setVisibility(View.VISIBLE);
+                case 2:
+                    choiceTwo.setVisibility(View.VISIBLE);
+                    choiceTwo.setText(answerChoices.get(1));
+                    removeChoiceTwo.setVisibility(View.VISIBLE);
+                case 1:
+                    choiceOne.setVisibility(View.VISIBLE);
+                    choiceOne.setText(answerChoices.get(0));
+                    removeChoiceOne.setVisibility(View.VISIBLE);
+            }
+
+            if (choiceNum <= 3) {
+                addChoice.setVisibility(View.VISIBLE);
+            }
+        }
     }
 }
