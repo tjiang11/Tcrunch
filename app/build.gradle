@@ -7,8 +7,8 @@ android {
         applicationId "com.toniebalonie.tjiang11.tcrunch"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 9
-        versionName "1.6"
+        versionCode 11
+        versionName "1.71"
         testInstrumentationRunner "android.support.ticket_list_card.runner.AndroidJUnitRunner"
     }
     buildTypes {

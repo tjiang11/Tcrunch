@@ -1,5 +1,7 @@
 package com.toniebalonie.tjiang11.tcrunch;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -322,62 +324,18 @@ public class CreateTicketActivity extends AppCompatActivity {
     }
 
     public void updateTicket() {
-        if (question.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Ticket cannot be empty.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (mcCheckBox.isChecked() &&
-                choiceOne.getText().toString().isEmpty() &&
-                choiceTwo.getText().toString().isEmpty() &&
-                choiceThree.getText().toString().isEmpty() &&
-                choiceFour.getText().toString().isEmpty() &&
-                choiceFive.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You must have at least one answer choice.", Toast.LENGTH_SHORT).show();
+        if (!validateTicket()) {
             return;
         }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(startyear, startmonth, startday - 1);
-        calendar.set(Calendar.HOUR_OF_DAY, starthour);
-        calendar.set(Calendar.MINUTE, startminute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        startTime = calendar.getTimeInMillis();
-        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-            Toast.makeText(this, "Your ticket has been launched.", Toast.LENGTH_SHORT).show();
-        }
+        Ticket newTicket = generateTicket();
 
-        final int msPerHour = 3600000;
-        endTime = startTime + ticketLength * msPerHour;
-        Ticket newTicket = new Ticket(question.getText().toString(),
-                Ticket.QuestionType.FreeResponse, startTime, endTime,
-                classSpinner.getSelectedItem().toString(), anonymousCheckBox.isChecked());
-        ArrayList<String> answerChoices = new ArrayList<>();
-        if (mcCheckBox.isChecked()) {
-            if (choiceOne.getVisibility() == View.VISIBLE && !choiceOne.getText().toString().isEmpty()) {
-                answerChoices.add(choiceOne.getText().toString());
-            }
-            if (choiceTwo.getVisibility() == View.VISIBLE && !choiceTwo.getText().toString().isEmpty()) {
-                answerChoices.add(choiceTwo.getText().toString());
-            }
-            if (choiceThree.getVisibility() == View.VISIBLE && !choiceThree.getText().toString().isEmpty()) {
-                answerChoices.add(choiceThree.getText().toString());
-            }
-            if (choiceFour.getVisibility() == View.VISIBLE && !choiceFour.getText().toString().isEmpty()) {
-                answerChoices.add(choiceFour.getText().toString());
-            }
-            if (choiceFive.getVisibility() == View.VISIBLE && !choiceFive.getText().toString().isEmpty()) {
-                answerChoices.add(choiceFive.getText().toString());
-            }
-        }
-        newTicket.setAnswerChoices(answerChoices);
         if (mAuth.getCurrentUser() != null) {
             String ticketId = getIntent().getStringExtra("ticket_id");
             if (!className.equals(classSpinner.getSelectedItem().toString())) {
                 DatabaseReference oldTicketRef = mDatabase.child("tickets").child(classId).child(ticketId);
                 oldTicketRef.removeValue();
             }
-
             String theClassId = classMap.get(classSpinner.getSelectedItem().toString()).getId();
             DatabaseReference newTicketRef = mDatabase.child("tickets").child(theClassId).child(ticketId);
             newTicket.setId(ticketId);
@@ -393,28 +351,50 @@ public class CreateTicketActivity extends AppCompatActivity {
     }
 
     public void createTicket() {
-        if (!launchDateSet) {
-            Toast.makeText(this, "Please select a launch date.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!launchTimeSet) {
-            Toast.makeText(this, "Please select a launch time.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (question.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Ticket cannot be empty.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (mcCheckBox.isChecked() &&
-                choiceOne.getText().toString().isEmpty() &&
-                choiceTwo.getText().toString().isEmpty() &&
-                choiceThree.getText().toString().isEmpty() &&
-                choiceFour.getText().toString().isEmpty() &&
-                choiceFive.getText().toString().isEmpty()) {
-            Toast.makeText(this, "You must have at least one answer choice.", Toast.LENGTH_SHORT).show();
+        if (!validateTicket()) {
             return;
         }
 
+        Ticket newTicket = generateTicket();
+
+        if (mAuth.getCurrentUser() != null) {
+            String theClassId = classMap.get(classSpinner.getSelectedItem().toString()).getId();
+            DatabaseReference newTicketRef = mDatabase.child("tickets").child(theClassId).push();
+            String newTicketId = newTicketRef.getKey();
+            newTicket.setId(newTicketId);
+            newTicketRef.setValue(newTicket);
+            finish();
+        } else {
+            Log.e("CreateTicketActivity", "User not logged in.");
+            Toast.makeText(this, "Error: Could not find current user.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void deleteTicket() {
+        final CreateTicketActivity parent = this;
+        new AlertDialog.Builder(this)
+                .setTitle("Are you sure you want to delete this ticket?")
+                .setMessage("This action cannot be undone.")
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String ticketId = getIntent().getStringExtra("ticket_id");
+                        DatabaseReference oldTicketRef = mDatabase.child("tickets").child(classId).child(ticketId);
+                        oldTicketRef.removeValue();
+                        Toast.makeText(parent, "Ticket deleted", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+
+    }
+
+    private Ticket generateTicket() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(startyear, startmonth, startday - 1);
         calendar.set(Calendar.HOUR_OF_DAY, starthour);
@@ -450,17 +430,32 @@ public class CreateTicketActivity extends AppCompatActivity {
             }
         }
         newTicket.setAnswerChoices(answerChoices);
-        if (mAuth.getCurrentUser() != null) {
-            String theClassId = classMap.get(classSpinner.getSelectedItem().toString()).getId();
-            DatabaseReference newTicketRef = mDatabase.child("tickets").child(theClassId).push();
-            String newTicketId = newTicketRef.getKey();
-            newTicket.setId(newTicketId);
-            newTicketRef.setValue(newTicket);
-            finish();
-        } else {
-            Log.e("CreateTicketActivity", "User not logged in.");
-            Toast.makeText(this, "Error: Could not find current user.", Toast.LENGTH_SHORT).show();
+        return newTicket;
+    }
+
+    private boolean validateTicket() {
+        if (!launchDateSet) {
+            Toast.makeText(this, "Please select a launch date.", Toast.LENGTH_SHORT).show();
+            return false;
         }
+        if (!launchTimeSet) {
+            Toast.makeText(this, "Please select a launch time.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (question.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Ticket cannot be empty.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (mcCheckBox.isChecked() &&
+                choiceOne.getText().toString().isEmpty() &&
+                choiceTwo.getText().toString().isEmpty() &&
+                choiceThree.getText().toString().isEmpty() &&
+                choiceFour.getText().toString().isEmpty() &&
+                choiceFive.getText().toString().isEmpty()) {
+            Toast.makeText(this, "You must have at least one answer choice.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -474,6 +469,9 @@ public class CreateTicketActivity extends AppCompatActivity {
                 break;
             case R.id.update:
                 updateTicket();
+                break;
+            case R.id.delete:
+                deleteTicket();
                 break;
         }
         return true;
