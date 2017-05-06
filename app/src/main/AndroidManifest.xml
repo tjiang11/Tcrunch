@@ -55,6 +55,9 @@
             android:name=".models.AnsweredTicketActivity"
             android:label="Answered Ticket"
             android:parentActivityName=".StudentTicketListActivity"/>
+        <activity android:name=".StudentIntroActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:label="Student Intro" />
         <service
             android:name=".PollingService"
             android:exported="true"

@@ -106,6 +106,27 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
         setTitle("All classes");
         sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isFirstStart = sharedPrefs.getBoolean("firstStart", true);
+
+                if (isFirstStart) {
+
+                    // Launch app intro
+                    Intent i = new Intent(stla, StudentIntroActivity.class);
+                    startActivity(i);
+
+                    SharedPreferences.Editor editor = sharedPrefs.edit();
+                    //editor.putBoolean("firstStart", false);
+                    editor.apply();
+                }
+            }
+        });
+
+        t.start();
+
         if (!sharedPrefs.contains("student_name")) {
             DialogFragment createNameDialog = new StudentCreateNameDialog();
             createNameDialog.setCancelable(false);
