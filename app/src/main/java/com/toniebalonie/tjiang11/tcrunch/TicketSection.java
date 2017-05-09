@@ -74,10 +74,65 @@ public class TicketSection extends StatelessSection {
             TextView ticketTime = (TextView) mViewHolder.cardView.findViewById(R.id.ticket_card_time);
 
             Date date = new Date(mDataset.get(position).getStartTime());
-            SimpleDateFormat formatter = new SimpleDateFormat("EEEEEE M/d h:mm a", Locale.US);
-            String dateFormatted = formatter.format(date);
 
-            ticketTime.setText(dateFormatted);
+            String timeText;
+            if (this.title.equalsIgnoreCase("upcoming")) {
+                long timeToLaunch = date.getTime() - System.currentTimeMillis();
+                if (timeToLaunch < 60000) {
+                    timeText = "Launching in less than a minute";
+                } else if (timeToLaunch < 3600000) {
+                    long minutes = timeToLaunch / 60000;
+                    if (minutes > 1) {
+                        timeText = "Launching in " + minutes + " minutes";
+                    } else {
+                        timeText = "Launching in 1 minute";
+                    }
+                } else if (timeToLaunch < 8.64e7) {
+                    long hours = timeToLaunch / 3600000;
+                    if (hours > 1) {
+                        timeText = "Launching in " + hours + " hours";
+                    } else {
+                        timeText = "Launching in 1 hour";
+                    }
+                } else {
+                    long days = timeToLaunch / 86400000;
+                    if (days > 1) {
+                        timeText = "Launching in " + days + " days";
+                    } else {
+                        timeText = "Launching in 1 day";
+                    }
+                }
+            } else {
+                long elapsedTime = System.currentTimeMillis() - date.getTime();
+                if (elapsedTime < 60000) {
+                    timeText = "Released less than a minute ago";
+                } else if (elapsedTime < 3600000) {
+                    //Released x minutes ago
+                    long minutes = elapsedTime / 60000;
+                    if (minutes > 1) {
+                        timeText = "Released " + minutes + " minutes ago";
+                    } else {
+                        timeText = "Released 1 minute ago";
+                    }
+                } else if (elapsedTime < 8.64e7) {
+                    long hours = elapsedTime / 3600000;
+                    if (hours > 1) {
+                        timeText = "Released " + hours + " hours ago";
+                    } else {
+                        timeText = "Released 1 hour ago";
+                    }
+                } else {
+                    //Released z days ago
+                    long days = elapsedTime / 86400000;
+                    if (days > 1) {
+                        timeText = "Released " + days + " days ago";
+                    } else {
+                        timeText = "Released 1 day ago";
+                    }
+                }
+            }
+
+            ticketTime.setText(timeText);
         }
     }
 

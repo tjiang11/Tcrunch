@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 
@@ -135,6 +138,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         setContentView(R.layout.activity_student_ticket_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.student_toolbar);
         setSupportActionBar(toolbar);
+        setTimeUpdater();
         noTicketText = (TextView) findViewById(R.id.no_ticket_view);
         mRecyclerView = (RecyclerView) findViewById(R.id.student_ticket_list_recycler_view);
         loadingIndicator = (RelativeLayout) findViewById(R.id.loadingPanel);
@@ -457,6 +461,30 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 Log.w("error", "doNewDialogPositiveClick:onCancelled");
             }
         });
+    }
+
+    private void setTimeUpdater() {
+
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            mSectionedTicketListAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+                });
+            }
+        };
+
+        timer.schedule(task, 0, 60*1000);  // interval of one minute
+
     }
 
     public void doCreateNameDialogClick(String name) {

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -38,6 +39,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 
@@ -117,6 +120,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTimeUpdater();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -533,6 +537,36 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 Log.w(TAG, "Error creating class: " + databaseError.toString());
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSectionedTicketListAdapter.notifyDataSetChanged();
+    }
+
+    private void setTimeUpdater() {
+
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            mSectionedTicketListAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+                });
+            }
+        };
+
+        timer.schedule(task, 0, 60*1000);  // interval of one minute
+
     }
 
     public Classroom getCurrentClass() {
