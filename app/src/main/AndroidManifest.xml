@@ -58,6 +58,9 @@
         <activity android:name=".StudentIntroActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:label="Student Intro" />
+        <activity android:name=".TeacherIntroActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:label="Teacher Intro" />
         <service
             android:name=".PollingService"
             android:exported="true"

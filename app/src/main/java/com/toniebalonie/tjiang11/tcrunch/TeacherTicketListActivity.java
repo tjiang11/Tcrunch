@@ -93,6 +93,27 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         final TeacherTicketListActivity ttla = this;
         sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isFirstStart = sharedPrefs.getBoolean("firstStartTeacher", true);
+
+                if (isFirstStart) {
+
+                    // Launch app intro
+                    Intent i = new Intent(ttla, TeacherIntroActivity.class);
+                    startActivity(i);
+
+                    SharedPreferences.Editor editor = sharedPrefs.edit();
+                    //editor.putBoolean("firstStartTeacher", false);
+                    editor.apply();
+                }
+            }
+        });
+
+        t.start();
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
