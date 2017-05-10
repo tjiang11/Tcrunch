@@ -15,9 +15,10 @@
         android:gravity="center"/>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:src="@drawable/s_demo_2"/>
+        android:src="@drawable/s_demo_2"
+        android:layout_marginBottom="30dp"/>
 </LinearLayout>
