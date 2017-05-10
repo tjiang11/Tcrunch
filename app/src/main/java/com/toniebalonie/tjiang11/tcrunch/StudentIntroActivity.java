@@ -18,8 +18,11 @@ public class StudentIntroActivity extends AppIntro {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addSlide(AppIntroFragment.newInstance("Title", "Description", R.drawable.class_icon, ContextCompat.getColor(this, R.color.colorPrimary)));
-        addSlide(AppIntroFragment.newInstance("Title 2", "Description 2", R.drawable.ic_arrow_forward_white, ContextCompat.getColor(this, R.color.colorPrimary)));
+        addSlide(IntroSlide.newInstance(R.layout.student_intro_1));
+        addSlide(IntroSlide.newInstance(R.layout.student_intro_2));
+        addSlide(IntroSlide.newInstance(R.layout.student_intro_3));
+        addSlide(IntroSlide.newInstance(R.layout.student_intro_4));
+        addSlide(IntroSlide.newInstance(R.layout.student_intro_5));
     }
 
     @Override
