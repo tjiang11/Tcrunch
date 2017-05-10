@@ -1,0 +1,14 @@
+[1mdiff --git a/.idea/misc.xml b/.idea/misc.xml[m
+[1mindex 5d19981..5d3cdb7 100644[m
+[1m--- a/.idea/misc.xml[m
+[1m+++ b/.idea/misc.xml[m
+[36m@@ -37,6 +37,9 @@[m
+     <ConfirmationsSetting value="0" id="Add" />[m
+     <ConfirmationsSetting value="0" id="Remove" />[m
+   </component>[m
+[32m+[m[32m  <component name="ProjectPlainTextFileTypeManager">[m
+[32m+[m[32m    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/n.xml" />[m
+[32m+[m[32m  </component>[m
+   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">[m
+     <output url="file://$PROJECT_DIR$/build/classes" />[m
+   </component>[m
