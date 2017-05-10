@@ -30,4 +30,10 @@ public class StudentIntroActivity extends AppIntro {
         finish();
         this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
+
+    @Override
+    public void onSkipPressed(Fragment currentFragment) {
+        finish();
+        this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
 }
