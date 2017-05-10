@@ -12,14 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".TeacherTicketListActivity"
@@ -61,6 +65,7 @@
         <activity android:name=".TeacherIntroActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:label="Teacher Intro" />
+
         <service
             android:name=".PollingService"
             android:exported="true"
