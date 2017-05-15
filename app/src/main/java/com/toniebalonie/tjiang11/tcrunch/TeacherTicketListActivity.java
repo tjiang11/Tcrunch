@@ -88,6 +88,9 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
     private TextView userDisplayName;
 
+    public static final int SUGGESTED_QUESTION_REQUEST = 5;
+    public static final int EDIT_TICKET_REQUEST = 0;
+
     TextView noClassText;
     TextView noTicketText;
     TextView classDeletedText;
@@ -382,7 +385,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
         if (id == R.id.suggest) {
             Intent intent = new Intent(this, SuggestedQuestionsActivity.class);
-            startActivityForResult(intent, 5);
+            startActivityForResult(intent, SUGGESTED_QUESTION_REQUEST);
         }
 
         if (id == R.id.delete_class) {
@@ -475,7 +478,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 intent.putExtra("classes", classList);
                 intent.putExtra("classMap", classMap);
                 intent.putExtra("is_editing", true);
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, EDIT_TICKET_REQUEST);
                 break;
         }
         if (ticket == null) {
@@ -485,14 +488,14 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0) {
+        if (requestCode == EDIT_TICKET_REQUEST) {
             if (resultCode == RESULT_OK) {
                 String updatedClass = data.getStringExtra("class_name");
                 currentClass = classMap.get(updatedClass);
                 getSupportActionBar().setTitle(updatedClass);
             }
         }
-        if (requestCode == 5) {
+        if (requestCode == SUGGESTED_QUESTION_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Intent intent = new Intent(this, CreateTicketActivity.class);
                 intent.putExtra("classId", this.getCurrentClass().getId());
