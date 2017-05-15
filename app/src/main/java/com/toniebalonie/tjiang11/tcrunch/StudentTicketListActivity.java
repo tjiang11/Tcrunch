@@ -454,7 +454,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 }
                 if (!newClassExists) {
                     if (answeredVisible) { answered.setVisible(true); }
-                    if (unansweredVisible) { answered.setVisible(true); }
+                    if (unansweredVisible) { unanswered.setVisible(true); }
                     Toast.makeText(stla, "Could not find a matching class.", Toast.LENGTH_SHORT).show();
                     loadingIndicator.setVisibility(View.GONE);
                 }
