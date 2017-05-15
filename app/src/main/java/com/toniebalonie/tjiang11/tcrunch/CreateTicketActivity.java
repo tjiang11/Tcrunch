@@ -160,6 +160,10 @@ public class CreateTicketActivity extends AppCompatActivity {
             prepopulateData();
         }
 
+        if (getIntent().hasExtra("pre_pop_question")) {
+            question.setText(getIntent().getStringExtra("pre_pop_question"));
+        }
+
         addChoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

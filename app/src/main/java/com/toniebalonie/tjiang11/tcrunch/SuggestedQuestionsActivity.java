@@ -1,9 +1,12 @@
 package com.toniebalonie.tjiang11.tcrunch;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +34,21 @@ public class SuggestedQuestionsActivity extends AppCompatActivity {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+                String question = listDataChild.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition);
+                Intent intent = new Intent();
+                intent.putExtra("pre_pop_question", question);
+                setResult(RESULT_OK, intent);
+                finish();
+                return false;
+            }
+        });
     }
 
     /*

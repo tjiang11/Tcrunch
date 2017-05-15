@@ -382,7 +382,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
         if (id == R.id.suggest) {
             Intent intent = new Intent(this, SuggestedQuestionsActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 5);
         }
 
         if (id == R.id.delete_class) {
@@ -490,6 +490,17 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 String updatedClass = data.getStringExtra("class_name");
                 currentClass = classMap.get(updatedClass);
                 getSupportActionBar().setTitle(updatedClass);
+            }
+        }
+        if (requestCode == 5) {
+            if (resultCode == RESULT_OK) {
+                Intent intent = new Intent(this, CreateTicketActivity.class);
+                intent.putExtra("classId", this.getCurrentClass().getId());
+                intent.putExtra("className", this.getCurrentClass().getName());
+                intent.putExtra("classes", classList);
+                intent.putExtra("classMap", classMap);
+                intent.putExtra("pre_pop_question", data.getStringExtra("pre_pop_question"));
+                startActivity(intent);
             }
         }
     }
