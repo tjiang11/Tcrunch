@@ -380,6 +380,11 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
             changeNameDialog.show(getFragmentManager(), "create name");
         }
 
+        if (id == R.id.suggest) {
+            Intent intent = new Intent(this, SuggestedQuestionsActivity.class);
+            startActivity(intent);
+        }
+
         if (id == R.id.delete_class) {
             if (currentClass == null) {
                 Toast.makeText(this, "You must select a class first to perform this action.", Toast.LENGTH_LONG).show();

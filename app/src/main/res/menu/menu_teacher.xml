@@ -23,13 +23,18 @@
         android:title="Change name"
         app:showAsAction="never" />
     <item
+        android:id="@+id/suggest"
+        android:orderInCategory="5"
+        android:title="Suggested questions"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/info"
-        android:orderInCategory="4"
+        android:orderInCategory="6"
         android:title="FAQ"
         app:showAsAction="never" />
     <item
         android:id="@+id/log_out"
-        android:orderInCategory="5"
+        android:orderInCategory="7"
         android:title="@string/log_out"
         app:showAsAction="never" />
 </menu>
