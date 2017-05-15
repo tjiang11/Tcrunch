@@ -10,12 +10,14 @@ public class Classroom implements Serializable {
 
     private String id;
     private String name;
+    private String teacher;
     private String courseCode; //6-digit alphanumeric code
 
     public Classroom() {}
-    public Classroom(String id, String name, String courseCode) {
+    public Classroom(String id, String name, String teacher, String courseCode) {
         this.id = id;
         this.name = name;
+        this.teacher = teacher;
         this.courseCode = courseCode;
     }
 
@@ -26,6 +28,8 @@ public class Classroom implements Serializable {
     public String getName() {
         return this.name;
     }
+
+    public String getTeacher() { return this.teacher; }
 
     public String getCourseCode() { return this.courseCode; }
 

@@ -11,10 +11,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 /**
- * Created by tjiang11 on 2/1/17.
+ * Created by tjiang11 on 5/15/17.
  */
 
-public class StudentCreateNameDialog extends DialogFragment {
+public class TeacherCreateNameDialog extends DialogFragment {
 
     private EditText input;
 
@@ -23,13 +23,13 @@ public class StudentCreateNameDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = getActivity().getLayoutInflater().inflate(R.layout.create_name, null);
         input = (EditText) view.findViewById(R.id.student_name);
-        builder.setMessage("What's your full name?")
+        builder.setMessage("What's your name? This is the name that students will see.")
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                    //Do nothing here because we override this button later to change the close behaviour.
-                    //However, we still need this because on older versions of Android unless we
-                    //pass a handler the button doesn't get instantiated
+                        //Do nothing here because we override this button later to change the close behaviour.
+                        //However, we still need this because on older versions of Android unless we
+                        //pass a handler the button doesn't get instantiated
                     }
                 });
         builder.setView(view);
@@ -46,7 +46,7 @@ public class StudentCreateNameDialog extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     if (!input.getText().toString().isEmpty()) {
-                        ((StudentTicketListActivity) getActivity())
+                        ((TeacherTicketListActivity) getActivity())
                                 .doCreateNameDialogClick(input.getText().toString());
                         dismiss();
                     } else {
@@ -56,4 +56,6 @@ public class StudentCreateNameDialog extends DialogFragment {
             });
         }
     }
+
+
 }

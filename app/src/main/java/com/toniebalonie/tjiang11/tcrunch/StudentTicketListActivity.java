@@ -446,7 +446,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     getSupportActionBar().setTitle(currentClass.getName());
                     DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
                     answeredRef.addListenerForSingleValueEvent(mValueEventListener);
-                    Toast.makeText(stla, "Joined class " + classToAdd.getName(), Toast.LENGTH_SHORT).show();
+                    String teacherString = "";
+                    if (classToAdd.getTeacher() != null) {
+                        teacherString = " by " + classToAdd.getTeacher();
+                    }
+                    Toast.makeText(stla, "Joined class " + classToAdd.getName() + teacherString, Toast.LENGTH_SHORT).show();
                 }
                 if (!newClassExists) {
                     if (answeredVisible) { answered.setVisible(true); }

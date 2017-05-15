@@ -15,7 +15,7 @@ import android.widget.Toast;
  * Created by tjiang11 on 1/18/17.
  */
 
-public class AddClassDialog extends DialogFragment {
+public class TeacherAddClassDialog extends DialogFragment {
 
     private EditText classNameInput;
     private EditText classCodeInput;

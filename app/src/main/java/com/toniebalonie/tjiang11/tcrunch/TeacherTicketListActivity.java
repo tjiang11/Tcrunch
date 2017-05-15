@@ -21,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,6 +86,8 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
     private RelativeLayout loadingIndicator;
 
+    private TextView userDisplayName;
+
     TextView noClassText;
     TextView noTicketText;
     TextView classDeletedText;
@@ -117,6 +118,12 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
         t.start();
 
+        if (!sharedPrefs.contains("teacher_name")) {
+            DialogFragment createNameDialog = new TeacherCreateNameDialog();
+            createNameDialog.setCancelable(false);
+            createNameDialog.show(getFragmentManager(), "create name");
+        }
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -142,6 +149,8 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         classListView = (NavigationView) findViewById(R.id.nav_view);
         View header = classListView.getHeaderView(0);
         TextView userEmail = (TextView) header.findViewById(R.id.user_info);
+        userDisplayName = (TextView) header.findViewById(R.id.user_info_top);
+        userDisplayName.setText(sharedPrefs.getString("teacher_name", "Unidentified"));
         userEmail.setText(sharedPrefs.getString("email", "No email specified"));
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -198,6 +207,8 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+
+        userDisplayName.setText(sharedPrefs.getString("teacher_name", "No name specified"));
 
         mValueEventListener = new ValueEventListener() {
             @Override
@@ -340,7 +351,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_teacher, menu);
         return true;
     }
 
@@ -359,9 +370,14 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         }
 
         if (id == R.id.add_class) {
-            DialogFragment addClassDialog = new AddClassDialog();
+            DialogFragment addClassDialog = new TeacherAddClassDialog();
             addClassDialog.show(getFragmentManager(), "add class");
             return true;
+        }
+
+        if (id == R.id.change_name) {
+            DialogFragment changeNameDialog = new TeacherCreateNameDialog();
+            changeNameDialog.show(getFragmentManager(), "create name");
         }
 
         if (id == R.id.delete_class) {
@@ -509,7 +525,8 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                                 String newClassId = newClassRef.getKey();
                                 String courseCode = classCode;
 
-                                Classroom newClassroom = new Classroom(newClassId, className, courseCode);
+                                String teacherName = sharedPrefs.getString("teacher_name", "");
+                                Classroom newClassroom = new Classroom(newClassId, className, teacherName, courseCode);
                                 newClassRef.setValue(newClassroom);
 
                                 DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
@@ -567,6 +584,14 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
         timer.schedule(task, 0, 60*1000);  // interval of one minute
 
+    }
+
+    public void doCreateNameDialogClick(String name) {
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString("teacher_name", name);
+        editor.apply();
+        userDisplayName.setText(name);
+        Toast.makeText(this, "Your name has been set to " + name, Toast.LENGTH_SHORT).show();
     }
 
     public Classroom getCurrentClass() {

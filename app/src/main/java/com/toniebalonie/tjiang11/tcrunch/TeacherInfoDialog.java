@@ -21,7 +21,7 @@ public class TeacherInfoDialog extends DialogFragment {
             "of lecture usually regarding student comprehension, engagement, teaching strategy effectiveness, " +
             "or classroom dynamic. Traditionally it was done on 3x5 cards and collected at the end of class.</p>" +
 
-            "<p>See examples of exit survey questions about three main categories<br>" +
+            "<p>See examples of exit survey questions about three menu_teacher categories<br>" +
             "<u><a href='https://drive.google.com/open?id=0B90vvtu1KZEMQUIxdk1GZFAtMlk'>Understanding students</a></u><br>" +
             "<u><a href='https://drive.google.com/open?id=0B90vvtu1KZEMWG5nd2lzcjVvcU0'>Evaluating Yourself</a></u><br>" +
             "<u><a href='https://drive.google.com/open?id=0B90vvtu1KZEMTmQ5ZVRvbTF0aVk'>Evaluating your class</a></u></p>" +
@@ -54,7 +54,7 @@ public class TeacherInfoDialog extends DialogFragment {
             "<p>When creating a new ticket, there will be a checkbox labeled \"Anonymous Responses\". If checked, then all student responses will be anonymous. Students will see an indication before submitting that their response will be anonymous. You will still be able to view which students submitted responses after exporting your data via email, but responses will not be tied to their authors.</p>" +
 
             "<h5>How do I delete a class?</h5>" +
-            "<p>Select the class you would like to delete from the menu button on the upper left side of the app. You should now see the class in the main screen of the app with any of the exit tickets you have created. Now click the options button in the upper right hand side of the app. Select \"delete class.\" You will be prompted if you want to delete this class. Press yes if this is the right class to delete. This action cannot be undone so make sure this is the class you want to delete.</p>" +
+            "<p>Select the class you would like to delete from the menu button on the upper left side of the app. You should now see the class in the menu_teacher screen of the app with any of the exit tickets you have created. Now click the options button in the upper right hand side of the app. Select \"delete class.\" You will be prompted if you want to delete this class. Press yes if this is the right class to delete. This action cannot be undone so make sure this is the class you want to delete.</p>" +
 
             "</big>";
     @Override
