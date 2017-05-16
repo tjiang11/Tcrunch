@@ -1,4 +1,4 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
+
+import com.toniebalonie.tjiang11.tcrunch.R;
+import com.toniebalonie.tjiang11.tcrunch.activities.StudentTicketListActivity;
 
 /**
  * Created by tjiang11 on 1/27/17.

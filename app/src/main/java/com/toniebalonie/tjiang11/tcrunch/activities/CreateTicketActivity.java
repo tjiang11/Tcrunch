@@ -1,9 +1,8 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -20,6 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.toniebalonie.tjiang11.tcrunch.fragments.DatePickerDialogFragment;
+import com.toniebalonie.tjiang11.tcrunch.R;
+import com.toniebalonie.tjiang11.tcrunch.fragments.TimePickerDialogFragment;
 import com.toniebalonie.tjiang11.tcrunch.models.Classroom;
 import com.toniebalonie.tjiang11.tcrunch.models.Ticket;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;

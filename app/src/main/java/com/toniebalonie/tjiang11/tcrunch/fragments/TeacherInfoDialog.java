@@ -1,4 +1,4 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

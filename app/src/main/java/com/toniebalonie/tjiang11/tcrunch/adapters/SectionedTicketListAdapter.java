@@ -1,4 +1,4 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;

@@ -1,4 +1,4 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.activities;
 
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -25,6 +25,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.toniebalonie.tjiang11.tcrunch.interfaces.ItemClickListener;
+import com.toniebalonie.tjiang11.tcrunch.R;
+import com.toniebalonie.tjiang11.tcrunch.adapters.SectionedTicketListAdapter;
+import com.toniebalonie.tjiang11.tcrunch.fragments.TeacherAddClassDialog;
+import com.toniebalonie.tjiang11.tcrunch.fragments.TeacherCreateNameDialog;
+import com.toniebalonie.tjiang11.tcrunch.fragments.TeacherInfoDialog;
+import com.toniebalonie.tjiang11.tcrunch.adapters.TicketSection;
 import com.toniebalonie.tjiang11.tcrunch.models.Classroom;
 import com.toniebalonie.tjiang11.tcrunch.models.Ticket;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +50,7 @@ import java.util.TimerTask;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 
-import static com.toniebalonie.tjiang11.tcrunch.LoginActivity.PREFS_NAME;
+import static com.toniebalonie.tjiang11.tcrunch.activities.LoginActivity.PREFS_NAME;
 
 public class TeacherTicketListActivity extends AppCompatActivity implements
         ItemClickListener {

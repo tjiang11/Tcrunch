@@ -1,4 +1,4 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.toniebalonie.tjiang11.tcrunch.R;
 
 /**
  * Created by tjiang11 on 3/12/17.

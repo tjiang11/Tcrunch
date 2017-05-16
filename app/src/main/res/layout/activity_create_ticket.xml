@@ -15,7 +15,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        tools:context="com.toniebalonie.tjiang11.tcrunch.CreateTicketActivity">
+        tools:context="com.toniebalonie.tjiang11.tcrunch.activities.CreateTicketActivity">
 
         <Spinner
             android:id="@+id/class_spinner"

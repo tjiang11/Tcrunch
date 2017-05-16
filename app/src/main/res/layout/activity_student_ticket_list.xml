@@ -12,7 +12,7 @@ tools:openDrawer="start">
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity">
+        tools:context="com.toniebalonie.tjiang11.tcrunch.activities.StudentTicketListActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@ tools:openDrawer="start">
             android:id="@+id/activity_student_ticket_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity"
+            tools:context="com.toniebalonie.tjiang11.tcrunch.activities.StudentTicketListActivity"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v7.widget.RecyclerView

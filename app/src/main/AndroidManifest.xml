@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,54 +21,54 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".TeacherTicketListActivity"
+            android:name=".activities.TeacherTicketListActivity"
             android:label="Tickets"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CreateTicketActivity"
+            android:name=".activities.CreateTicketActivity"
             android:label="Create a Ticket"
-            android:parentActivityName=".TeacherTicketListActivity">
+            android:parentActivityName=".activities.TeacherTicketListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity" />
+                android:value="com.toniebalonie.tjiang11.tcrunch.activities.TeacherTicketListActivity" />
         </activity>
         <activity
-            android:name=".TeacherTicketDetailActivity"
-            android:parentActivityName=".TeacherTicketListActivity">
+            android:name=".activities.TeacherTicketDetailActivity"
+            android:parentActivityName=".activities.TeacherTicketListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.toniebalonie.tjiang11.tcrunch.TeacherTicketListActivity" />
+                android:value="com.toniebalonie.tjiang11.tcrunch.activities.TeacherTicketListActivity" />
         </activity>
         <activity
-            android:name=".StudentTicketListActivity"
+            android:name=".activities.StudentTicketListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SubmitResponseActivity"
+            android:name=".activities.SubmitResponseActivity"
             android:label="Submit Response"
-            android:parentActivityName=".StudentTicketListActivity">
+            android:parentActivityName=".activities.StudentTicketListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.toniebalonie.tjiang11.tcrunch.StudentTicketListActivity" />
+                android:value="com.toniebalonie.tjiang11.tcrunch.activities.StudentTicketListActivity" />
         </activity>
         <activity
             android:name=".models.AnsweredTicketActivity"
             android:label="Answered Ticket"
-            android:parentActivityName=".StudentTicketListActivity" />
+            android:parentActivityName=".activities.StudentTicketListActivity" />
         <activity
-            android:name=".StudentIntroActivity"
+            android:name=".activities.StudentIntroActivity"
             android:label="Student Intro"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".TeacherIntroActivity"
+            android:name=".activities.TeacherIntroActivity"
             android:label="Teacher Intro"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <service
-            android:name=".PollingService"
+            android:name=".services.PollingService"
             android:exported="true"
             android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
             <intent-filter>
@@ -76,9 +76,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".SuggestedQuestionsActivity"
+        <activity android:name=".activities.SuggestedQuestionsActivity"
             android:label="Suggested Questions"
-            android:parentActivityName=".TeacherTicketListActivity" />
+            android:parentActivityName=".activities.TeacherTicketListActivity" />
     </application>
 
 </manifest>

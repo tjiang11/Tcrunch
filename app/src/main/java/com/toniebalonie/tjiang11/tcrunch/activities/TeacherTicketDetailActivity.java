@@ -1,6 +1,5 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.activities;
 
-import android.*;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,64 +16,49 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebHistoryItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidplot.Plot;
-import com.androidplot.ui.DynamicTableModel;
-import com.androidplot.ui.Insets;
-import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SeriesRenderer;
-import com.androidplot.ui.Size;
-import com.androidplot.ui.TableModel;
-import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.BoundaryMode;
-import com.androidplot.xy.CatmullRomInterpolator;
-import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYGraphWidget;
-import com.androidplot.xy.XYLegendWidget;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.opencsv.CSVWriter;
+import com.toniebalonie.tjiang11.tcrunch.R;
 import com.toniebalonie.tjiang11.tcrunch.models.Response;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.toniebalonie.tjiang11.tcrunch.models.Ticket;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.FieldPosition;
 import java.text.Format;
-import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-import static com.toniebalonie.tjiang11.tcrunch.LoginActivity.PREFS_NAME;
+import static com.toniebalonie.tjiang11.tcrunch.activities.LoginActivity.PREFS_NAME;
 
 public class TeacherTicketDetailActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -8,6 +8,9 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.DatePicker;
+
+import com.toniebalonie.tjiang11.tcrunch.R;
+import com.toniebalonie.tjiang11.tcrunch.activities.CreateTicketActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

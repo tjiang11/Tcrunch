@@ -1,7 +1,6 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.activities;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,19 +10,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.toniebalonie.tjiang11.tcrunch.fragments.ForgotPasswordDialog;
+import com.toniebalonie.tjiang11.tcrunch.fragments.LoginFragment;
+import com.toniebalonie.tjiang11.tcrunch.R;
+import com.toniebalonie.tjiang11.tcrunch.fragments.StudentLoginFragment;
+import com.toniebalonie.tjiang11.tcrunch.fragments.TeacherLoginFragment;
 
 /**
  * Created by tjiang11 on 12/26/16.
@@ -31,7 +32,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity
         implements StudentLoginFragment.OnStudentLoginListener,
-        TeacherLoginFragment.OnTeacherLoginListener{
+        TeacherLoginFragment.OnTeacherLoginListener {
 
     public static final String PREFS_NAME = "appPrefs";
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
-    tools:context="com.toniebalonie.tjiang11.tcrunch.StudentLoginFragment">
+    tools:context="com.toniebalonie.tjiang11.tcrunch.fragments.StudentLoginFragment">
 
     <Button
         android:id="@+id/studentLoginButton"

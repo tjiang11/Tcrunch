@@ -1,14 +1,14 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.fragments;
 
 
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.TimePicker;
+
+import com.toniebalonie.tjiang11.tcrunch.activities.CreateTicketActivity;
 
 import java.util.Calendar;
 

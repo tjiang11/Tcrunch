@@ -1,12 +1,12 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 
 import com.github.paolorotolo.appintro.AppIntro;
-import com.github.paolorotolo.appintro.AppIntroFragment;
+import com.toniebalonie.tjiang11.tcrunch.fragments.IntroSlide;
+import com.toniebalonie.tjiang11.tcrunch.R;
 
 /**
  * Created by tjiang11 on 5/7/17.

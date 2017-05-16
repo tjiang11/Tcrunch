@@ -1,4 +1,4 @@
-package com.toniebalonie.tjiang11.tcrunch;
+package com.toniebalonie.tjiang11.tcrunch.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import com.toniebalonie.tjiang11.tcrunch.R;
 
 import java.util.HashMap;
 import java.util.List;
