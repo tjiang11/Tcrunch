@@ -230,6 +230,17 @@ public class TeacherTicketDetailActivity extends AppCompatActivity {
                     MyBarRenderer renderer = plot.getRenderer(MyBarRenderer.class);
                     renderer.setBarOrientation(MyBarRenderer.BarOrientation.SIDE_BY_SIDE);
                     renderer.setBarGroupWidth(MyBarRenderer.BarGroupWidthMode.FIXED_GAP, 30);
+
+                    int maxNumResponses = 0;
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i) > maxNumResponses) {
+                            maxNumResponses = list.get(i);
+                        }
+                    }
+
+                    if (maxNumResponses > 10) {
+                        plot.setRangeStep(StepMode.SUBDIVIDE, 10);
+                    }
                     plot.redraw();
                 }
             }
