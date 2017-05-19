@@ -129,7 +129,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     startActivity(i);
 
                     SharedPreferences.Editor editor = sharedPrefs.edit();
-                    //editor.putBoolean("firstStart", false);
+                    editor.putBoolean("firstStart", false);
                     editor.apply();
                 }
             }

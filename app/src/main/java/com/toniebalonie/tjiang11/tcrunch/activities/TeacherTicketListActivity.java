@@ -148,7 +148,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                     startActivity(i);
 
                     SharedPreferences.Editor editor = sharedPrefs.edit();
-                    //editor.putBoolean("firstStartTeacher", false);
+                    editor.putBoolean("firstStartTeacher", false);
                     editor.apply();
                 }
             }
