@@ -59,55 +59,83 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
     private SharedPreferences sharedPrefs;
 
+    /** Recycler view containing tickets displayed */
     private RecyclerView mTicketListRecyclerView;
     private SectionedTicketListAdapter mSectionedTicketListAdapter;
     private RecyclerView.LayoutManager mTicketListLayoutManager;
 
+    /** Sections representing upcoming tickets and launched ticket
+     * in the sectioned recycler view. */
     private Section upcoming;
     private Section launched;
 
+    /** Reference to Firebase */
     private DatabaseReference mDatabaseReference;
+    /** Reference to Tickets table in Firebase */
     private Query mDatabaseReferenceTickets;
+    /** Database listener detecting changes to tickets table.
+     *  Update the list of tickets displayed on change detected. */
     private ValueEventListener mValueEventListener;
 
+    /** Reference to Classes table in Firebase */
     private Query mDatabaseReferenceClasses;
+    /** Database listener for changes to classes table */
     private ValueEventListener mClassesValueEventListener;
+    /** Database listener for initialization of classes (fires only once) */
     private ValueEventListener mClassesSingleValueEventListener;
 
+    /** Firebase Authentication. */
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
+    /** Displayed upcoming tickets. */
     private ArrayList<Ticket> upcomingTickets;
+    /** Displayed launched tickets. */
     private ArrayList<Ticket> launchedTickets;
 
+    /** Name of selected class */
     private String currentClassName;
+    /** Selected class */
     private Classroom currentClass;
 
-    private DrawerLayout mDrawerLayout;
-    private NavigationView classListView;
+    /** List of all classes created by the teacher. */
     private ArrayList<String> classList;
 
+    /** Map from class names to the corresponding class objects. */
     private HashMap<String, Classroom> classMap;
 
+    /** Drawer view. */
+    private DrawerLayout mDrawerLayout;
+
+    /** Side navigation window containing all the classes. */
+    private NavigationView classListView;
+
+    /** Button in the bottom right for creating new ticket. */
     private FloatingActionButton fab;
 
+    /** Spinning circle indicating that content is loading. */
     private RelativeLayout loadingIndicator;
 
+    /** Teacher's name displayed in the side navigation header. */
     private TextView userDisplayName;
 
-    public static final int SUGGESTED_QUESTION_REQUEST = 5;
-    public static final int EDIT_TICKET_REQUEST = 0;
+    /** Text informing user that they have no classes. */
+    private TextView noClassText;
+    /** Text informing user that they have no tickets for the selected class. */
+    private TextView noTicketText;
+    /** Text informing user that they have just deleted the class. */
+    private TextView classDeletedText;
 
-    TextView noClassText;
-    TextView noTicketText;
-    TextView classDeletedText;
+    /** Request code for opening suggested questions activity. */
+    public static final int SUGGESTED_QUESTION_REQUEST = 5;
+    /** Request code for opening edit ticket activity. */
+    public static final int EDIT_TICKET_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final TeacherTicketListActivity ttla = this;
         sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
+        // Only launch tutorial on first time
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -116,7 +144,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 if (isFirstStart) {
 
                     // Launch app intro
-                    Intent i = new Intent(ttla, TeacherIntroActivity.class);
+                    Intent i = new Intent(TeacherTicketListActivity.this, TeacherIntroActivity.class);
                     startActivity(i);
 
                     SharedPreferences.Editor editor = sharedPrefs.edit();
@@ -128,6 +156,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
         t.start();
 
+        // Make user set name on first login
         if (!sharedPrefs.contains("teacher_name")) {
             DialogFragment createNameDialog = new TeacherCreateNameDialog();
             createNameDialog.setCancelable(false);
@@ -143,11 +172,12 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG, ttla.getCurrentClass().getName());
-                Log.i(TAG, ttla.getCurrentClass().toString());
+                //Launch new ticket activity
+                Log.i(TAG, TeacherTicketListActivity.this.getCurrentClass().getName());
+                Log.i(TAG, TeacherTicketListActivity.this.getCurrentClass().toString());
                 Intent intent = new Intent(view.getContext(), CreateTicketActivity.class);
-                intent.putExtra("classId", ttla.getCurrentClass().getId());
-                intent.putExtra("className", ttla.getCurrentClass().getName());
+                intent.putExtra("classId", TeacherTicketListActivity.this.getCurrentClass().getId());
+                intent.putExtra("className", TeacherTicketListActivity.this.getCurrentClass().getName());
                 intent.putExtra("classes", classList);
                 intent.putExtra("classMap", classMap);
                 startActivity(intent);
@@ -162,13 +192,16 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         userDisplayName = (TextView) header.findViewById(R.id.user_info_top);
         userDisplayName.setText(sharedPrefs.getString("teacher_name", "Unidentified"));
         userEmail.setText(sharedPrefs.getString("email", "No email specified"));
+
+        //On selecting a class, display all tickets for that class.
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.no_class_item) {
+                    // No items present, other than text saying "No classes yet".
                     return false;
                 }
-                Log.i(TAG, "Navigation item selected");
+
                 classDeletedText.setVisibility(View.GONE);
                 loadingIndicator.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.VISIBLE);
@@ -532,20 +565,19 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 return;
             }
         }
-        final TeacherTicketListActivity ttla = this;
         Query classRefByCode = mDatabaseReference.child("classes").orderByChild("courseCode").equalTo(classCode);
         final Query classRef = mDatabaseReference.child("classes").orderByChild("name").equalTo(className);
         classRefByCode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    Toast.makeText(ttla, "That class code is taken.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TeacherTicketListActivity.this, "That class code is taken.", Toast.LENGTH_SHORT).show();
                 } else {
                     classRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() != null) {
-                                Toast.makeText(ttla, "That class name is taken.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TeacherTicketListActivity.this, "That class name is taken.", Toast.LENGTH_SHORT).show();
                             } else {
                                 DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
                                 String newClassId = newClassRef.getKey();

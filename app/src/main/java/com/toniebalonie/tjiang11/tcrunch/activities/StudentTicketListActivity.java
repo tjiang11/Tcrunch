@@ -92,8 +92,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private ArrayList<Ticket> answeredTickets;
     private ArrayList<Ticket> unansweredTickets;
 
-    private StudentTicketListActivity stla = this;
-
     private HashMap<String, Classroom> classMap;
 
     private Classroom currentClass = null;
@@ -104,6 +102,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Task for polling notifications
         Task task = new PeriodicTask.Builder()
                 .setService(PollingService.class)
                 .setPeriod(30)
@@ -117,6 +116,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         setTitle("All classes");
         sharedPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
+        //Only launch tutorial on first time
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -125,7 +125,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 if (isFirstStart) {
 
                     // Launch app intro
-                    Intent i = new Intent(stla, StudentIntroActivity.class);
+                    Intent i = new Intent(StudentTicketListActivity.this, StudentIntroActivity.class);
                     startActivity(i);
 
                     SharedPreferences.Editor editor = sharedPrefs.edit();
@@ -137,6 +137,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
         t.start();
 
+        //Make user set name on first login
         if (!sharedPrefs.contains("student_name")) {
             DialogFragment createNameDialog = new StudentCreateNameDialog();
             createNameDialog.setCancelable(false);
@@ -146,6 +147,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         Toolbar toolbar = (Toolbar) findViewById(R.id.student_toolbar);
         setSupportActionBar(toolbar);
         setTimeUpdater();
+
         noTicketText = (TextView) findViewById(R.id.no_ticket_view);
         mRecyclerView = (RecyclerView) findViewById(R.id.student_ticket_list_recycler_view);
         loadingIndicator = (RelativeLayout) findViewById(R.id.loadingPanel);
@@ -457,12 +459,12 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     if (classToAdd.getTeacher() != null) {
                         teacherString = " by " + classToAdd.getTeacher();
                     }
-                    Toast.makeText(stla, "Joined class " + classToAdd.getName() + teacherString, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StudentTicketListActivity.this, "Joined class " + classToAdd.getName() + teacherString, Toast.LENGTH_SHORT).show();
                 }
                 if (!newClassExists) {
                     if (answeredVisible) { answered.setVisible(true); }
                     if (unansweredVisible) { unanswered.setVisible(true); }
-                    Toast.makeText(stla, "Could not find a matching class.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StudentTicketListActivity.this, "Could not find a matching class.", Toast.LENGTH_SHORT).show();
                     loadingIndicator.setVisibility(View.GONE);
                 }
             }
