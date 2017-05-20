@@ -75,12 +75,10 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
     private Query mDatabaseReferenceTickets;
     /** Database listener detecting changes to tickets table.
      *  Update the list of tickets displayed on change detected. */
-    private ValueEventListener mValueEventListener;
+    private ValueEventListener mTicketChangeListener;
 
     /** Reference to Classes table in Firebase */
     private Query mDatabaseReferenceClasses;
-    /** Database listener for changes to classes table */
-    private ValueEventListener mClassesValueEventListener;
 
     /** Firebase Authentication. */
     private FirebaseAuth mAuth;
@@ -206,7 +204,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 currentClassName = item.getTitle().toString();
                 currentClass = classMap.get(currentClassName);
                 mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-                mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                mDatabaseReferenceTickets.addValueEventListener(mTicketChangeListener);
                 mDrawerLayout.closeDrawers();
                 getSupportActionBar().setTitle(currentClassName);
                 return true;
@@ -254,7 +252,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         /**
          * Load and display tickets for the currently selected class.
          */
-        mValueEventListener = new ValueEventListener() {
+        mTicketChangeListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 launchedTickets.clear();
@@ -297,39 +295,38 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
             }
         };
 
-        // Load all classes owned by teacher into the side navigation menu.
-        mClassesValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean classesExist = false;
-                classMap.clear();
-                classList.clear();
-                classListView.getMenu().clear();
-                for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
-                    Classroom cr = classSnapshot.getValue(Classroom.class);
-                    classListView.getMenu().add(cr.getName());
-                    classList.add(cr.getName());
-                    classMap.put(cr.getName(), cr);
-                    classesExist = true;
-                }
-                if (classesExist) {
-                    noClassText.setVisibility(View.GONE);
-                } else {
-                    noClassText.setVisibility(View.VISIBLE);
-                    classListView.getMenu().add(0, R.id.no_class_item, 0, "No classes yet");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "classEvent:onCancelled", databaseError.toException());
-            }
-        };
-
         // Reference to classes owned by the teacher
         mDatabaseReferenceClasses = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid());
         // Sync classes in navigation menu with any changes
-        mDatabaseReferenceClasses.addValueEventListener(mClassesValueEventListener);
+        mDatabaseReferenceClasses.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Load all classes owned by teacher into the side navigation menu.
+                        boolean classesExist = false;
+                        classMap.clear();
+                        classList.clear();
+                        classListView.getMenu().clear();
+                        for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
+                            Classroom cr = classSnapshot.getValue(Classroom.class);
+                            classListView.getMenu().add(cr.getName());
+                            classList.add(cr.getName());
+                            classMap.put(cr.getName(), cr);
+                            classesExist = true;
+                        }
+                        if (classesExist) {
+                            noClassText.setVisibility(View.GONE);
+                        } else {
+                            noClassText.setVisibility(View.VISIBLE);
+                            classListView.getMenu().add(0, R.id.no_class_item, 0, "No classes yet");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "classEvent:onCancelled", databaseError.toException());
+                    }
+                });
+
         // Initialize by picking a class and showing its tickets (fires only once on login).
         mDatabaseReferenceClasses.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -339,7 +336,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                         currentClass = classSnapshot.getValue(Classroom.class);
                         getSupportActionBar().setTitle(currentClass.getName());
                         mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-                        mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                        mDatabaseReferenceTickets.addValueEventListener(mTicketChangeListener);
                         noClassText.setVisibility(View.GONE);
                         return;
                     }
@@ -356,8 +353,6 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 Log.w(TAG, "Error on initialization" , databaseError.toException());
             }
         });
-
-        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -477,6 +472,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         int index = determineIndex(position);
         Intent intent;
         switch (type) {
+            // On clicking a ticket that is already launched, go to the ticket's details.
             case "launched":
                 ticket = launchedTickets.get(index);
                 intent = new Intent(this, TeacherTicketDetailActivity.class);
@@ -490,6 +486,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 intent.putExtra("class_name", getCurrentClass().getName());
                 startActivity(intent);
                 break;
+            // On click a ticket not yet launched, go to edit page.
             case "upcoming":
                 ticket = upcomingTickets.get(index);
                 intent = new Intent(this, CreateTicketActivity.class);
@@ -512,15 +509,36 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Determine the local index of a ticket given its position in the entire sectioned recycler view.
+     * @param position position of item within sectioned recycler view
+     * @return local index within respective array list.
+     */
+    public int determineIndex(int position) {
+        if (upcomingTickets.size() > 0 && position < upcomingTickets.size() + 1) {
+            return position - 1;
+        } else if (upcomingTickets.size() > 0 && position >= upcomingTickets.size() + 1) {
+            return position - upcomingTickets.size() - 2;
+        } else {
+            return position - 1;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Returning from edit ticket activity. Make sure that if class of ticket
+        // was edited then switch to that class.
         if (requestCode == EDIT_TICKET_REQUEST) {
             if (resultCode == RESULT_OK) {
                 String updatedClass = data.getStringExtra("class_name");
                 currentClass = classMap.get(updatedClass);
                 getSupportActionBar().setTitle(updatedClass);
+                Toast.makeText(this, "Your ticket has been updated.", Toast.LENGTH_SHORT).show();
             }
         }
+
+        // Returning from suggested questions activity. Start new ticket activity
+        // populated with the selected question.
         if (requestCode == SUGGESTED_QUESTION_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Intent intent = new Intent(this, CreateTicketActivity.class);
@@ -534,16 +552,12 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         }
     }
 
-    public int determineIndex(int position) {
-        if (upcomingTickets.size() > 0 && position < upcomingTickets.size() + 1) {
-            return position - 1;
-        } else if (upcomingTickets.size() > 0 && position >= upcomingTickets.size() + 1) {
-            return position - upcomingTickets.size() - 2;
-        } else {
-            return position - 1;
-        }
-    }
-
+    /**
+     * Handle positive click on the new class dialog.
+     * @param className The new class' name input by the teacher.
+     * @param classCode The new class' code input by the teacher.
+     * @param dialog The dialog--only dismiss if class creation successful (code and name aren't taken)
+     */
     public void doNewClassDialogPositiveClick(final String className, final String classCode, final AlertDialog dialog) {
         for (String c : classList) {
             if (className.equals(c)) {
@@ -551,22 +565,25 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 return;
             }
         }
-        Query classRefByCode = mDatabaseReference.child("classes").orderByChild("courseCode").equalTo(classCode);
-        final Query classRef = mDatabaseReference.child("classes").orderByChild("name").equalTo(className);
 
         // Handle adding new class.
+        Query classRefByCode = mDatabaseReference.child("classes").orderByChild("courseCode").equalTo(classCode);
+        final Query classRef = mDatabaseReference.child("classes").orderByChild("name").equalTo(className);
         classRefByCode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
+                    // Class code already exists
                     Toast.makeText(TeacherTicketListActivity.this, "That class code is taken.", Toast.LENGTH_SHORT).show();
                 } else {
                     classRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() != null) {
+                                // Class name already exists
                                 Toast.makeText(TeacherTicketListActivity.this, "That class name is taken.", Toast.LENGTH_SHORT).show();
                             } else {
+                                // Create and add class to database.
                                 DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
                                 String newClassId = newClassRef.getKey();
                                 String teacherName = sharedPrefs.getString("teacher_name", "");
@@ -574,12 +591,18 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                                 newClassRef.setValue(newClassroom);
                                 DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
                                 newClassRefClasses.setValue(newClassroom);
+
+                                // Front-end view changes
                                 classListView.getMenu().add(className);
                                 currentClass = newClassroom;
                                 getSupportActionBar().setTitle(currentClass.getName());
                                 fab.setVisibility(View.VISIBLE);
+
+                                // Attach ticket listener to class
                                 mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-                                mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                                mDatabaseReferenceTickets.addValueEventListener(mTicketChangeListener);
+
+                                // Dismiss new class dialog since class creation successful
                                 dialog.dismiss();
                             }
                         }
@@ -604,6 +627,9 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         mSectionedTicketListAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Used to update release times of tickets approximately once a minute.
+     */
     private void setTimeUpdater() {
 
         final Handler handler = new Handler();
@@ -628,6 +654,10 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * Handle editing of user display name.
+     * @param name New name for teacher
+     */
     public void doCreateNameDialogClick(String name) {
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString("teacher_name", name);
