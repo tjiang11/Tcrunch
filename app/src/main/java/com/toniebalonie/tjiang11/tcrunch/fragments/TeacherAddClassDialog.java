@@ -1,10 +1,10 @@
 package com.toniebalonie.tjiang11.tcrunch.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,7 +50,7 @@ public class TeacherAddClassDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        AlertDialog d = (AlertDialog) getDialog();
+        final AlertDialog d = (AlertDialog) getDialog();
         if (d != null) {
             Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +61,8 @@ public class TeacherAddClassDialog extends DialogFragment {
                         ((TeacherTicketListActivity) getActivity())
                                 .doNewClassDialogPositiveClick(
                                         classNameInput.getText().toString(),
-                                        classCodeInput.getText().toString());
-                        dismiss();
+                                        classCodeInput.getText().toString(),
+                                        d);
                     }
                     if (classNameInput.getText().toString().isEmpty()) {
                         Toast.makeText(getActivity(), "Class name cannot be blank.", Toast.LENGTH_SHORT).show();

@@ -81,8 +81,6 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
     private Query mDatabaseReferenceClasses;
     /** Database listener for changes to classes table */
     private ValueEventListener mClassesValueEventListener;
-    /** Database listener for initialization of classes (fires only once) */
-    private ValueEventListener mClassesSingleValueEventListener;
 
     /** Firebase Authentication. */
     private FirebaseAuth mAuth;
@@ -253,6 +251,9 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
         userDisplayName.setText(sharedPrefs.getString("teacher_name", "No name specified"));
 
+        /**
+         * Load and display tickets for the currently selected class.
+         */
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -296,33 +297,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
             }
         };
 
-        mClassesSingleValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i(TAG, "monkey");
-                for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
-                    Log.i(TAG, "single value event");
-                    Classroom cr = classSnapshot.getValue(Classroom.class);
-                    //condense
-                    currentClass = cr;
-                    getSupportActionBar().setTitle(currentClass.getName());
-                    mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
-                    mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
-                    noClassText.setVisibility(View.GONE);
-                    return;
-                }
-                noClassText.setVisibility(View.VISIBLE);
-                noTicketText.setVisibility(View.GONE);
-                fab.setVisibility(View.GONE);
-                currentClass = null;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG", "classEventSingle:onCancelled", databaseError.toException());
-            }
-        };
-
+        // Load all classes owned by teacher into the side navigation menu.
         mClassesValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -350,26 +325,37 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                 Log.w(TAG, "classEvent:onCancelled", databaseError.toException());
             }
         };
+
+        // Reference to classes owned by the teacher
         mDatabaseReferenceClasses = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid());
+        // Sync classes in navigation menu with any changes
+        mDatabaseReferenceClasses.addValueEventListener(mClassesValueEventListener);
+        // Initialize by picking a class and showing its tickets (fires only once on login).
         mDatabaseReferenceClasses.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    mDatabaseReferenceClasses.addListenerForSingleValueEvent(mClassesSingleValueEventListener);
+                    for (DataSnapshot classSnapshot: dataSnapshot.getChildren()) {
+                        currentClass = classSnapshot.getValue(Classroom.class);
+                        getSupportActionBar().setTitle(currentClass.getName());
+                        mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
+                        mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                        noClassText.setVisibility(View.GONE);
+                        return;
+                    }
                 } else {
+                    // No classes found
                     loadingIndicator.setVisibility(View.GONE);
                     noClassText.setVisibility(View.VISIBLE);
                     fab.setVisibility(View.GONE);
                 }
-                mDatabaseReferenceClasses.addValueEventListener(mClassesValueEventListener);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w(TAG, "Error on initialization" , databaseError.toException());
             }
         });
-
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -558,7 +544,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         }
     }
 
-    public void doNewClassDialogPositiveClick(final String className, final String classCode) {
+    public void doNewClassDialogPositiveClick(final String className, final String classCode, final AlertDialog dialog) {
         for (String c : classList) {
             if (className.equals(c)) {
                 Toast.makeText(this, "You already have a class with that name.", Toast.LENGTH_SHORT).show();
@@ -567,6 +553,8 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
         }
         Query classRefByCode = mDatabaseReference.child("classes").orderByChild("courseCode").equalTo(classCode);
         final Query classRef = mDatabaseReference.child("classes").orderByChild("name").equalTo(className);
+
+        // Handle adding new class.
         classRefByCode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -581,22 +569,18 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
                             } else {
                                 DatabaseReference newClassRef = mDatabaseReference.child("teachers").child(mAuth.getCurrentUser().getUid()).push();
                                 String newClassId = newClassRef.getKey();
-                                String courseCode = classCode;
-
                                 String teacherName = sharedPrefs.getString("teacher_name", "");
-                                Classroom newClassroom = new Classroom(newClassId, className, teacherName, courseCode);
+                                Classroom newClassroom = new Classroom(newClassId, className, teacherName, classCode);
                                 newClassRef.setValue(newClassroom);
-
                                 DatabaseReference newClassRefClasses = mDatabaseReference.child("classes").child(newClassId);
                                 newClassRefClasses.setValue(newClassroom);
-
                                 classListView.getMenu().add(className);
                                 currentClass = newClassroom;
-                                Log.i(TAG, currentClass.toString());
                                 getSupportActionBar().setTitle(currentClass.getName());
                                 fab.setVisibility(View.VISIBLE);
                                 mDatabaseReferenceTickets = mDatabaseReference.child("tickets").child(currentClass.getId());
                                 mDatabaseReferenceTickets.addValueEventListener(mValueEventListener);
+                                dialog.dismiss();
                             }
                         }
 
