@@ -63,8 +63,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     private SharedPreferences sharedPrefs;
 
-    private DrawerLayout mDrawerLayout;
-
     /** Recycler View containing tickets displayed. */
     private RecyclerView mRecyclerView;
     private SectionedTicketListAdapter mSectionedTicketListAdapter;
@@ -79,6 +77,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     private TextView userDisplayName;
     /** NavigationView containing all classes the student is enrolled in. */
     private NavigationView classListView;
+    /** DrawerLayout containing side navigation window */
+    private DrawerLayout mDrawerLayout;
 
     /** TextView that is visible when no tickets are available. */
     private TextView noTicketText;
@@ -86,27 +86,35 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
     /** Spinning circle indicating that content is loading. */
     private RelativeLayout loadingIndicator;
 
+    /** Reference to Firebase */
     private DatabaseReference mDatabaseReference;
+    /** Reference to Tickets table in Firebase, organized by class ID*/
     private DatabaseReference mDatabaseReferenceTickets;
+    /** Reference to Classes table in Firebase containing class information */
     private DatabaseReference mDatabaseReferenceClasses;
+    /** Reference to Students --> Student ID in Firebase (this student's classes) */
     private DatabaseReference mDatabaseReferenceUserClasses;
+    /** Reference to student's answered tickets in Firebase */
     private DatabaseReference mDatabaseReferenceStudentAnsweredTickets;
+
     private ValueEventListener mValueEventListener;
     private ValueEventListener mTicketChangeListener;
+
+    /** Firebase Instance ID used to identify Student */
     private FirebaseInstanceId mFirebaseInstanceId;
 
-    // Set of all tickets answered by the user
+    /** Set of all tickets answered by the user */
     private HashSet<String> hasAnswered;
 
-    // List of displayed, answered tickets
+    /** List of displayed, answered tickets */
     private ArrayList<Ticket> answeredTickets;
-    // List of displayed, unanswered tickets
+    /** List of displayed, unanswered tickets */
     private ArrayList<Ticket> unansweredTickets;
 
-    // Map from class name to class object
+    /** Map from class name to class object */
     private HashMap<String, Classroom> classMap;
 
-    // Currently selected class, a value of null means all classes are shown
+    /** Currently selected class, a value of null means all classes are shown */
     private Classroom currentClass = null;
     boolean showingAll = true;
 
@@ -516,6 +524,9 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         });
     }
 
+    /**
+     * Used to update release times of tickets approximately once a minute.
+     */
     private void setTimeUpdater() {
 
         final Handler handler = new Handler();
@@ -540,6 +551,10 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     }
 
+    /**
+     * Handle editing of user display name.
+     * @param name New name for student
+     */
     public void doCreateNameDialogClick(String name) {
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString("student_name", name);

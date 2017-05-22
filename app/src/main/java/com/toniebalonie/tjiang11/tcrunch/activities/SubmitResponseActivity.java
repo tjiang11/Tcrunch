@@ -103,6 +103,9 @@ public class SubmitResponseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Perform checks on response and open confirmation dialog
+     */
     private void submitResponse() {
         if (questionType == QuestionType.MULTIPLE_CHOICE && submitMultipleChoice.getCheckedRadioButtonId() == -1) {
             Toast.makeText(this, "You must select a choice.", Toast.LENGTH_LONG).show();
@@ -129,6 +132,9 @@ public class SubmitResponseActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Save response to Firebase.
+     */
     private void sendResponse() {
         SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
         String author = sharedPreferences.getString("student_name", "Unidentified");
