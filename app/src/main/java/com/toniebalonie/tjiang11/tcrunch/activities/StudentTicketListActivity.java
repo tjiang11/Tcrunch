@@ -461,7 +461,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         return super.onOptionsItemSelected(item);
     }
 
-    public void doNewClassDialogPositiveClick(String classCode) {
+    public void doNewClassDialogPositiveClick(String classCode, final AlertDialog d) {
         final boolean answeredVisible = answered.isVisible();
         final boolean unansweredVisible = unanswered.isVisible();
         answered.setVisible(false);
@@ -496,7 +496,10 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     if (classToAdd.getTeacher() != null) {
                         teacherString = " by " + classToAdd.getTeacher();
                     }
-                    Toast.makeText(StudentTicketListActivity.this, "Joined class " + classToAdd.getName() + teacherString, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StudentTicketListActivity.this, "Joined class " + classToAdd.getName() + teacherString, Toast.LENGTH_LONG).show();
+
+                    // Dismiss the join class dialog
+                    d.dismiss();
                 }
                 if (!newClassExists) {
                     if (answeredVisible) { answered.setVisible(true); }
