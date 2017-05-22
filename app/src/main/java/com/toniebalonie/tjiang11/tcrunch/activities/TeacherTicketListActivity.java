@@ -249,9 +249,7 @@ public class TeacherTicketListActivity extends AppCompatActivity implements
 
         userDisplayName.setText(sharedPrefs.getString("teacher_name", "No name specified"));
 
-        /**
-         * Load and display tickets for the currently selected class.
-         */
+        // Load and display tickets for the currently selected class.
         mTicketChangeListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -65,26 +65,34 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     private DrawerLayout mDrawerLayout;
 
+    /** Recycler View containing tickets displayed. */
     private RecyclerView mRecyclerView;
     private SectionedTicketListAdapter mSectionedTicketListAdapter;
     private RecyclerView.LayoutManager mTicketListLayoutManager;
 
-    private TextView userDisplayName;
-    private NavigationView classListView;
-
-    private TextView noTicketText;
-    private RelativeLayout loadingIndicator;
-
+    /** Sections representing answered tickets and unanswered tickets
+     * in the sectioned recycler view. */
     private Section answered;
     private Section unanswered;
 
+    /** The student's diplay name, visible in the navigation drawer header. */
+    private TextView userDisplayName;
+    /** NavigationView containing all classes the student is enrolled in. */
+    private NavigationView classListView;
+
+    /** TextView that is visible when no tickets are available. */
+    private TextView noTicketText;
+
+    /** Spinning circle indicating that content is loading. */
+    private RelativeLayout loadingIndicator;
+
     private DatabaseReference mDatabaseReference;
-    private Query mDatabaseReferenceTickets;
+    private DatabaseReference mDatabaseReferenceTickets;
     private Query mDatabaseReferenceClasses;
     private Query mDatabaseReferenceUserClasses;
     private Query mDatabaseReferenceStudentAnsweredTickets;
     private ValueEventListener mValueEventListener;
-    private ValueEventListener innerValueEventListener;
+    private ValueEventListener mTicketChangeListener;
     private FirebaseInstanceId mFirebaseInstanceId;
 
     private HashSet<String> hasAnswered;
@@ -169,6 +177,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         View header = classListView.getHeaderView(0);
         userDisplayName = (TextView) header.findViewById(R.id.user_info);
         userDisplayName.setText(sharedPrefs.getString("student_name", "No name specified"));
+
+        // When class is seleceted in the navigation menu, show all tickets for that class.
         classListView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -176,6 +186,8 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 unanswered.setVisible(false);
                 loadingIndicator.setVisibility(View.VISIBLE);
                 if (item.toString().equals("Show All")) {
+                    // Set currentClass to null to represent no specific class is seleceted,
+                    // and show all tickets for all classes.
                     currentClass = null;
                     getSupportActionBar().setTitle("All classes");
                     showingAll = true;
@@ -185,7 +197,6 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                     getSupportActionBar().setTitle(currentClass.getName());
                 }
                 mDatabaseReferenceStudentAnsweredTickets.addListenerForSingleValueEvent(mValueEventListener);
-
                 mDrawerLayout.closeDrawers();
                 return true;
             }
@@ -201,26 +212,28 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         unanswered.setVisible(false);
 
         mFirebaseInstanceId = FirebaseInstanceId.getInstance();
-        innerValueEventListener = new ValueEventListener() {
+
+        // Listener attached to a single class that when activated, loads
+        // and displays tickets for that class.
+        mTicketChangeListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!showingAll) {
                     answeredTickets.clear();
                     unansweredTickets.clear();
                 }
-                for (DataSnapshot classSnapshot2 : dataSnapshot.getChildren()) {
-                    for (DataSnapshot ticketSnapshot : classSnapshot2.getChildren()) {
-                        Ticket ticket = ticketSnapshot.getValue(Ticket.class);
-                        if (ticket.getStartTime() < System.currentTimeMillis()) {
-                            if (!hasAnswered.contains(ticket.getId())) {
-                                unansweredTickets.add(ticket);
-                            } else {
-                                answeredTickets.add(ticket);
-                            }
+                for (DataSnapshot ticketSnapshot : dataSnapshot.getChildren()) {
+                    Ticket ticket = ticketSnapshot.getValue(Ticket.class);
+                    if (ticket.getStartTime() < System.currentTimeMillis()) {
+                        if (!hasAnswered.contains(ticket.getId())) {
+                            unansweredTickets.add(ticket);
+                        } else {
+                            answeredTickets.add(ticket);
                         }
-                        mSectionedTicketListAdapter.notifyDataSetChanged();
                     }
+                    mSectionedTicketListAdapter.notifyDataSetChanged();
                 }
+
                 if (answeredTickets.size() == 0) {
                     answered.setVisible(false);
                 } else {
@@ -247,10 +260,16 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 Log.w(TAG, "loadTickets:onCancelled");
             }
         };
+
+        // Listener that when activated loads, filters, and displays tickets
+        // based on class selected. Should be attached to answered tickets column for user.
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // Reset map containing what tickets the user has already answered.
                 hasAnswered.clear();
+
+                // Record every ticket that the user has answered.
                 for (DataSnapshot ticketSnapshot : dataSnapshot.getChildren()) {
                     hasAnswered.add(ticketSnapshot.getValue().toString());
                 }
@@ -267,20 +286,18 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                             loadingIndicator.setVisibility(View.GONE);
                         }
 
+                        // For every class that the student is enrolled in, add to the navigation menu
+                        // and if the class is selected (or showing all) then display its tickets.
                         for (final DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
                             Classroom newClass = classSnapshot.getValue(Classroom.class);
                             classListView.getMenu().add(newClass.getName());
                             classMap.put(newClass.getName(), newClass);
                             String classId = newClass.getId();
-                            mDatabaseReferenceTickets.orderByKey().equalTo(classId).removeEventListener(
-                                    innerValueEventListener
-                            );
-                            if (currentClass != null && !classId.equals(currentClass.getId())) {
-                                continue;
+
+                            if (currentClass == null || classId.equals(currentClass.getId())) {
+                                mDatabaseReferenceTickets.child(classId)
+                                        .addValueEventListener(mTicketChangeListener);
                             }
-                            mDatabaseReferenceTickets.orderByKey().equalTo(classId).addValueEventListener(
-                                    innerValueEventListener
-                            );
                         }
 
                         classListView.getMenu().add("Show All");
