@@ -88,22 +88,26 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
 
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mDatabaseReferenceTickets;
-    private Query mDatabaseReferenceClasses;
-    private Query mDatabaseReferenceUserClasses;
-    private Query mDatabaseReferenceStudentAnsweredTickets;
+    private DatabaseReference mDatabaseReferenceClasses;
+    private DatabaseReference mDatabaseReferenceUserClasses;
+    private DatabaseReference mDatabaseReferenceStudentAnsweredTickets;
     private ValueEventListener mValueEventListener;
     private ValueEventListener mTicketChangeListener;
     private FirebaseInstanceId mFirebaseInstanceId;
 
+    // Set of all tickets answered by the user
     private HashSet<String> hasAnswered;
 
+    // List of displayed, answered tickets
     private ArrayList<Ticket> answeredTickets;
+    // List of displayed, unanswered tickets
     private ArrayList<Ticket> unansweredTickets;
 
+    // Map from class name to class object
     private HashMap<String, Classroom> classMap;
 
+    // Currently selected class, a value of null means all classes are shown
     private Classroom currentClass = null;
-
     boolean showingAll = true;
 
     @Override
@@ -339,6 +343,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 break;
         }
         if (ticket != null && type.equals("not answered")) {
+            // On clicking an unanswered ticket, go to submit response activity.
             Intent intent = new Intent(this, SubmitResponseActivity.class);
             intent.putExtra("question", ticket.getQuestion());
             intent.putExtra("start_time", ticket.getStartTime());
@@ -348,6 +353,7 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
             intent.putStringArrayListExtra("answer_choices", new ArrayList<>(ticket.getAnswerChoices()));
             startActivity(intent);
         } else if (ticket != null && type.equals("answered")) {
+            // On clicking an answered ticket, view the student's response.
             Intent intent = new Intent(this, AnsweredTicketActivity.class);
             intent.putExtra("question", ticket.getQuestion());
             intent.putExtra("ticket_id", ticket.getId());
@@ -355,6 +361,11 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
         }
     }
 
+    /**
+     * Determine the local index of a ticket given its position in the entire sectioned recycler view.
+     * @param position position of item within sectioned recycler view
+     * @return local index within respective array list.
+     */
     public int determineIndex(int position) {
         if (unansweredTickets.size() > 0 && position < unansweredTickets.size() + 1) {
             return position - 1;
@@ -464,14 +475,23 @@ public class StudentTicketListActivity extends AppCompatActivity implements Item
                 boolean newClassExists = false;
                 for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
                     newClassExists = true;
+
+                    // Update class to student enrolled classes in Firebase
                     Classroom classToAdd = classSnapshot.getValue(Classroom.class);
                     DatabaseReference addClass = mDatabaseReference.child("students")
                             .child(mFirebaseInstanceId.getId()).child(classToAdd.getId());
                     addClass.setValue(classToAdd);
-                    currentClass = classToAdd;
+
+                    // Front-end changes
                     getSupportActionBar().setTitle(currentClass.getName());
+
+                    // Reload tickets
+                    currentClass = classToAdd;
+
                     DatabaseReference answeredRef = mDatabaseReference.child("answered").child(mFirebaseInstanceId.getId());
                     answeredRef.addListenerForSingleValueEvent(mValueEventListener);
+
+                    // Display message saying what class the user joined by what teacher
                     String teacherString = "";
                     if (classToAdd.getTeacher() != null) {
                         teacherString = " by " + classToAdd.getTeacher();
